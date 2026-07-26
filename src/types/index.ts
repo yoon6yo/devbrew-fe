@@ -8,6 +8,11 @@ export interface IdeaDto {
   sourceTrack: SourceTrack
   sourceUrl: string | null
   score: number | null
+  scoreMarketFit: number | null
+  scoreNovelty: number | null
+  scoreFeasibility: number | null
+  scoreMonetization: number | null
+  scoreTrend: number | null
   scoreReason: string | null
   starCount: number
   status: IdeaStatus

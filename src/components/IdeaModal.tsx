@@ -97,6 +97,33 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               <ScoreBar score={idea.score} />
             </div>
 
+            {/* 세부 점수 */}
+            {idea.scoreMarketFit != null && (
+              <div className="mb-4 p-3 bg-[#f8f8f8] rounded">
+                <p className="text-[14px] leading-[18px] text-[#828c94] mb-2 font-bold uppercase tracking-wide">세부 점수</p>
+                <div className="space-y-1.5">
+                  {([
+                    ['시장 적합성', idea.scoreMarketFit],
+                    ['참신성',      idea.scoreNovelty],
+                    ['실현 가능성', idea.scoreFeasibility],
+                    ['수익화',      idea.scoreMonetization],
+                    ['트렌드',      idea.scoreTrend],
+                  ] as [string, number | null][]).map(([label, val]) => (
+                    <div key={label} className="flex items-center gap-2">
+                      <span className="text-[13px] text-[#828c94] w-20 shrink-0">{label}</span>
+                      <div className="flex-1 h-1.5 bg-[#e0e0e0] rounded-full overflow-hidden">
+                        <div
+                          className="h-full rounded-full bg-[#7c3aed] transition-all"
+                          style={{ width: `${((val ?? 0) / 10) * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-[13px] font-bold tabular-nums text-[#2f3438] w-6 text-right">{val}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* 채점 이유 */}
             {idea.scoreReason && (
               <Section title="채점 이유">
