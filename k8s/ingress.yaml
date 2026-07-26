@@ -1,8 +1,8 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: devbrew-fe
-  namespace: devbrew
+  name: daybrew-fe
+  namespace: daybrew
 spec:
   ingressClassName: nginx
   rules:
@@ -13,13 +13,13 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: devbrew
+                name: daybrew
                 port:
                   number: 80
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: devbrew-fe
+                name: daybrew-fe
                 port:
                   number: 80

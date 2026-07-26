@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: devbrew-fe
-  namespace: devbrew
+  name: daybrew-fe
+  namespace: daybrew
 spec:
   selector:
-    app: devbrew-fe
+    app: daybrew-fe
   ports:
     - port: 80
       targetPort: 80

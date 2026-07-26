@@ -3,8 +3,6 @@ name: CI/CD — FE
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   build:
@@ -39,5 +37,8 @@ jobs:
           username: ${{ secrets.K8S_SSH_USER }}
           key: ${{ secrets.K8S_SSH_KEY }}
           script: |
-            kubectl rollout restart deployment/devbrew-fe -n devbrew
-            kubectl rollout status deployment/devbrew-fe -n devbrew --timeout=120s
+            kubectl apply -f https://raw.githubusercontent.com/yoon6yo/devbrew-fe/main/k8s/deployment.yaml
+            kubectl apply -f https://raw.githubusercontent.com/yoon6yo/devbrew-fe/main/k8s/service.yaml
+            kubectl apply -f https://raw.githubusercontent.com/yoon6yo/devbrew-fe/main/k8s/ingress.yaml
+            kubectl rollout restart deployment/daybrew-fe -n daybrew
+            kubectl rollout status deployment/daybrew-fe -n daybrew --timeout=120s
