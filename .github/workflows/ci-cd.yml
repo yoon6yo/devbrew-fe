@@ -32,17 +32,23 @@ jobs:
   deploy:
     name: Deploy
     needs: build
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     environment: production
     env:
       DEPLOY_SHA: ${{ github.sha }}
     steps:
-      - name: Apply manifests and roll out
-        run: |
-          set -euo pipefail
-          curl -fs https://raw.githubusercontent.com/yoon6yo/devbrew-fe/${DEPLOY_SHA}/k8s/deployment.yaml \
-            | sed "s|image: ghcr.io/yoon6yo/devbrew-fe:.*|image: ghcr.io/yoon6yo/devbrew-fe:sha-${DEPLOY_SHA}|" \
-            | kubectl apply -f -
-          curl -fs https://raw.githubusercontent.com/yoon6yo/devbrew-fe/${DEPLOY_SHA}/k8s/service.yaml | kubectl apply -f -
-          curl -fs https://raw.githubusercontent.com/yoon6yo/devbrew-fe/${DEPLOY_SHA}/k8s/ingress.yaml | kubectl apply -f -
-          kubectl rollout status deployment/daybrew-fe -n daybrew --timeout=120s
+      - uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.K8S_SSH_HOST }}
+          port: ${{ secrets.K8S_SSH_PORT }}
+          username: ${{ secrets.K8S_SSH_USER }}
+          key: ${{ secrets.K8S_SSH_KEY }}
+          envs: DEPLOY_SHA
+          script: |
+            set -euo pipefail
+            curl -fs https://raw.githubusercontent.com/yoon6yo/devbrew-fe/${DEPLOY_SHA}/k8s/deployment.yaml \
+              | sed "s|image: ghcr.io/yoon6yo/devbrew-fe:.*|image: ghcr.io/yoon6yo/devbrew-fe:sha-${DEPLOY_SHA}|" \
+              | kubectl apply -f -
+            curl -fs https://raw.githubusercontent.com/yoon6yo/devbrew-fe/${DEPLOY_SHA}/k8s/service.yaml | kubectl apply -f -
+            curl -fs https://raw.githubusercontent.com/yoon6yo/devbrew-fe/${DEPLOY_SHA}/k8s/ingress.yaml | kubectl apply -f -
+            kubectl rollout status deployment/daybrew-fe -n daybrew --timeout=120s
