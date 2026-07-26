@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: devbrew-fe
+  namespace: devbrew
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - host: devbrew-fe.YOURDOMAIN.com   # ← 실제 도메인으로 교체
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: devbrew-fe
+                port:
+                  number: 80
