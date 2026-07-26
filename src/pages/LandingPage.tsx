@@ -4,21 +4,52 @@ import type { IdeaDto } from '@/types'
 import { ScoreBar } from '@/components/ScoreBar'
 import { TrackBadge } from '@/components/TrackBadge'
 
+const SignalIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="14" cy="14" r="3" stroke="#7c3aed" strokeWidth="1.5"/>
+    <path d="M6 14c0-4.418 3.582-8 8-8s8 3.582 8 8-3.582 8-8 8-8-3.582-8-8z" stroke="#7c3aed" strokeWidth="1.5" strokeDasharray="3 2"/>
+    <path d="M2 14c0-6.627 5.373-12 12-12s12 5.373 12 12-5.373 12-12 12S2 20.627 2 14z" stroke="#7c3aed" strokeWidth="1.2" opacity="0.35"/>
+    <path d="M14 11v-3M14 20v-3M11 14H8M20 14h-3" stroke="#7c3aed" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
+
+const SparkleIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M14 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2 2-6z" stroke="#7c3aed" strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M21.5 18l1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3z" stroke="#7c3aed" strokeWidth="1.2" strokeLinejoin="round" opacity="0.6"/>
+    <path d="M7 18l.75 2.25L10 21l-2.25.75L7 24l-.75-2.25L4 21l2.25-.75L7 18z" stroke="#7c3aed" strokeWidth="1.2" strokeLinejoin="round" opacity="0.4"/>
+  </svg>
+)
+
+const DocumentIcon = () => (
+  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="5" y="2" width="18" height="24" rx="2" stroke="#7c3aed" strokeWidth="1.5"/>
+    <path d="M9 8h10M9 13h10M9 18h6" stroke="#7c3aed" strokeWidth="1.5" strokeLinecap="round"/>
+    <path d="M17 20l2 2 3-3" stroke="#7c3aed" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
 const STEPS = [
   {
+    Icon: SignalIcon,
     num: '01',
     title: '신호 수집',
-    desc: 'Reddit SaaS 커뮤니티, GitHub 급상승 레포, 바이럴 토픽에서 매일 트렌드 신호를 수집합니다.',
+    items: ['Reddit r/SaaS 커뮤니티', 'GitHub 트렌딩 레포', '바이럴 토픽'],
+    desc: '매일 실제 개발자들이 반응하는 신호를 자동으로 수집합니다.',
   },
   {
+    Icon: SparkleIcon,
     num: '02',
-    title: 'AI 분석',
-    desc: '노이즈를 걸러내고 실제 개발 프로젝트로 만들 수 있는 아이디어로 변환합니다.',
+    title: 'AI 분석 · 채점',
+    items: ['노이즈 제거', '시장 적합성 / 실현 가능성 채점', '아이디어로 변환'],
+    desc: '수백 개의 신호 중 실제 만들 만한 것만 걸러냅니다.',
   },
   {
+    Icon: DocumentIcon,
     num: '03',
     title: '기획서 전달',
-    desc: '사용 목적, 동작 방식, 기술 스택 추천까지 한 장짜리 기획서로 매일 아침 정리해드립니다.',
+    items: ['사용 목적 · 동작 방식', '추천 기술 스택', '세부 점수 breakdown'],
+    desc: '한 장짜리 기획서로 매일 아침 정리됩니다.',
   },
 ]
 
@@ -39,16 +70,54 @@ const PLANS = [
   },
 ]
 
+function MockIdeaCard() {
+  return (
+    <div className="relative">
+      <div className="absolute -inset-4 bg-[#7c3aed]/6 rounded-2xl blur-2xl pointer-events-none" />
+      <div className="relative bg-[#faf9f6] rounded-xl border border-[#e8e0f0] p-5 shadow-[0_8px_32px_rgba(124,58,237,0.10)]">
+        <div className="flex items-center justify-between mb-3">
+          <span className="text-[12px] font-bold text-[#7c3aed] bg-[rgba(124,58,237,0.08)] px-2.5 py-1 rounded-md tracking-wide">SAAS</span>
+          <span className="text-[15px] font-bold tabular-nums text-[#2a2433]">
+            9.2<span className="text-[#8b8398] font-normal text-[13px]">/10</span>
+          </span>
+        </div>
+
+        <h3 className="text-[15px] font-bold text-[#2a2433] mb-1.5 leading-snug">AI 기반 노코드 앱 빌더 플랫폼</h3>
+        <p className="text-[13px] text-[#8b8398] mb-3 leading-relaxed">
+          비개발자도 실용적인 웹앱을 만들 수 있는 AI-first 빌더. 수요 급증 중.
+        </p>
+
+        <div className="h-1.5 bg-[#e8e0f0] rounded-full overflow-hidden mb-3">
+          <div className="h-full rounded-full bg-[#7c3aed]" style={{ width: '92%' }} />
+        </div>
+
+        <div className="space-y-1.5 mb-3">
+          {([['시장 적합성', 95], ['실현 가능성', 85], ['수익화', 90]] as [string, number][]).map(([label, pct]) => (
+            <div key={label} className="flex items-center gap-2">
+              <span className="text-[12px] text-[#8b8398] w-20 shrink-0">{label}</span>
+              <div className="flex-1 h-1 bg-[#e8e0f0] rounded-full overflow-hidden">
+                <div className="h-full rounded-full bg-[#7c3aed]/50" style={{ width: `${pct}%` }} />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="pt-3 border-t border-[#e8e0f0] flex items-center justify-between">
+          <span className="text-[12px] text-[#8b8398]">Reddit r/SaaS · 오늘 09:00</span>
+          <span className="text-[12px] font-bold text-[#7c3aed]">★ 24</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export default function LandingPage() {
   const [ideas, setIdeas] = useState<IdeaDto[]>([])
   const [status, setStatus] = useState<'loading' | 'error' | 'ready'>('loading')
 
   useEffect(() => {
     getIdeas({ size: 3 })
-      .then(p => {
-        setIdeas(p.content)
-        setStatus('ready')
-      })
+      .then(p => { setIdeas(p.content); setStatus('ready') })
       .catch(() => setStatus('error'))
   }, [])
 
@@ -69,30 +138,37 @@ export default function LandingPage() {
 
       {/* Hero */}
       <section className="border-b border-[#e8e0f0]">
-        <div className="max-w-4xl mx-auto px-6 py-28 text-center">
-          <p className="text-[14px] font-bold text-[#7c3aed] mb-5 tracking-wider uppercase">
-            매일 아침 업데이트
-          </p>
-          <h1 className="text-5xl md:text-6xl font-bold text-[#2a2433] mb-6 leading-[1.05]">
-            만들 만한 아이디어를<br />매일 아침 골라드립니다
-          </h1>
-          <p className="text-base text-[#8b8398] mb-10 max-w-xl mx-auto leading-relaxed">
-            Reddit, GitHub의 실제 신호에서 추출한 개발 아이디어.<br />
-            사용 목적부터 기술 스택 추천까지 한 장으로 정리해드립니다.
-          </p>
-          <div className="flex gap-3 justify-center flex-wrap">
-            <a
-              href="#ideas"
-              className="bg-[#7c3aed] text-white font-bold text-[14px] px-7 py-3 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.25)]"
-            >
-              오늘의 아이디어 보기
-            </a>
-            <a
-              href="#how-it-works"
-              className="border border-[#e8e0f0] text-[#2a2433] font-bold text-[14px] px-7 py-3 rounded-lg hover:border-[#d9cce8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.25)]"
-            >
-              어떻게 동작하나요
-            </a>
+        <div className="max-w-4xl mx-auto px-6 py-20 md:py-28">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-[14px] font-bold text-[#7c3aed] mb-5 tracking-wider uppercase">
+                매일 아침 업데이트
+              </p>
+              <h1 className="text-4xl md:text-5xl font-bold text-[#2a2433] mb-6 leading-[1.1]">
+                만들 만한<br />아이디어를<br />매일 아침<br />골라드립니다
+              </h1>
+              <p className="text-[15px] text-[#8b8398] mb-8 leading-relaxed">
+                Reddit, GitHub의 실제 신호에서 추출한 개발 아이디어.<br />
+                사용 목적부터 기술 스택 추천까지 한 장으로 정리해드립니다.
+              </p>
+              <div className="flex gap-3 flex-wrap">
+                <a
+                  href="#ideas"
+                  className="bg-[#7c3aed] text-white font-bold text-[14px] px-7 py-3 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.25)]"
+                >
+                  오늘의 아이디어 보기
+                </a>
+                <a
+                  href="#how-it-works"
+                  className="border border-[#e8e0f0] text-[#2a2433] font-bold text-[14px] px-7 py-3 rounded-lg hover:border-[#d9cce8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.25)]"
+                >
+                  어떻게 동작하나요
+                </a>
+              </div>
+            </div>
+            <div className="hidden md:block">
+              <MockIdeaCard />
+            </div>
           </div>
         </div>
       </section>
@@ -100,13 +176,29 @@ export default function LandingPage() {
       {/* How it works */}
       <section id="how-it-works" className="py-24">
         <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-[#2a2433] text-center mb-12">어떻게 동작하나요</h2>
+          <h2 className="text-3xl font-bold text-[#2a2433] text-center mb-3">어떻게 동작하나요</h2>
+          <p className="text-[14px] text-[#8b8398] text-center mb-12">매일 자동으로 실행되는 3단계 파이프라인</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {STEPS.map(step => (
-              <div key={step.num} className="bg-[#f3f0ec] rounded-xl border border-[#e8e0f0] p-6">
-                <span className="text-4xl font-bold text-[#e8e0f0] mb-4 block">{step.num}</span>
-                <h3 className="text-[15px] font-bold text-[#2a2433] mb-2">{step.title}</h3>
-                <p className="text-[14px] text-[#8b8398] leading-relaxed">{step.desc}</p>
+            {STEPS.map(({ Icon, num, title, items, desc }) => (
+              <div key={num} className="bg-[#f3f0ec] rounded-xl border border-[#e8e0f0] p-6 flex flex-col gap-4">
+                <div className="flex items-start justify-between">
+                  <div className="p-2.5 bg-[rgba(124,58,237,0.08)] rounded-xl">
+                    <Icon />
+                  </div>
+                  <span className="text-3xl font-bold text-[#e8e0f0] leading-none">{num}</span>
+                </div>
+                <div>
+                  <h3 className="text-[15px] font-bold text-[#2a2433] mb-2">{title}</h3>
+                  <p className="text-[13px] text-[#8b8398] mb-3 leading-relaxed">{desc}</p>
+                  <ul className="space-y-1">
+                    {items.map(item => (
+                      <li key={item} className="flex items-center gap-2 text-[13px] text-[#4a4458]">
+                        <span className="w-1 h-1 rounded-full bg-[#7c3aed] shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
@@ -167,7 +259,9 @@ export default function LandingPage() {
                     <div className="flex items-center justify-between mb-3">
                       <TrackBadge track={idea.sourceTrack} />
                       {idea.score !== null && (
-                        <span className="text-[14px] font-bold tabular-nums text-[#2a2433]">{idea.score}<span className="text-[#8b8398] font-normal">/10</span></span>
+                        <span className="text-[14px] font-bold tabular-nums text-[#2a2433]">
+                          {idea.score}<span className="text-[#8b8398] font-normal">/10</span>
+                        </span>
                       )}
                     </div>
                     <h3 className="text-[15px] font-bold text-[#2a2433] mb-2 line-clamp-2 leading-snug">{idea.title}</h3>
