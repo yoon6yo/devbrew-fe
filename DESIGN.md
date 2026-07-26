@@ -59,6 +59,14 @@ Letter spacing: **-0.3px** on all text (`tracking-[-0.3px]`)
 | Badge | 400 | `text-[14px]` | `leading-[18px]` |
 | Action button | 700 | `text-[14px]` | `leading-[18px]` |
 
+### Landing page typography (additional — not for dashboard)
+| Role | Weight | Size | Line height |
+|------|--------|------|-------------|
+| Hero heading | 700 | `text-4xl` / `md:text-5xl` | tight |
+| Section heading | 700 | `text-2xl` | tight |
+| Step number (decorative) | 700 | `text-3xl` | tight |
+| Price | 700 | `text-2xl` | tight |
+
 ## §4 Spacing & Radius (Ohouse)
 
 Spacing scale (Ohouse-observed):

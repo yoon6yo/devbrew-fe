@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-4 p-3 bg-[#f8f8f8] rounded">
-      <p className="text-xs text-[#828c94] mb-1.5 font-bold uppercase tracking-wide">{title}</p>
+      <p className="text-[14px] leading-[18px] text-[#828c94] mb-1.5 font-bold uppercase tracking-wide">{title}</p>
       <div className="text-[15px] text-[#424242] leading-relaxed">{children}</div>
     </div>
   )
@@ -93,7 +93,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
 
             {/* 점수 */}
             <div className="mb-4">
-              <p className="text-xs text-[#828c94] mb-1.5">점수</p>
+              <p className="text-[14px] leading-[18px] text-[#828c94] mb-1.5">점수</p>
               <ScoreBar score={idea.score} />
             </div>
 
