@@ -123,7 +123,7 @@ export function DashboardPage() {
               localStorage.removeItem('devbrew_token')
               localStorage.removeItem('daybrew_auth')
               localStorage.removeItem('daybrew_role')
-              window.location.href = '/login'
+              window.location.href = '/'
             }}
             className="text-[14px] text-[#828c94] hover:text-[#424242] transition-colors"
           >
