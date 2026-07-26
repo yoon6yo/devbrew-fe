@@ -6,11 +6,15 @@ export interface IdeaDto {
   title: string
   description: string
   sourceTrack: SourceTrack
-  sourceUrl: string
+  sourceUrl: string | null
   score: number | null
   scoreReason: string | null
+  starCount: number
   status: IdeaStatus
   createdAt: string
+  purpose: string | null
+  howItWorks: string | null
+  suggestedStack: string | null
 }
 
 export interface PageResponse<T> {

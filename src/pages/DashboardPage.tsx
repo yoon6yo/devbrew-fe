@@ -40,7 +40,15 @@ export function DashboardPage() {
     <div className="min-h-screen bg-[#f8f8f8]">
       <header className="border-b bg-white px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-[#2f3438]">DevBrew</h1>
-        <ExportButton />
+        <div className="flex items-center gap-4">
+          <ExportButton />
+          <button
+            onClick={() => { localStorage.removeItem('devbrew_token'); window.location.href = '/login' }}
+            className="text-[14px] text-[#828c94] hover:text-[#424242] transition-colors"
+          >
+            로그아웃
+          </button>
+        </div>
       </header>
       <main className="max-w-5xl mx-auto px-6 py-6">
         <SummaryCards data={data} isLoading={isLoading} />

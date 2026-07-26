@@ -8,8 +8,10 @@ export class ApiError extends Error {
 }
 
 export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = localStorage.getItem('devbrew_token')
+  const authHeader: Record<string, string> = token ? { Authorization: `Bearer ${token}` } : {}
   const res = await fetch(path, {
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    headers: { 'Content-Type': 'application/json', ...authHeader, ...init?.headers },
     ...init,
   })
   if (!res.ok) {
