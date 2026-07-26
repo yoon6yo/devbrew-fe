@@ -39,8 +39,5 @@ jobs:
           username: ${{ secrets.K8S_SSH_USER }}
           key: ${{ secrets.K8S_SSH_KEY }}
           script: |
-            kubectl set image deployment/devbrew-fe \
-              devbrew-fe=ghcr.io/yoon6yo/devbrew-fe:latest \
-              -n devbrew
-            kubectl rollout status deployment/devbrew-fe \
-              -n devbrew --timeout=120s
+            kubectl rollout restart deployment/devbrew-fe -n devbrew
+            kubectl rollout status deployment/devbrew-fe -n devbrew --timeout=120s
