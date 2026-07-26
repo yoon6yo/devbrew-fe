@@ -53,22 +53,6 @@ const STEPS = [
   },
 ]
 
-const PLANS = [
-  {
-    name: 'Free',
-    price: '무료',
-    features: ['주 3개 아이디어 미리보기', '기본 정보 (제목 + 점수)', '웹 대시보드 접근'],
-    cta: '무료로 시작',
-    highlight: false,
-  },
-  {
-    name: 'Pro',
-    price: '₩9,900/월',
-    features: ['매일 전체 피드', '상세 기획서 (목적 + 동작 + 스택)', 'CSV/JSON 내보내기', '이메일 알림'],
-    cta: '7일 무료 체험',
-    highlight: true,
-  },
-]
 
 function MockIdeaCard() {
   return (
@@ -128,7 +112,7 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <span className="text-xl font-bold text-[#2a2433]">DevBrew</span>
           <a
-            href="#pricing"
+            href="/login"
             className="text-[14px] font-bold text-[#2a2433] border border-[#e8e0f0] px-4 py-2 rounded-lg hover:border-[#d9cce8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.25)]"
           >
             시작하기
@@ -274,56 +258,10 @@ export default function LandingPage() {
                 ))}
               </div>
               <p className="text-center mt-8 text-[14px] text-[#8b8398]">
-                전체 피드와 상세 기획서는 <a href="#pricing" className="text-[#7c3aed] hover:underline font-bold">Pro 플랜</a>에서 확인하세요.
+                <a href="/login" className="text-[#7c3aed] hover:underline font-bold">로그인</a>하여 전체 피드와 상세 기획서를 확인하세요.
               </p>
             </>
           )}
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="py-24">
-        <div className="max-w-3xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-[#2a2433] text-center mb-3">요금제</h2>
-          <p className="text-[14px] text-[#8b8398] text-center mb-12">시작은 무료로. 필요할 때 업그레이드하세요.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {PLANS.map(plan => (
-              <div
-                key={plan.name}
-                className={`rounded-xl border p-8 bg-[#f3f0ec] ${
-                  plan.highlight
-                    ? 'border-[#7c3aed] bg-[rgba(124,58,237,0.04)] shadow-[0_4px_16px_rgba(124,58,237,0.08)]'
-                    : 'border-[#e8e0f0]'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[15px] font-bold text-[#2a2433]">{plan.name}</span>
-                  {plan.highlight && (
-                    <span className="text-xs bg-[#7c3aed] text-white px-2 py-0.5 rounded-full font-bold">추천</span>
-                  )}
-                </div>
-                <p className="text-3xl font-bold text-[#2a2433] mb-6">{plan.price}</p>
-                <ul className="space-y-2.5 mb-8">
-                  {plan.features.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-[14px] text-[#4a4458]">
-                      <span className="text-[#7c3aed] mt-0.5 font-bold">✓</span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  disabled
-                  className={`block w-full text-center py-2.5 rounded-lg text-[14px] font-bold transition-colors disabled:opacity-30 cursor-not-allowed ${
-                    plan.highlight
-                      ? 'bg-[#7c3aed] text-white'
-                      : 'border border-[#e8e0f0] text-[#2a2433]'
-                  }`}
-                >
-                  {plan.cta}
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 

@@ -16,6 +16,20 @@ spec:
                 name: daybrew
                 port:
                   number: 80
+          - path: /oauth2/
+            pathType: Prefix
+            backend:
+              service:
+                name: daybrew
+                port:
+                  number: 80
+          - path: /login/oauth2/
+            pathType: Prefix
+            backend:
+              service:
+                name: daybrew
+                port:
+                  number: 80
           - path: /
             pathType: Prefix
             backend:
