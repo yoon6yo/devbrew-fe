@@ -110,7 +110,7 @@ export default function LandingPage() {
       {/* Nav */}
       <nav className="sticky top-0 z-10 bg-[#faf9f6]/90 backdrop-blur border-b border-[#e8e0f0] px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <span className="text-xl font-bold text-[#2a2433]">DevBrew</span>
+          <span className="text-xl font-bold text-[#2a2433]">daybrew</span>
           <a
             href="/login"
             className="text-[14px] font-bold text-white bg-[#7c3aed] px-5 py-2.5 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)] shadow-sm"
@@ -268,7 +268,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="border-t border-[#e8e0f0] py-8">
         <div className="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="text-[15px] font-bold text-[#2a2433]">DevBrew</span>
+          <span className="text-[15px] font-bold text-[#2a2433]">daybrew</span>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
             <p className="text-[14px] text-[#8b8398]">매일 아침 개발 아이디어를 배달합니다</p>
             <a href="/privacy" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">개인정보처리방침</a>

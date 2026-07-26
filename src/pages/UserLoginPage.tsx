@@ -18,7 +18,7 @@ export default function UserLoginPage() {
       <div className="bg-white border border-[#e8e0f0] rounded-xl p-10 w-full max-w-sm shadow-[0_4px_16px_rgba(124,58,237,0.08)]">
         <div className="mb-8 text-center">
           <a href="/" className="text-xl font-bold text-[#2a2433] hover:text-[#7c3aed] transition-colors">
-            DevBrew
+            daybrew
           </a>
           <p className="text-[14px] text-[#8b8398] mt-2">로그인하여 오늘의 아이디어를 확인하세요</p>
         </div>

@@ -115,7 +115,7 @@ export function DashboardPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
       <header className="border-b bg-white px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-[#2f3438]">DevBrew</h1>
+        <h1 className="text-xl font-bold text-[#2f3438]">daybrew</h1>
         <div className="flex items-center gap-4">
           <ExportButton />
           <button

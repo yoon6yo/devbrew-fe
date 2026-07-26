@@ -7,7 +7,7 @@ export default function PrivacyPage() {
       <nav className="sticky top-0 z-10 bg-[#faf9f6]/90 backdrop-blur border-b border-[#e8e0f0] px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link to="/" className="text-xl font-bold text-[#2a2433] hover:opacity-80 transition-opacity">
-            DevBrew
+            daybrew
           </Link>
           <Link
             to="/"
@@ -28,7 +28,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-[18px] font-bold text-[#2a2433] mb-3">1. 개인정보 수집 항목 및 수집 방법</h2>
             <p className="text-[15px] text-[#4a4458] leading-relaxed mb-3">
-              DevBrew(이하 "서비스")는 회원가입 및 서비스 제공을 위해 아래와 같은 개인정보를 수집합니다.
+              daybrew(이하 "서비스")는 회원가입 및 서비스 제공을 위해 아래와 같은 개인정보를 수집합니다.
             </p>
             <div className="bg-[#f3f0ec] border border-[#e8e0f0] rounded-xl p-5">
               <table className="w-full text-[14px]">
@@ -98,7 +98,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-[18px] font-bold text-[#2a2433] mb-3">4. 개인정보의 제3자 제공</h2>
             <p className="text-[15px] text-[#4a4458] leading-relaxed">
-              DevBrew는 원칙적으로 이용자의 개인정보를 외부에 제공하지 않습니다. 단, 이용자가 사전에 동의한 경우 또는 법령의 규정에 의한 경우에는 예외로 합니다.
+              daybrew는 원칙적으로 이용자의 개인정보를 외부에 제공하지 않습니다. 단, 이용자가 사전에 동의한 경우 또는 법령의 규정에 의한 경우에는 예외로 합니다.
             </p>
           </section>
 
@@ -155,7 +155,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-[18px] font-bold text-[#2a2433] mb-3">7. 쿠키 및 유사 기술의 사용</h2>
             <p className="text-[15px] text-[#4a4458] leading-relaxed">
-              DevBrew는 로그인 상태 유지 및 서비스 이용 편의를 위해 쿠키와 로컬 스토리지를 사용합니다. 브라우저 설정을 통해 쿠키 저장을 거부할 수 있으나, 이 경우 서비스 이용에 제한이 생길 수 있습니다.
+              daybrew는 로그인 상태 유지 및 서비스 이용 편의를 위해 쿠키와 로컬 스토리지를 사용합니다. 브라우저 설정을 통해 쿠키 저장을 거부할 수 있으나, 이 경우 서비스 이용에 제한이 생길 수 있습니다.
             </p>
           </section>
 
@@ -179,7 +179,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="text-[18px] font-bold text-[#2a2433] mb-3">9. 개인정보 보호책임자</h2>
             <div className="bg-[#f3f0ec] border border-[#e8e0f0] rounded-xl p-5 text-[14px] text-[#4a4458] space-y-1">
-              <p><span className="font-medium text-[#2a2433]">서비스명:</span> DevBrew</p>
+              <p><span className="font-medium text-[#2a2433]">서비스명:</span> daybrew</p>
               <p><span className="font-medium text-[#2a2433]">문의 이메일:</span> <a href="mailto:2025112405@dgu.ac.kr" className="text-[#7c3aed] hover:underline">2025112405@dgu.ac.kr</a></p>
             </div>
             <p className="text-[14px] text-[#8b8398] mt-3 leading-relaxed">
@@ -200,7 +200,7 @@ export default function PrivacyPage() {
       {/* Footer */}
       <footer className="border-t border-[#e8e0f0] py-8 mt-8">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
-          <span className="text-[15px] font-bold text-[#2a2433]">DevBrew</span>
+          <span className="text-[15px] font-bold text-[#2a2433]">daybrew</span>
           <div className="flex items-center gap-5">
             <Link to="/privacy" className="text-[14px] text-[#7c3aed] font-medium hover:underline">개인정보처리방침</Link>
             <Link to="/terms" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">이용약관</Link>

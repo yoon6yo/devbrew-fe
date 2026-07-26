@@ -7,7 +7,7 @@ export default function TermsPage() {
       <nav className="sticky top-0 z-10 bg-[#faf9f6]/90 backdrop-blur border-b border-[#e8e0f0] px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <Link to="/" className="text-xl font-bold text-[#2a2433] hover:opacity-80 transition-opacity">
-            DevBrew
+            daybrew
           </Link>
           <Link
             to="/"
@@ -28,7 +28,7 @@ export default function TermsPage() {
           <section>
             <h2 className="text-[18px] font-bold text-[#2a2433] mb-3">제1조 (목적)</h2>
             <p className="text-[15px] text-[#4a4458] leading-relaxed">
-              이 약관은 DevBrew(이하 "서비스")가 제공하는 개발 아이디어 큐레이션 서비스의 이용과 관련하여 서비스와 이용자 간의 권리·의무 및 책임 사항을 규정함을 목적으로 합니다.
+              이 약관은 daybrew(이하 "서비스")가 제공하는 개발 아이디어 큐레이션 서비스의 이용과 관련하여 서비스와 이용자 간의 권리·의무 및 책임 사항을 규정함을 목적으로 합니다.
             </p>
           </section>
 
@@ -36,7 +36,7 @@ export default function TermsPage() {
             <h2 className="text-[18px] font-bold text-[#2a2433] mb-3">제2조 (정의)</h2>
             <ul className="space-y-3">
               {[
-                { term: '"서비스"', def: 'DevBrew가 운영하는 개발 아이디어 큐레이션 플랫폼 및 관련 부가서비스를 의미합니다.' },
+                { term: '"서비스"', def: 'daybrew가 운영하는 개발 아이디어 큐레이션 플랫폼 및 관련 부가서비스를 의미합니다.' },
                 { term: '"이용자"', def: '이 약관에 동의하고 서비스를 이용하는 모든 회원 및 비회원을 의미합니다.' },
                 { term: '"회원"', def: '서비스에 회원가입하여 계정을 보유하고 서비스를 이용하는 자를 의미합니다.' },
                 { term: '"아이디어"', def: '서비스가 수집·분석하여 제공하는 개발 프로젝트 아이디어 및 관련 콘텐츠를 의미합니다.' },
@@ -194,7 +194,7 @@ export default function TermsPage() {
       {/* Footer */}
       <footer className="border-t border-[#e8e0f0] py-8 mt-8">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
-          <span className="text-[15px] font-bold text-[#2a2433]">DevBrew</span>
+          <span className="text-[15px] font-bold text-[#2a2433]">daybrew</span>
           <div className="flex items-center gap-5">
             <Link to="/privacy" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">개인정보처리방침</Link>
             <Link to="/terms" className="text-[14px] text-[#7c3aed] font-medium hover:underline">이용약관</Link>
