@@ -7,10 +7,17 @@ const colorMap: Record<IdeaStatus, string> = {
   REJECTED: 'bg-gray-100 text-gray-500 border-gray-200',
 }
 
+const labelMap: Record<IdeaStatus, string> = {
+  NOTIFIED: '알림 완료',
+  SCORED: '채점 완료',
+  PENDING: '대기 중',
+  REJECTED: '거절됨',
+}
+
 export function StatusBadge({ status }: { status: IdeaStatus }) {
   return (
     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border ${colorMap[status]}`}>
-      {status}
+      {labelMap[status]}
     </span>
   )
 }

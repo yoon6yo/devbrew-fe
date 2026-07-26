@@ -13,10 +13,10 @@ export function SummaryCards({ data, isLoading }: { data: PageResponse<IdeaDto> 
       {STATUSES.map(({ status, label, color }) => {
         const count = data?.content.filter((i) => i.status === status).length ?? 0
         return (
-          <div key={status} className="rounded-xl border bg-white p-4">
-            <p className="text-xs text-zinc-500 mb-1">{label}</p>
+          <div key={status} className="rounded border bg-white p-4">
+            <p className="text-xs text-[#828c94] mb-1">{label}</p>
             {isLoading
-              ? <div className="h-7 w-12 bg-zinc-100 animate-pulse rounded" />
+              ? <div className="h-7 w-12 bg-[#e0e0e0] animate-pulse rounded" />
               : <p className={`text-2xl font-bold tabular-nums ${color}`}>{count}</p>}
           </div>
         )

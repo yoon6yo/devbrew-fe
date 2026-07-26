@@ -11,10 +11,10 @@ import type { IdeaStatus } from '@/types'
 
 const TABS: { label: string; value: IdeaStatus | 'ALL' }[] = [
   { label: '전체', value: 'ALL' },
-  { label: 'NOTIFIED', value: 'NOTIFIED' },
-  { label: 'SCORED', value: 'SCORED' },
-  { label: 'PENDING', value: 'PENDING' },
-  { label: 'REJECTED', value: 'REJECTED' },
+  { label: '알림 완료', value: 'NOTIFIED' },
+  { label: '채점 완료', value: 'SCORED' },
+  { label: '대기 중', value: 'PENDING' },
+  { label: '거절됨', value: 'REJECTED' },
 ]
 
 export function DashboardPage() {
@@ -37,9 +37,9 @@ export function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-[#f8f8f8]">
       <header className="border-b bg-white px-6 py-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-zinc-900">DevBrew</h1>
+        <h1 className="text-xl font-bold text-[#2f3438]">DevBrew</h1>
         <ExportButton />
       </header>
       <main className="max-w-5xl mx-auto px-6 py-6">

@@ -9,17 +9,17 @@ export function IdeaCard({ idea, onClick }: { idea: IdeaDto; onClick: () => void
     <article
       role="article"
       onClick={onClick}
-      className="cursor-pointer rounded-xl border bg-white p-4 hover:border-zinc-300 hover:shadow-sm transition-all"
+      className="cursor-pointer rounded border border-[#e0e0e0] bg-white p-4 hover:border-[#c8c8c8] hover:shadow-[0_2px_5px_rgba(63,71,77,0.15)] transition-all"
     >
       <div className="flex items-start justify-between gap-2 mb-2">
-        <h3 className="text-sm font-semibold text-zinc-900 line-clamp-2 flex-1">{idea.title}</h3>
+        <h3 className="text-sm font-semibold text-[#2f3438] line-clamp-2 flex-1">{idea.title}</h3>
         <TrackBadge track={idea.sourceTrack} />
       </div>
       <div className="flex items-center justify-between">
         <ScoreBar score={idea.score} />
         <StatusBadge status={idea.status} />
       </div>
-      <p className="mt-2 text-xs text-zinc-400">{formatDate(idea.createdAt)}</p>
+      <p className="mt-2 text-xs text-[#828c94]">{formatDate(idea.createdAt)}</p>
     </article>
   )
 }
