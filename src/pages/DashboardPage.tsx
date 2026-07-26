@@ -53,17 +53,17 @@ export function DashboardPage() {
         </Tabs>
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[...Array(6)].map((_, i) => <div key={i} className="rounded-xl border bg-white p-4 h-28 animate-pulse" />)}
+            {[...Array(6)].map((_, i) => <div key={i} className="rounded border border-[#e0e0e0] bg-[#e0e0e0] p-4 h-28 animate-pulse" />)}
           </div>
         )}
         {isError && (
           <div className="text-center py-20">
-            <p className="text-zinc-500 mb-3">데이터를 불러올 수 없습니다.</p>
-            <button onClick={() => refetch()} className="text-sm text-blue-600 hover:underline">다시 시도</button>
+            <p className="text-[#828c94] mb-3">데이터를 불러올 수 없습니다.</p>
+            <button onClick={() => refetch()} className="text-sm text-[#00a1ff] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00a1ff] rounded">다시 시도</button>
           </div>
         )}
         {!isLoading && !isError && data?.content.length === 0 && (
-          <p className="text-center py-20 text-zinc-400 text-sm">아직 아이디어가 없습니다.</p>
+          <p className="text-center py-20 text-[#828c94] text-sm">아직 아이디어가 없습니다.</p>
         )}
         {!isLoading && !isError && data && data.content.length > 0 && (
           <>

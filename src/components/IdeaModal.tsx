@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useIdeaDetail } from '@/hooks/useIdeaDetail'
 import { useRejectIdea } from '@/hooks/useRejectIdea'
 import { StatusBadge } from './StatusBadge'
@@ -10,11 +11,21 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
   const { data: idea, isLoading, isError } = useIdeaDetail(ideaId)
   const reject = useRejectIdea()
 
+  useEffect(() => {
+    if (ideaId === null) return
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
+    document.addEventListener('keydown', handler)
+    return () => document.removeEventListener('keydown', handler)
+  }, [ideaId, onClose])
+
   if (ideaId === null) return null
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
       <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
         className="bg-white rounded w-full max-w-lg mx-4 p-6 shadow-[0_2px_5px_rgba(63,71,77,0.15)] max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
@@ -30,8 +41,8 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
         ) : idea ? (
           <>
             <div className="flex items-start justify-between gap-3 mb-4">
-              <h2 className="text-lg font-bold text-[#2f3438] flex-1">{idea.title}</h2>
-              <button aria-label="닫기" onClick={onClose} className="text-[#828c94] hover:text-[#424242] text-2xl leading-none">×</button>
+              <h2 id="modal-title" className="text-lg font-bold text-[#2f3438] flex-1">{idea.title}</h2>
+              <button aria-label="닫기" onClick={onClose} className="text-[#828c94] hover:text-[#424242] text-2xl leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e0e0e0] rounded">×</button>
             </div>
             <div className="flex gap-2 mb-4">
               <StatusBadge status={idea.status} />

@@ -8,8 +8,10 @@ export function IdeaCard({ idea, onClick }: { idea: IdeaDto; onClick: () => void
   return (
     <article
       role="article"
+      tabIndex={0}
       onClick={onClick}
-      className="cursor-pointer rounded border border-[#e0e0e0] bg-white p-4 hover:border-[#c8c8c8] hover:shadow-[0_2px_5px_rgba(63,71,77,0.15)] transition-all"
+      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick()}
+      className="cursor-pointer rounded border border-[#e0e0e0] bg-white p-4 hover:border-[#c8c8c8] hover:shadow-[0_2px_5px_rgba(63,71,77,0.15)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00a1ff]"
     >
       <div className="flex items-start justify-between gap-2 mb-2">
         <h3 className="text-sm font-semibold text-[#2f3438] line-clamp-2 flex-1">{idea.title}</h3>

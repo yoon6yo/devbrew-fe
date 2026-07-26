@@ -23,7 +23,7 @@ export function ExportButton() {
   return (
     <div className="flex items-center gap-2">
       <select value={format} onChange={(e) => setFormat(e.target.value as Format)}
-        className="text-sm border rounded border-[#e0e0e0] px-2 py-1.5 text-[#424242] bg-white">
+        className="text-sm border rounded border-[#e0e0e0] px-2 py-1.5 text-[#424242] bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00a1ff]">
         <option>JSON</option>
         <option>CSV</option>
       </select>

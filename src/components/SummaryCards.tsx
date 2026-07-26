@@ -16,7 +16,7 @@ export function SummaryCards({ data, isLoading }: { data: PageResponse<IdeaDto> 
           <div key={status} className="rounded border bg-white p-4">
             <p className="text-xs text-[#828c94] mb-1">{label}</p>
             {isLoading
-              ? <div className="h-7 w-12 bg-[#e0e0e0] animate-pulse rounded" />
+              ? <div className="h-8 w-12 bg-[#e0e0e0] animate-pulse rounded" />
               : <p className={`text-2xl font-bold tabular-nums ${color}`}>{count}</p>}
           </div>
         )
