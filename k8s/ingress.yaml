@@ -3,13 +3,18 @@ kind: Ingress
 metadata:
   name: devbrew-fe
   namespace: devbrew
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-    - host: devbrew-fe.YOURDOMAIN.com   # ← 실제 도메인으로 교체
+    - host: daybrew.duckdns.org
       http:
         paths:
+          - path: /api/
+            pathType: Prefix
+            backend:
+              service:
+                name: devbrew
+                port:
+                  number: 80
           - path: /
             pathType: Prefix
             backend:
