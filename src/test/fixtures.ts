@@ -8,8 +8,12 @@ export const mockIdea: IdeaDto = {
   sourceUrl: 'https://example.com',
   score: 8,
   scoreReason: 'PMF 명확, 시장 규모 큼',
+  starCount: 0,
   status: 'SCORED',
   createdAt: '2026-07-26T09:00:00+09:00',
+  purpose: null,
+  howItWorks: null,
+  suggestedStack: null,
 }
 
 export const mockIdeas: IdeaDto[] = [
