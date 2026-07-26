@@ -3,8 +3,8 @@ kind: Ingress
 metadata:
   name: devbrew-fe
   namespace: devbrew
-  ingressClassName: traefik
 spec:
+  ingressClassName: traefik
   rules:
     - host: daybrew.duckdns.org
       http:
