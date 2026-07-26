@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { getIdeas } from '@/api/ideas'
 import type { IdeaDto } from '@/types'
 import { ScoreBar } from '@/components/ScoreBar'
@@ -34,7 +33,7 @@ const PLANS = [
   {
     name: 'Pro',
     price: '₩9,900/월',
-    features: ['매일 전체 피드', '상세 기획서 (목적 + 동작 + 스택)', 'Slack 알림', 'CSV/JSON 내보내기'],
+    features: ['매일 전체 피드', '상세 기획서 (목적 + 동작 + 스택)', 'CSV/JSON 내보내기', '이메일 알림'],
     cta: '7일 무료 체험',
     highlight: true,
   },
@@ -50,14 +49,8 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f8]">
       {/* Nav */}
-      <nav className="bg-white border-b border-[#e0e0e0] px-6 py-4 flex items-center justify-between">
+      <nav className="bg-white border-b border-[#e0e0e0] px-6 py-4">
         <span className="text-xl font-bold text-[#2f3438]">DevBrew</span>
-        <Link
-          to="/login"
-          className="text-[14px] font-bold text-[#00a1ff] hover:underline"
-        >
-          관리자 로그인
-        </Link>
       </nav>
 
       {/* Hero */}
@@ -134,9 +127,7 @@ export default function LandingPage() {
               ))}
             </div>
             <p className="text-center mt-8 text-[14px] text-[#828c94]">
-              전체 피드와 상세 기획서는{' '}
-              <Link to="/login" className="text-[#00a1ff] hover:underline font-bold">Pro 플랜</Link>
-              에서 확인하세요.
+              전체 피드와 상세 기획서는 <a href="#pricing" className="text-[#00a1ff] hover:underline font-bold">Pro 플랜</a>에서 확인하세요.
             </p>
           </div>
         </section>
@@ -172,16 +163,16 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-                <Link
-                  to="/login"
-                  className={`block text-center py-2.5 rounded text-[14px] font-bold transition-colors ${
+                <button
+                  disabled
+                  className={`block w-full text-center py-2.5 rounded text-[14px] font-bold transition-colors disabled:opacity-30 cursor-not-allowed ${
                     plan.highlight
-                      ? 'bg-[#00a1ff] text-white hover:bg-[#0090e8]'
-                      : 'border border-[#e0e0e0] text-[#2f3438] hover:border-[#c8c8c8]'
+                      ? 'bg-[#00a1ff] text-white'
+                      : 'border border-[#e0e0e0] text-[#2f3438]'
                   }`}
                 >
                   {plan.cta}
-                </Link>
+                </button>
               </div>
             ))}
           </div>
