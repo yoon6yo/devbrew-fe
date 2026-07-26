@@ -3,14 +3,13 @@ import { describe, it, expect } from 'vitest'
 import { StatusBadge } from './StatusBadge'
 
 describe('StatusBadge', () => {
-  it('renders NOTIFIED with green class', () => {
-    render(<StatusBadge status="NOTIFIED" />)
-    expect(screen.getByText('NOTIFIED').className).toMatch(/green/)
+  it.each([
+    ['NOTIFIED', '알림 완료', 'green'],
+    ['SCORED',   '채점 완료', 'blue'],
+    ['PENDING',  '대기 중',   'amber'],
+    ['REJECTED', '거절됨',    'gray'],
+  ] as const)('renders %s as "%s" with %s class', (status, label, color) => {
+    render(<StatusBadge status={status} />)
+    expect(screen.getByText(label).className).toMatch(color)
   })
-  it.each([['SCORED', 'blue'], ['PENDING', 'amber'], ['REJECTED', 'gray']] as const)(
-    'renders %s with %s class', (status, color) => {
-      render(<StatusBadge status={status} />)
-      expect(screen.getByText(status).className).toMatch(color)
-    }
-  )
 })
