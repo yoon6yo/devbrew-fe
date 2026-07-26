@@ -113,7 +113,7 @@ export default function LandingPage() {
           <span className="text-xl font-bold text-[#2a2433]">DevBrew</span>
           <a
             href="/login"
-            className="text-[14px] font-bold text-[#2a2433] border border-[#e8e0f0] px-4 py-2 rounded-lg hover:border-[#d9cce8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.25)]"
+            className="text-[14px] font-bold text-white bg-[#7c3aed] px-5 py-2.5 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)] shadow-sm"
           >
             시작하기
           </a>
