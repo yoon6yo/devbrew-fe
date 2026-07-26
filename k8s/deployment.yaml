@@ -16,6 +16,7 @@ spec:
       containers:
         - name: devbrew-fe
           image: ghcr.io/yoon6yo/devbrew-fe:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 80
           resources:
