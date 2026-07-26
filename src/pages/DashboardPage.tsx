@@ -97,7 +97,7 @@ export function DashboardPage() {
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
   const role = localStorage.getItem('daybrew_role')
-  const isAdmin = localStorage.getItem('devbrew_token') !== null || role === 'ADMIN'
+  const isAdmin = role === 'ADMIN'
 
   const { data, isLoading, isError, refetch } = useIdeas({ status, page })
 
