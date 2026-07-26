@@ -3,8 +3,15 @@ kind: Ingress
 metadata:
   name: daybrew-fe
   namespace: daybrew
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - daybrew.duckdns.org
+      secretName: daybrew-tls
   rules:
     - host: daybrew.duckdns.org
       http:
