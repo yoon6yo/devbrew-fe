@@ -1,12 +1,20 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { getMe } from '../api/auth'
 
 export default function OAuthCallbackPage() {
   const navigate = useNavigate()
 
   useEffect(() => {
-    localStorage.setItem('daybrew_auth', 'oauth')
-    navigate('/dashboard', { replace: true })
+    getMe()
+      .then((me) => {
+        localStorage.setItem('daybrew_auth', 'oauth')
+        localStorage.setItem('daybrew_role', me.role)
+        navigate('/dashboard', { replace: true })
+      })
+      .catch(() => {
+        navigate('/login', { replace: true })
+      })
   }, [navigate])
 
   return (

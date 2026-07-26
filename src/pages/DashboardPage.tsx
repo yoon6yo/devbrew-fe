@@ -96,6 +96,9 @@ export function DashboardPage() {
   const page = Number(searchParams.get('page') ?? 0)
   const [selectedId, setSelectedId] = useState<number | null>(null)
 
+  const role = localStorage.getItem('daybrew_role')
+  const isAdmin = localStorage.getItem('devbrew_token') !== null || role === 'ADMIN'
+
   const { data, isLoading, isError, refetch } = useIdeas({ status, page })
 
   function setStatus(value: IdeaStatus | 'ALL') {
@@ -116,7 +119,12 @@ export function DashboardPage() {
         <div className="flex items-center gap-4">
           <ExportButton />
           <button
-            onClick={() => { localStorage.removeItem('devbrew_token'); window.location.href = '/login' }}
+            onClick={() => {
+              localStorage.removeItem('devbrew_token')
+              localStorage.removeItem('daybrew_auth')
+              localStorage.removeItem('daybrew_role')
+              window.location.href = '/login'
+            }}
             className="text-[14px] text-[#828c94] hover:text-[#424242] transition-colors"
           >
             로그아웃
@@ -124,7 +132,7 @@ export function DashboardPage() {
         </div>
       </header>
       <main className="max-w-5xl mx-auto px-6 py-6">
-        <AdminStatsSection />
+        {isAdmin && <AdminStatsSection />}
         <SummaryCards data={data} isLoading={isLoading} />
         <Tabs value={status ?? 'ALL'} onValueChange={(v) => setStatus(v as IdeaStatus | 'ALL')}>
           <TabsList className="mb-4">
