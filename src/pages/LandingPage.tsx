@@ -269,7 +269,11 @@ export default function LandingPage() {
       <footer className="border-t border-[#e8e0f0] py-8">
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
           <span className="text-[15px] font-bold text-[#2a2433]">DevBrew</span>
-          <p className="text-[14px] text-[#8b8398]">매일 아침 개발 아이디어를 배달합니다</p>
+          <div className="flex items-center gap-5">
+            <p className="text-[14px] text-[#8b8398]">매일 아침 개발 아이디어를 배달합니다</p>
+            <a href="/privacy" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">개인정보처리방침</a>
+            <a href="/terms" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">이용약관</a>
+          </div>
         </div>
       </footer>
     </div>
