@@ -1,7 +1,5 @@
-// TODO: These types will be fully defined in Task 2 (API layer)
-
+export type IdeaStatus = 'PENDING' | 'SCORED' | 'NOTIFIED' | 'REJECTED'
 export type SourceTrack = 'SAAS' | 'GITHUB' | 'VIRAL'
-export type IdeaStatus = 'PENDING' | 'SCORED' | 'NOTIFIED'
 
 export interface IdeaDto {
   id: number
@@ -9,8 +7,8 @@ export interface IdeaDto {
   description: string
   sourceTrack: SourceTrack
   sourceUrl: string
-  score: number
-  scoreReason: string
+  score: number | null
+  scoreReason: string | null
   status: IdeaStatus
   createdAt: string
 }
