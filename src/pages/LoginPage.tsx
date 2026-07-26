@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { apiFetch } from '@/api/client'
+import { getMe } from '@/api/auth'
 
 export default function LoginPage() {
   const [username, setUsername] = useState('')
@@ -19,6 +20,10 @@ export default function LoginPage() {
         body: JSON.stringify({ username, password }),
       })
       localStorage.setItem('devbrew_token', res.token)
+      try {
+        const me = await getMe()
+        localStorage.setItem('daybrew_role', me.role)
+      } catch {}
       navigate('/dashboard', { replace: true })
     } catch {
       setError('아이디 또는 비밀번호가 올바르지 않습니다.')
