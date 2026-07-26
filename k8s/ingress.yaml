@@ -4,7 +4,7 @@ metadata:
   name: devbrew-fe
   namespace: devbrew
 spec:
-  ingressClassName: traefik
+  ingressClassName: nginx
   rules:
     - host: daybrew.duckdns.org
       http:
