@@ -25,3 +25,14 @@ export async function getTopIdeas(n = 5): Promise<IdeaDto[]> {
   const page = await getIdeas({ page: 0, size: n })
   return page.content
 }
+
+export interface IdeaStatsDto {
+  PENDING: number
+  SCORED: number
+  NOTIFIED: number
+  REJECTED: number
+}
+
+export function getIdeaStats(): Promise<IdeaStatsDto> {
+  return apiFetch<IdeaStatsDto>('/api/ideas/stats')
+}

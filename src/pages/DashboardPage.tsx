@@ -162,7 +162,7 @@ export function DashboardPage() {
       </header>
       <main className="max-w-5xl mx-auto px-6 py-6">
         {isAdmin && <AdminStatsSection />}
-        <SummaryCards data={data} isLoading={isLoading} />
+        <SummaryCards />
         <Tabs value={status ?? 'ALL'} onValueChange={(v) => setStatus(v as IdeaStatus | 'ALL')}>
           <TabsList className="mb-4">
             {TABS.map(({ label, value }) => (
