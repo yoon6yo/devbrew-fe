@@ -12,6 +12,11 @@ export const server = setupServer(
       content: mockIdeas.slice(page * size, page * size + size),
     })
   }),
+  http.get('/api/ideas/stats', () => {
+    const counts = { PENDING: 0, SCORED: 0, NOTIFIED: 0, REJECTED: 0 }
+    mockIdeas.forEach((i) => { counts[i.status as keyof typeof counts]++ })
+    return HttpResponse.json(counts)
+  }),
   http.get('/api/ideas/:id', ({ params }) => {
     const idea = mockIdeas.find((i) => i.id === Number(params.id))
     if (!idea) return HttpResponse.json({ message: 'Not found' }, { status: 404 })
