@@ -186,7 +186,7 @@ export function DashboardPage() {
     setBulkPending(false)
   }
 
-  const canBulkSelect = tab === 'SCORED' || tab === 'PENDING' || tab === 'REJECTED'
+  const canBulkSelect = tab === 'SCORED' || tab === 'PENDING' || tab === 'REJECTED' || tab === 'NOTIFIED'
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#4a4458]">
