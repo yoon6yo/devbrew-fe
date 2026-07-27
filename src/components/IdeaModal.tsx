@@ -9,9 +9,18 @@ import { Button } from '@/components/ui/button'
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="mb-4 p-3 bg-[#f8f8f8] rounded">
-      <p className="text-[14px] leading-[18px] text-[#828c94] mb-1.5 font-bold uppercase tracking-wide">{title}</p>
-      <div className="text-[15px] text-[#424242] leading-relaxed">{children}</div>
+    <div className="mb-4 p-3.5 bg-[#faf9f6] border border-[#e8e0f0] rounded-xl">
+      <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-2">{title}</p>
+      <div className="text-[14px] text-[#4a4458] leading-relaxed">{children}</div>
+    </div>
+  )
+}
+
+function AdminSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="mb-4 p-3.5 bg-[rgba(124,58,237,0.04)] border border-[rgba(124,58,237,0.15)] rounded-xl">
+      <p className="text-[11px] font-bold text-[#7c3aed] uppercase tracking-wider mb-2">{title}</p>
+      <div className="text-[14px] text-[#4a4458] leading-relaxed">{children}</div>
     </div>
   )
 }
@@ -19,6 +28,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
 export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose: () => void }) {
   const { data: idea, isLoading, isError } = useIdeaDetail(ideaId)
   const reject = useRejectIdea()
+  const isAdmin = localStorage.getItem('daybrew_role') === 'ADMIN'
 
   useEffect(() => {
     if (ideaId === null) return
@@ -39,7 +49,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="bg-white rounded w-full max-w-lg mx-4 p-6 shadow-[0_2px_5px_rgba(63,71,77,0.15)] max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-2xl border border-[#e8e0f0] w-full max-w-lg mx-4 p-6 shadow-xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}
       >
         {isLoading ? (
@@ -54,24 +64,32 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
         ) : idea ? (
           <>
             {/* Header */}
-            <div className="flex items-start justify-between gap-3 mb-4">
-              <h2 id="modal-title" className="text-[16px] font-bold text-[#2f3438] leading-6 flex-1">{idea.title}</h2>
+            <div className="flex items-start justify-between gap-3 mb-3">
+              <h2 id="modal-title" className="text-[17px] font-bold text-[#2a2433] leading-snug flex-1">{idea.title}</h2>
               <button
                 aria-label="닫기"
                 onClick={onClose}
-                className="text-[#828c94] hover:text-[#424242] text-2xl leading-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#e0e0e0] rounded shrink-0"
+                className="text-[#9b91b0] hover:text-[#4a4458] text-2xl leading-none focus-visible:outline-none rounded shrink-0"
               >×</button>
             </div>
 
-            {/* Badges */}
-            <div className="flex gap-2 mb-5">
+            {/* Badges + score */}
+            <div className="flex items-center gap-2 mb-5">
               <StatusBadge status={idea.status} />
               <TrackBadge track={idea.sourceTrack} />
+              <div className="ml-auto">
+                <ScoreBar score={idea.score} />
+              </div>
             </div>
 
-            {/* 사용 목적 */}
+            {/* 설명 (pitch) */}
+            <Section title="한 줄 요약">
+              {idea.description}
+            </Section>
+
+            {/* 왜 필요한가 */}
             {idea.purpose && (
-              <Section title="사용 목적">
+              <Section title="왜 필요한가">
                 {idea.purpose}
               </Section>
             )}
@@ -83,86 +101,81 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               </Section>
             )}
 
-            {/* 설명 */}
-            <Section title="설명">
-              {idea.description}
-            </Section>
-
             {/* 추천 기술 스택 */}
             {idea.suggestedStack && (
-              <Section title="추천 기술 스택">
+              <Section title="기술 스택">
                 {idea.suggestedStack}
               </Section>
             )}
 
-            {/* 점수 */}
-            <div className="mb-4">
-              <p className="text-[14px] leading-[18px] text-[#828c94] mb-1.5">점수</p>
-              <ScoreBar score={idea.score} />
+            {/* 원본 링크 + 날짜 */}
+            <div className="flex items-center gap-3 mb-5 text-[13px] text-[#9b91b0]">
+              <span>{formatDate(idea.createdAt)}</span>
+              {idea.sourceUrl && (
+                <>
+                  <span>·</span>
+                  <a
+                    href={idea.sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[#7c3aed] hover:underline"
+                  >
+                    원본 보기 ↗
+                  </a>
+                </>
+              )}
             </div>
 
-            {/* 세부 점수 */}
-            {idea.scoreMarketFit != null && (
-              <div className="mb-4 p-3 bg-[#f8f8f8] rounded">
-                <p className="text-[14px] leading-[18px] text-[#828c94] mb-2 font-bold uppercase tracking-wide">세부 점수</p>
-                <div className="space-y-1.5">
-                  {([
-                    ['시장 적합성', idea.scoreMarketFit],
-                    ['참신성',      idea.scoreNovelty],
-                    ['실현 가능성', idea.scoreFeasibility],
-                    ['수익화',      idea.scoreMonetization],
-                    ['트렌드',      idea.scoreTrend],
-                  ] as [string, number | null][]).map(([label, val]) => (
-                    <div key={label} className="flex items-center gap-2">
-                      <span className="text-[13px] text-[#828c94] w-20 shrink-0">{label}</span>
-                      <div className="flex-1 h-1.5 bg-[#e0e0e0] rounded-full overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-[#7c3aed] transition-all"
-                          style={{ width: `${((val ?? 0) / 10) * 100}%` }}
-                        />
-                      </div>
-                      <span className="text-[13px] font-bold tabular-nums text-[#2f3438] w-6 text-right">{val}</span>
+            {/* 관리자 전용 영역 */}
+            {isAdmin && (
+              <>
+                {idea.scoreMarketFit != null && (
+                  <AdminSection title="세부 채점">
+                    <div className="space-y-2">
+                      {([
+                        ['시장 적합성', idea.scoreMarketFit],
+                        ['참신성',      idea.scoreNovelty],
+                        ['실현 가능성', idea.scoreFeasibility],
+                        ['수익화',      idea.scoreMonetization],
+                        ['트렌드',      idea.scoreTrend],
+                      ] as [string, number | null][]).map(([label, val]) => (
+                        <div key={label} className="flex items-center gap-2">
+                          <span className="text-[12px] text-[#6b6080] w-20 shrink-0">{label}</span>
+                          <div className="flex-1 h-1.5 bg-[#e8e0f0] rounded-full overflow-hidden">
+                            <div
+                              className="h-full rounded-full bg-[#7c3aed] transition-all"
+                              style={{ width: `${((val ?? 0) / 10) * 100}%` }}
+                            />
+                          </div>
+                          <span className="text-[12px] font-bold tabular-nums text-[#2a2433] w-5 text-right">{val}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* 채점 이유 */}
-            {idea.scoreReason && (
-              <Section title="채점 이유">
-                {idea.scoreReason}
-              </Section>
-            )}
-
-            {/* 원본 링크 */}
-            {idea.sourceUrl && (
-              <a
-                href={idea.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[14px] text-[#00a1ff] hover:underline break-all block mb-4"
-              >
-                {idea.sourceUrl}
-              </a>
-            )}
-
-            <p className="text-[14px] text-[#828c94] mb-4">{formatDate(idea.createdAt)}</p>
-
-            {idea.status !== 'REJECTED' && (
-              <div className="space-y-1.5">
-                <Button
-                  variant="destructive"
-                  size="sm"
-                  disabled={reject.isPending}
-                  onClick={() => reject.mutate(idea.id, { onSuccess: onClose })}
-                >
-                  {reject.isPending ? '처리 중…' : '거절'}
-                </Button>
-                {reject.isError && (
-                  <p role="alert" className="text-xs text-red-500">거절 처리에 실패했습니다. 다시 시도해주세요.</p>
+                  </AdminSection>
                 )}
-              </div>
+
+                {idea.scoreReason && (
+                  <AdminSection title="채점 이유">
+                    {idea.scoreReason}
+                  </AdminSection>
+                )}
+
+                {idea.status !== 'REJECTED' && (
+                  <div className="space-y-1.5">
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      disabled={reject.isPending}
+                      onClick={() => reject.mutate(idea.id, { onSuccess: onClose })}
+                    >
+                      {reject.isPending ? '처리 중…' : '거절'}
+                    </Button>
+                    {reject.isError && (
+                      <p role="alert" className="text-xs text-red-500">거절 처리에 실패했습니다. 다시 시도해주세요.</p>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </>
         ) : null}
