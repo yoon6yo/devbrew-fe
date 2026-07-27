@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { getIdeas, getIdea, rejectIdea, getTopIdeas } from './ideas'
+import { getIdeas, getIdea, rejectIdea, getTopIdeas, getIdeaStats } from './ideas'
 
 describe('getIdeas', () => {
   it('fetches paginated ideas with score desc sort', async () => {
@@ -28,5 +28,16 @@ describe('getTopIdeas', () => {
   it('returns array of ideas', async () => {
     const ideas = await getTopIdeas(5)
     expect(Array.isArray(ideas)).toBe(true)
+  })
+})
+
+describe('getIdeaStats', () => {
+  it('returns per-status counts from /api/ideas/stats', async () => {
+    // mockIdeas: id:1=SCORED, id:2=PENDING, id:3=NOTIFIED
+    const stats = await getIdeaStats()
+    expect(stats.SCORED).toBe(1)
+    expect(stats.PENDING).toBe(1)
+    expect(stats.NOTIFIED).toBe(1)
+    expect(stats.REJECTED).toBe(0)
   })
 })
