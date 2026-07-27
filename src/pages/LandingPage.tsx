@@ -108,7 +108,7 @@ export default function LandingPage() {
 
   function fetchIdeas() {
     setStatus('loading')
-    getIdeas({ size: 3 })
+    getIdeas({ size: 3, status: 'NOTIFIED' })
       .then(p => { setIdeas(p.content); setStatus('ready') })
       .catch(() => setStatus('error'))
   }
@@ -353,7 +353,7 @@ export default function LandingPage() {
 
       </main>
 
-      <IdeaModal ideaId={selectedIdeaId} onClose={() => setSelectedIdeaId(null)} />
+      <IdeaModal ideaId={selectedIdeaId} onClose={() => { setSelectedIdeaId(null); fetchIdeas() }} />
 
       {/* Footer */}
       <footer className="border-t border-[#e8e0f0] py-8">

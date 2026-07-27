@@ -1,10 +1,18 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
+import { compression } from 'vite-plugin-compression2'
+import { ViteMinifyPlugin } from 'vite-plugin-minify'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    ViteMinifyPlugin(),
+    compression({ algorithm: 'gzip', exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
+    compression({ algorithm: 'brotliCompress', exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
+  ],
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
   },
