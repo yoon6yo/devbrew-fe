@@ -1,0 +1,17 @@
+{
+  "name": "daybrew",
+  "short_name": "daybrew",
+  "description": "매일 아침 만들 만한 아이디어를 골라드립니다",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f6",
+  "theme_color": "#7c3aed",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

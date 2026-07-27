@@ -1,5 +1,5 @@
 export type IdeaStatus = 'PENDING' | 'SCORED' | 'NOTIFIED' | 'REJECTED'
-export type SourceTrack = 'SAAS' | 'GITHUB' | 'VIRAL'
+export type SourceTrack = 'SAAS' | 'GITHUB' | 'VIRAL' | 'HACKERNEWS'
 
 export interface IdeaDto {
   id: number

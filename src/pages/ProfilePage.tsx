@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getMe, logout } from '@/api/auth'
+import { getMe, logout, updateNickname } from '@/api/auth'
 import type { MeResponse } from '@/api/auth'
 
 const PROVIDER_LABEL: Record<string, string> = {
@@ -19,12 +19,29 @@ export default function ProfilePage() {
   const navigate = useNavigate()
   const [me, setMe] = useState<MeResponse | null>(null)
   const [loading, setLoading] = useState(true)
+  const [nicknameInput, setNicknameInput] = useState('')
+  const [nicknameSaving, setNicknameSaving] = useState(false)
+  const [nicknameSaved, setNicknameSaved] = useState(false)
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     getMe()
-      .then(data => { setMe(data); setLoading(false) })
+      .then(data => { setMe(data); setNicknameInput(data.nickname ?? ''); setLoading(false) })
       .catch(() => navigate('/login', { replace: true }))
   }, [navigate])
+
+  function handleSaveNickname() {
+    if (nicknameSaving) return
+    setNicknameSaving(true)
+    updateNickname(nicknameInput.trim())
+      .then(() => {
+        setMe(prev => prev ? { ...prev, nickname: nicknameInput.trim() || null } : prev)
+        setNicknameSaved(true)
+        if (saveTimer.current) clearTimeout(saveTimer.current)
+        saveTimer.current = setTimeout(() => setNicknameSaved(false), 2000)
+      })
+      .finally(() => setNicknameSaving(false))
+  }
 
   function handleLogout() {
     logout().finally(() => {
@@ -53,6 +70,28 @@ export default function ProfilePage() {
           </div>
         ) : me ? (
           <div className="space-y-3">
+            <div className="bg-white border border-[#e8e0f0] rounded-xl px-5 py-4">
+              <p className="text-[12px] font-bold text-[#9b91b0] uppercase tracking-wider mb-2">닉네임</p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={nicknameInput}
+                  onChange={e => setNicknameInput(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSaveNickname()}
+                  maxLength={50}
+                  placeholder="닉네임 입력 (미입력 시 이메일 앞부분 사용)"
+                  className="flex-1 text-[14px] text-[#2a2433] border border-[#e8e0f0] rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[rgba(124,58,237,0.4)] placeholder:text-[#c9bedd]"
+                />
+                <button
+                  onClick={handleSaveNickname}
+                  disabled={nicknameSaving}
+                  className="text-[13px] font-bold px-4 py-2 rounded-lg bg-[#7c3aed] text-white hover:bg-[#6d28d9] disabled:opacity-50 transition-colors"
+                >
+                  {nicknameSaved ? '저장됨 ✓' : '저장'}
+                </button>
+              </div>
+            </div>
+
             <div className="bg-white border border-[#e8e0f0] rounded-xl px-5 py-4">
               <p className="text-[12px] font-bold text-[#9b91b0] uppercase tracking-wider mb-1">이메일</p>
               <p className="text-[15px] font-medium text-[#2a2433]">{me.email}</p>
