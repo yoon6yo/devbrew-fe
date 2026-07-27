@@ -99,11 +99,14 @@ export default function LandingPage() {
   const [ideas, setIdeas] = useState<IdeaDto[]>([])
   const [status, setStatus] = useState<'loading' | 'error' | 'ready'>('loading')
 
-  useEffect(() => {
+  function fetchIdeas() {
+    setStatus('loading')
     getIdeas({ size: 3 })
       .then(p => { setIdeas(p.content); setStatus('ready') })
       .catch(() => setStatus('error'))
-  }, [])
+  }
+
+  useEffect(() => { fetchIdeas() }, [])
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#4a4458] tracking-[-0.3px]">
@@ -225,12 +228,7 @@ export default function LandingPage() {
             <div className="text-center py-12">
               <p className="text-[14px] text-[#6b6080] mb-4">아이디어를 불러올 수 없습니다.</p>
               <button
-                onClick={() => {
-                  setStatus('loading')
-                  getIdeas({ size: 3 })
-                    .then(p => { setIdeas(p.content); setStatus('ready') })
-                    .catch(() => setStatus('error'))
-                }}
+                onClick={fetchIdeas}
                 className="text-[14px] font-bold text-[#7c3aed] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.25)] rounded"
               >
                 다시 시도
