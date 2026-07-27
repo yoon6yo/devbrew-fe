@@ -150,14 +150,19 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
             <p className="text-[14px] text-[#828c94] mb-4">{formatDate(idea.createdAt)}</p>
 
             {idea.status !== 'REJECTED' && (
-              <Button
-                variant="destructive"
-                size="sm"
-                disabled={reject.isPending}
-                onClick={() => reject.mutate(idea.id, { onSuccess: onClose })}
-              >
-                {reject.isPending ? '처리 중…' : '거절'}
-              </Button>
+              <div className="space-y-1.5">
+                <Button
+                  variant="destructive"
+                  size="sm"
+                  disabled={reject.isPending}
+                  onClick={() => reject.mutate(idea.id, { onSuccess: onClose })}
+                >
+                  {reject.isPending ? '처리 중…' : '거절'}
+                </Button>
+                {reject.isError && (
+                  <p role="alert" className="text-xs text-red-500">거절 처리에 실패했습니다. 다시 시도해주세요.</p>
+                )}
+              </div>
             )}
           </>
         ) : null}
