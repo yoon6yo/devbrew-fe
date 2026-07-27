@@ -23,7 +23,7 @@ spec:
                 name: daybrew
                 port:
                   number: 80
-          - path: /oauth2/
+          - path: /oauth2/authorization/
             pathType: Prefix
             backend:
               service:
