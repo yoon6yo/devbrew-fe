@@ -9,6 +9,7 @@ const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
 const PrivacyPage = lazy(() => import('@/pages/PrivacyPage'))
 const TermsPage = lazy(() => import('@/pages/TermsPage'))
+const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
 
 function PageLoader() {
   return (
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
       </ProtectedRoute>
     ),
   },
+  { path: '*', element: <NotFoundPage /> },
 ])
 
 export default function App() {
