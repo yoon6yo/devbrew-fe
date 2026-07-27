@@ -11,6 +11,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
 import type { DailyViewsDto } from '@/api/adminStats'
 import { triggerPipeline } from '@/api/adminStats'
+import { logout } from '@/api/auth'
 
 const TABS: { label: string; value: IdeaStatus | 'ALL' }[] = [
   { label: '전체', value: 'ALL' },
@@ -146,7 +147,8 @@ export function DashboardPage() {
           )}
           <ExportButton />
           <button
-            onClick={() => {
+            onClick={async () => {
+              await logout().catch(() => {})
               localStorage.removeItem('devbrew_token')
               localStorage.removeItem('daybrew_auth')
               localStorage.removeItem('daybrew_role')
