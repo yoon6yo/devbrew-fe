@@ -99,7 +99,7 @@ function MockIdeaCard() {
 
 export default function LandingPage() {
   const [ideas, setIdeas] = useState<IdeaDto[]>([])
-  const [visibleCount, setVisibleCount] = useState(3)
+  const [visibleCount, setVisibleCount] = useState(6)
   const [status, setStatus] = useState<'loading' | 'error' | 'ready'>('loading')
   const [role, setRole] = useState<string | null>(() => localStorage.getItem('daybrew_role'))
   const [userLabel, setUserLabel] = useState<string | null>(null)
@@ -345,7 +345,7 @@ export default function LandingPage() {
               {visibleCount < ideas.length && (
                 <div className="text-center mt-8">
                   <button
-                    onClick={() => setVisibleCount(c => c + 3)}
+                    onClick={() => setVisibleCount(c => c + 6)}
                     className="text-[14px] font-medium text-[#7c3aed] border border-[#e8e0f0] px-6 py-2.5 rounded-lg hover:border-[#7c3aed] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.4)]"
                   >
                     더 보기 ({ideas.length - visibleCount}개 남음)

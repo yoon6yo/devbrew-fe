@@ -9,6 +9,15 @@ export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
+    {
+      name: 'preload-css',
+      transformIndexHtml(html: string) {
+        return html.replace(
+          /<link rel="stylesheet" crossorigin href="([^"]+\.css[^"]*)"/g,
+          '<link rel="preload" as="style" href="$1"><link rel="stylesheet" crossorigin href="$1"'
+        )
+      },
+    },
     ViteMinifyPlugin(),
     compression({ algorithms: ['gzip'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
     compression({ algorithms: ['brotliCompress'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
@@ -23,7 +32,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+          if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/')) {
             return 'react-vendor'
           }
           if (id.includes('node_modules/react-router')) {
