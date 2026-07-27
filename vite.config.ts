@@ -10,8 +10,8 @@ export default defineConfig({
     react(),
     tailwindcss(),
     ViteMinifyPlugin(),
-    compression({ algorithm: 'gzip', exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
-    compression({ algorithm: 'brotliCompress', exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
+    compression({ algorithms: ['gzip'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
+    compression({ algorithms: ['brotliCompress'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
   ],
   resolve: {
     alias: { '@': path.resolve(__dirname, './src') },
