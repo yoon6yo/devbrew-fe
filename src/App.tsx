@@ -8,6 +8,7 @@ const UserLoginPage = lazy(() => import('@/pages/UserLoginPage'))
 const OAuthCallbackPage = lazy(() => import('@/pages/OAuthCallbackPage'))
 const LoginPage = lazy(() => import('@/pages/LoginPage'))
 const DashboardPage = lazy(() => import('@/pages/DashboardPage'))
+const ProfilePage = lazy(() => import('@/pages/ProfilePage'))
 const PrivacyPage = lazy(() => import('@/pages/PrivacyPage'))
 const TermsPage = lazy(() => import('@/pages/TermsPage'))
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'))
@@ -50,6 +51,7 @@ const router = createBrowserRouter([
   { path: '/login', element: <UserLoginPage /> },
   { path: '/oauth2/callback', element: <OAuthCallbackPage /> },
   { path: '/admin/login', element: <LoginPage /> },
+  { path: '/profile', element: <ProfilePage /> },
   { path: '/privacy', element: <PrivacyPage /> },
   { path: '/terms', element: <TermsPage /> },
   {

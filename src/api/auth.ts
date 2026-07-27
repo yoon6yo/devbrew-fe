@@ -3,6 +3,8 @@ import { apiFetch } from './client'
 export interface MeResponse {
   email: string
   role: string
+  provider: string
+  joinedAt: string | null
 }
 
 export function getMe(): Promise<MeResponse> {

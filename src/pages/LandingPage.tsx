@@ -4,6 +4,7 @@ import { getMe, logout } from '@/api/auth'
 import type { IdeaDto } from '@/types'
 import { ScoreBar } from '@/components/ScoreBar'
 import { TrackBadge } from '@/components/TrackBadge'
+import { IdeaModal } from '@/components/IdeaModal'
 
 const SignalIcon = () => (
   <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,6 +103,7 @@ export default function LandingPage() {
   const [role, setRole] = useState<string | null>(() => localStorage.getItem('daybrew_role'))
   const [userLabel, setUserLabel] = useState<string | null>(null)
   const [showMenu, setShowMenu] = useState(false)
+  const [selectedIdeaId, setSelectedIdeaId] = useState<number | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
   function fetchIdeas() {
@@ -123,15 +125,20 @@ export default function LandingPage() {
   useEffect(() => { fetchIdeas() }, [])
 
   useEffect(() => {
-    if (!role) return
     getMe()
-      .then(me => setUserLabel(me.email.split('@')[0]))
+      .then(me => {
+        localStorage.setItem('daybrew_role', me.role)
+        localStorage.setItem('daybrew_auth', 'oauth')
+        setRole(me.role)
+        setUserLabel(me.email.split('@')[0])
+      })
       .catch(() => {
         localStorage.removeItem('daybrew_role')
         localStorage.removeItem('daybrew_auth')
         setRole(null)
+        setUserLabel(null)
       })
-  }, [role])
+  }, [])
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -171,6 +178,12 @@ export default function LandingPage() {
                 </button>
                 {showMenu && (
                   <div className="absolute right-0 mt-1 w-36 bg-white border border-[#e8e0f0] rounded-lg shadow-lg py-1 z-20">
+                    <a
+                      href="/profile"
+                      className="block px-4 py-2 text-[13px] text-[#4a4458] hover:bg-[#f3f0ec] transition-colors"
+                    >
+                      내 계정
+                    </a>
                     <button
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-[13px] text-[#4a4458] hover:bg-[#f3f0ec] transition-colors"
@@ -306,7 +319,10 @@ export default function LandingPage() {
                   <div
                     key={idea.id}
                     role="article"
-                    className="border border-[#e8e0f0] rounded-xl p-5 bg-[#faf9f6] hover:border-[#d9cce8] hover:shadow-[0_4px_16px_rgba(124,58,237,0.08)] transition-all"
+                    tabIndex={0}
+                    onClick={() => setSelectedIdeaId(idea.id)}
+                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setSelectedIdeaId(idea.id)}
+                    className="cursor-pointer border border-[#e8e0f0] rounded-xl p-5 bg-[#faf9f6] hover:border-[#d9cce8] hover:shadow-[0_4px_16px_rgba(124,58,237,0.08)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.4)]"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <TrackBadge track={idea.sourceTrack} />
@@ -336,6 +352,8 @@ export default function LandingPage() {
       </section>
 
       </main>
+
+      <IdeaModal ideaId={selectedIdeaId} onClose={() => setSelectedIdeaId(null)} />
 
       {/* Footer */}
       <footer className="border-t border-[#e8e0f0] py-8">
