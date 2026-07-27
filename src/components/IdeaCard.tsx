@@ -1,40 +1,8 @@
 import type { IdeaDto } from '@/types'
 import { StatusBadge } from './StatusBadge'
 import { TrackBadge } from './TrackBadge'
+import { ScoreRing } from './ScoreRing'
 import { formatDate } from '@/utils/dateFormat'
-
-function scoreStyle(score: number): { color: string; track: string; label?: string } {
-  if (score >= 9) return { color: '#f59e0b', track: '#fef3c7', label: '★' }
-  if (score >= 8) return { color: '#10b981', track: '#d1fae5', label: '↑' }
-  if (score >= 7) return { color: '#3b82f6', track: '#dbeafe', label: '↑' }
-  if (score >= 5) return { color: '#7c3aed', track: '#ede9fe' }
-  return { color: '#9b91b0', track: '#f0ebf8' }
-}
-
-function ScoreRing({ score }: { score: number | null }) {
-  if (score === null) return <span className="text-[12px] text-[#c4b8d4] font-medium">미채점</span>
-  const { color, track, label } = scoreStyle(score)
-  const pct = (score / 10) * 100
-  const r = 16
-  const circ = 2 * Math.PI * r
-  const dash = (pct / 100) * circ
-  return (
-    <div className="flex items-center gap-1.5 shrink-0">
-      <svg width="40" height="40" viewBox="0 0 40 40" className="-rotate-90">
-        <circle cx="20" cy="20" r={r} fill="none" stroke={track} strokeWidth="3.5" />
-        <circle
-          cx="20" cy="20" r={r} fill="none" stroke={color} strokeWidth="3.5"
-          strokeDasharray={`${dash} ${circ}`} strokeLinecap="round"
-          style={{ transition: 'stroke-dasharray 0.4s ease' }}
-        />
-      </svg>
-      <div className="flex flex-col items-center leading-none gap-0.5">
-        <span className="text-[20px] font-bold tabular-nums" style={{ color }}>{score}</span>
-        {label && <span className="text-[10px] font-bold" style={{ color }}>{label}</span>}
-      </div>
-    </div>
-  )
-}
 
 export function IdeaCard({
   idea,

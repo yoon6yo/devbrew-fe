@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { getIdeas } from '@/api/ideas'
 import { getMe, logout } from '@/api/auth'
 import type { IdeaDto } from '@/types'
-import { ScoreBar } from '@/components/ScoreBar'
+import { ScoreRing } from '@/components/ScoreRing'
+import { StatusBadge } from '@/components/StatusBadge'
 import { TrackBadge } from '@/components/TrackBadge'
 import { IdeaModal } from '@/components/IdeaModal'
 
@@ -57,40 +58,39 @@ const STEPS = [
 
 
 function MockIdeaCard() {
+  const r = 16
+  const circ = 2 * Math.PI * r
+  const dash = (9 / 10) * circ
   return (
     <div className="relative">
       <div className="absolute -inset-4 bg-[#7c3aed]/6 rounded-2xl blur-2xl pointer-events-none" />
-      <div className="relative bg-[#faf9f6] rounded-xl border border-[#e8e0f0] p-5 shadow-[0_8px_32px_rgba(124,58,237,0.10)]">
-        <div className="flex items-center justify-between mb-3">
-          <span className="text-[12px] font-bold text-[#7c3aed] bg-[rgba(124,58,237,0.08)] px-2.5 py-1 rounded-md tracking-wide">SAAS</span>
-          <span className="text-[15px] font-bold tabular-nums text-[#2a2433]">
-            9.2<span className="text-[#6b6080] font-normal text-[13px]">/10</span>
-          </span>
+      <div className="relative bg-white rounded-2xl border border-[#e8e0f0] p-5 shadow-[0_8px_32px_rgba(124,58,237,0.10)] flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-bold text-[#7c3aed] bg-[rgba(124,58,237,0.08)] border border-[rgba(124,58,237,0.2)] px-2.5 py-0.5 rounded-full">SAAS</span>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <svg width="40" height="40" viewBox="0 0 40 40" className="-rotate-90">
+              <circle cx="20" cy="20" r={r} fill="none" stroke="#fef3c7" strokeWidth="3.5" />
+              <circle cx="20" cy="20" r={r} fill="none" stroke="#f59e0b" strokeWidth="3.5"
+                strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
+            </svg>
+            <div className="flex flex-col items-center leading-none gap-0.5">
+              <span className="text-[20px] font-bold tabular-nums" style={{ color: '#f59e0b' }}>9</span>
+              <span className="text-[10px] font-bold" style={{ color: '#f59e0b' }}>★</span>
+            </div>
+          </div>
         </div>
 
-        <p className="text-[15px] font-bold text-[#2a2433] mb-1.5 leading-snug">AI 기반 노코드 앱 빌더 플랫폼</p>
-        <p className="text-[13px] text-[#6b6080] mb-3 leading-relaxed">
+        <h3 className="text-[14px] font-bold text-[#2a2433] leading-snug">AI 기반 노코드 앱 빌더 플랫폼</h3>
+        <p className="text-[12px] text-[#6b6080] leading-relaxed line-clamp-2">
           비개발자도 실용적인 웹앱을 만들 수 있는 AI-first 빌더. 수요 급증 중.
         </p>
 
-        <div className="h-1.5 bg-[#e8e0f0] rounded-full overflow-hidden mb-3">
-          <div className="h-full rounded-full bg-[#7c3aed]" style={{ width: '92%' }} />
-        </div>
-
-        <div className="space-y-1.5 mb-3">
-          {([['시장 적합성', 95], ['실현 가능성', 85], ['수익화', 90]] as [string, number][]).map(([label, pct]) => (
-            <div key={label} className="flex items-center gap-2">
-              <span className="text-[12px] text-[#6b6080] w-20 shrink-0">{label}</span>
-              <div className="flex-1 h-1 bg-[#e8e0f0] rounded-full overflow-hidden">
-                <div className="h-full rounded-full bg-[#7c3aed]/50" style={{ width: `${pct}%` }} />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="pt-3 border-t border-[#e8e0f0] flex items-center justify-between">
-          <span className="text-[12px] text-[#6b6080]">Reddit r/SaaS · 오늘 09:00</span>
-          <span className="text-[12px] font-bold text-[#7c3aed]">★ 24</span>
+        <div className="flex items-center justify-between pt-1 border-t border-[#f0ebf8]">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold text-[#10b981] bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.2)] px-2 py-0.5 rounded-full">공시됨</span>
+            <span className="text-[11px] text-[#c4b8d4]">오늘 09:00</span>
+          </div>
+          <span className="text-[12px] text-[#c4b8d4] font-medium">자세히 →</span>
         </div>
       </div>
     </div>
@@ -316,29 +316,32 @@ export default function LandingPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {ideas.map(idea => (
-                  <div
+                  <article
                     key={idea.id}
-                    role="article"
                     tabIndex={0}
                     onClick={() => setSelectedIdeaId(idea.id)}
                     onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setSelectedIdeaId(idea.id)}
-                    className="cursor-pointer border border-[#e8e0f0] rounded-xl p-5 bg-[#faf9f6] hover:border-[#d9cce8] hover:shadow-[0_4px_16px_rgba(124,58,237,0.08)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.4)]"
+                    className="group cursor-pointer rounded-2xl border bg-white p-5
+                               hover:border-[#c4b5fd] hover:shadow-[0_4px_20px_rgba(124,58,237,0.10)]
+                               transition-all duration-200 focus-visible:outline-none
+                               focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40
+                               border-[#e8e0f0] flex flex-col gap-3"
                   >
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center justify-between">
                       <TrackBadge track={idea.sourceTrack} />
-                      {idea.score !== null && (
-                        <span className="text-[14px] font-bold tabular-nums text-[#2a2433]">
-                          {idea.score}<span className="text-[#6b6080] font-normal">/10</span>
-                        </span>
-                      )}
+                      <ScoreRing score={idea.score} />
                     </div>
-                    <h3 className="text-[15px] font-bold text-[#2a2433] mb-2 line-clamp-2 leading-snug">{idea.title}</h3>
-                    {idea.purpose
-                      ? <p className="text-[14px] text-[#6b6080] line-clamp-3 mb-3 leading-relaxed">{idea.purpose}</p>
-                      : <p className="text-[14px] text-[#6b6080] line-clamp-3 mb-3 leading-relaxed">{idea.description}</p>
-                    }
-                    <ScoreBar score={idea.score} />
-                  </div>
+                    <h3 className="text-[14px] font-bold text-[#2a2433] line-clamp-2 leading-snug flex-1">{idea.title}</h3>
+                    <p className="text-[12px] text-[#6b6080] line-clamp-2 leading-relaxed">
+                      {idea.purpose ?? idea.description}
+                    </p>
+                    <div className="flex items-center justify-between pt-1 border-t border-[#f0ebf8]">
+                      <StatusBadge status={idea.status} />
+                      <span className="text-[12px] text-[#c4b8d4] group-hover:text-[#7c3aed] transition-colors font-medium select-none">
+                        자세히 →
+                      </span>
+                    </div>
+                  </article>
                 ))}
               </div>
               {!role && (
