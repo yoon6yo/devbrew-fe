@@ -26,4 +26,21 @@ describe('IdeaModal', () => {
     await userEvent.click(screen.getByRole('button', { name: /닫기/i }))
     expect(onClose).toHaveBeenCalledOnce()
   })
+
+  it('locks body scroll when open and restores it on close', async () => {
+    const { rerender } = render(<IdeaModal ideaId={1} onClose={() => {}} />, { wrapper })
+    await waitFor(() => screen.getByText('AI 기반 코드 리뷰 SaaS'))
+    expect(document.body.style.overflow).toBe('hidden')
+
+    rerender(<IdeaModal ideaId={null} onClose={() => {}} />)
+    expect(document.body.style.overflow).toBe('')
+  })
+
+  it('calls onClose when Escape key is pressed', async () => {
+    const onClose = vi.fn()
+    render(<IdeaModal ideaId={1} onClose={onClose} />, { wrapper })
+    await waitFor(() => screen.getByText('AI 기반 코드 리뷰 SaaS'))
+    await userEvent.keyboard('{Escape}')
+    expect(onClose).toHaveBeenCalledOnce()
+  })
 })
