@@ -113,6 +113,7 @@ export function DashboardPage() {
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
   const [bulkPending, setBulkPending] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
 
   const queryClient = useQueryClient()
   const role = localStorage.getItem('daybrew_role')
@@ -139,6 +140,7 @@ export function DashboardPage() {
     if (key !== 'ALL') p.set('tab', key)
     p.set('page', '0')
     setSelectedIds(new Set())
+    setIsEditMode(false)
     setSearchParams(p)
   }
 
@@ -239,18 +241,32 @@ export function DashboardPage() {
       <main className="max-w-5xl mx-auto px-6 py-6">
         {isAdmin && <AdminStatsSection />}
 
-        <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-          <TabsList className="mb-4">
-            {TABS.map(({ label, key, count }) => (
-              <TabsTrigger key={key} value={key}>
-                {label}
-                {count !== null && (
-                  <span className="ml-1.5 text-[11px] opacity-60 tabular-nums">({count})</span>
-                )}
-              </TabsTrigger>
-            ))}
-          </TabsList>
-        </Tabs>
+        <div className="flex items-center justify-between mb-4">
+          <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
+            <TabsList>
+              {TABS.map(({ label, key, count }) => (
+                <TabsTrigger key={key} value={key}>
+                  {label}
+                  {count !== null && (
+                    <span className="ml-1.5 text-[11px] opacity-60 tabular-nums">({count})</span>
+                  )}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          </Tabs>
+          {canBulkSelect && (
+            <button
+              onClick={() => { setIsEditMode(v => !v); setSelectedIds(new Set()) }}
+              className={`text-[13px] font-medium px-3 py-1.5 rounded-lg border transition-colors ${
+                isEditMode
+                  ? 'border-[#7c3aed] text-[#7c3aed] bg-[rgba(124,58,237,0.06)]'
+                  : 'border-[#e8e0f0] text-[#9b91b0] hover:border-[#7c3aed] hover:text-[#7c3aed]'
+              }`}
+            >
+              {isEditMode ? '완료' : '편집'}
+            </button>
+          )}
+        </div>
 
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -278,7 +294,7 @@ export function DashboardPage() {
 
         {!isLoading && !isError && data && data.content.length > 0 && (
           <>
-            {canBulkSelect && selectedIds.size > 0 && (
+            {isEditMode && canBulkSelect && selectedIds.size > 0 && (
               <div className="flex items-center gap-3 mb-4 px-4 py-3 bg-white border border-[#7c3aed]/30 rounded-xl shadow-sm">
                 <span className="text-[13px] font-medium text-[#2a2433]">{selectedIds.size}개 선택됨</span>
                 <div className="flex-1" />
@@ -316,7 +332,7 @@ export function DashboardPage() {
                 </button>
               </div>
             )}
-            {canBulkSelect && (
+            {isEditMode && canBulkSelect && (
               <div className="flex items-center gap-2 mb-3">
                 <input
                   type="checkbox"
@@ -333,8 +349,8 @@ export function DashboardPage() {
                   key={idea.id}
                   idea={idea}
                   onClick={() => setSelectedId(idea.id)}
-                  selected={canBulkSelect ? selectedIds.has(idea.id) : undefined}
-                  onToggle={canBulkSelect ? toggleSelect : undefined}
+                  selected={isEditMode && canBulkSelect ? selectedIds.has(idea.id) : undefined}
+                  onToggle={isEditMode && canBulkSelect ? toggleSelect : undefined}
                 />
               ))}
             </div>
