@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { useIdeaDetail } from '@/hooks/useIdeaDetail'
 import { useRejectIdea } from '@/hooks/useRejectIdea'
+import { useScoreIdea } from '@/hooks/useScoreIdea'
+import { useNotifyIdea } from '@/hooks/useNotifyIdea'
 import { StatusBadge } from './StatusBadge'
 import { TrackBadge } from './TrackBadge'
 import { ScoreBar } from './ScoreBar'
@@ -131,6 +133,8 @@ function ImplementationGuide({ text }: { text: string }) {
 export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose: () => void }) {
   const { data: idea, isLoading, isError } = useIdeaDetail(ideaId)
   const reject = useRejectIdea()
+  const score = useScoreIdea()
+  const notify = useNotifyIdea()
   const isAdmin = localStorage.getItem('daybrew_role') === 'ADMIN'
 
   useEffect(() => {
@@ -275,21 +279,67 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                   </AdminSection>
                 )}
 
-                {idea.status !== 'REJECTED' && (
-                  <div className="space-y-1.5">
-                    <Button
-                      variant="destructive"
-                      size="sm"
-                      disabled={reject.isPending}
-                      onClick={() => reject.mutate(idea.id, { onSuccess: onClose })}
-                    >
-                      {reject.isPending ? '처리 중…' : '거절'}
-                    </Button>
-                    {reject.isError && (
-                      <p role="alert" className="text-xs text-red-500">거절 처리에 실패했습니다. 다시 시도해 주세요.</p>
+                {/* 라이프사이클 관리 */}
+                <AdminSection title="라이프사이클">
+                  {/* Stage indicator */}
+                  <div className="flex items-center gap-1 mb-3 text-[11px]">
+                    {(['PENDING', 'SCORED', 'NOTIFIED'] as const).map((s, i) => {
+                      const labels: Record<string, string> = { PENDING: '수집됨', SCORED: '채점 완료', NOTIFIED: '공시됨' }
+                      const active = idea.status === s
+                      const done = idea.status === 'NOTIFIED' ? i < 2 : idea.status === 'SCORED' ? i < 1 : false
+                      return (
+                        <div key={s} className="flex items-center gap-1">
+                          <span className={`px-2 py-0.5 rounded-full font-semibold ${
+                            active ? 'bg-[#7c3aed] text-white' :
+                            done   ? 'bg-[#e8e0f0] text-[#7c3aed]' :
+                                     'bg-[#f5f5f5] text-[#c4b8d4]'
+                          }`}>{labels[s]}</span>
+                          {i < 2 && <span className="text-[#d8d0e8]">→</span>}
+                        </div>
+                      )
+                    })}
+                    {idea.status === 'REJECTED' && (
+                      <span className="px-2 py-0.5 rounded-full font-semibold bg-red-100 text-red-600 ml-1">거절됨</span>
                     )}
                   </div>
-                )}
+
+                  {/* Action buttons */}
+                  <div className="flex flex-wrap gap-2">
+                    {idea.status === 'PENDING' && (
+                      <Button
+                        size="sm"
+                        className="bg-[#7c3aed] hover:bg-[#6d28d9] text-white"
+                        disabled={score.isPending}
+                        onClick={() => score.mutate(idea.id, { onSuccess: onClose })}
+                      >
+                        {score.isPending ? '채점 중…' : '채점 요청 →'}
+                      </Button>
+                    )}
+                    {idea.status === 'SCORED' && (
+                      <Button
+                        size="sm"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                        disabled={notify.isPending}
+                        onClick={() => notify.mutate(idea.id, { onSuccess: onClose })}
+                      >
+                        {notify.isPending ? '공시 중…' : '공시하기 → Slack'}
+                      </Button>
+                    )}
+                    {idea.status !== 'REJECTED' && (
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        disabled={reject.isPending}
+                        onClick={() => reject.mutate(idea.id, { onSuccess: onClose })}
+                      >
+                        {reject.isPending ? '처리 중…' : '거절'}
+                      </Button>
+                    )}
+                  </div>
+                  {(score.isError || notify.isError || reject.isError) && (
+                    <p role="alert" className="text-xs text-red-500 mt-1.5">처리에 실패했습니다. 다시 시도해 주세요.</p>
+                  )}
+                </AdminSection>
               </>
             )}
           </>

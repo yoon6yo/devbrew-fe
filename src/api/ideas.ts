@@ -28,6 +28,14 @@ export function rejectIdea(id: number): Promise<IdeaDto> {
   return apiFetch(`/api/ideas/${id}/reject`, { method: 'POST' })
 }
 
+export function scoreIdea(id: number): Promise<IdeaDto> {
+  return apiFetch(`/api/ideas/${id}/score`, { method: 'POST' })
+}
+
+export function notifyIdea(id: number): Promise<IdeaDto> {
+  return apiFetch(`/api/ideas/${id}/notify`, { method: 'POST' })
+}
+
 export async function getTopIdeas(n = 5): Promise<IdeaDto[]> {
   const page = await getIdeas({ page: 0, size: n })
   return page.content
