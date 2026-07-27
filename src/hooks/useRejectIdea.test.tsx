@@ -30,6 +30,7 @@ describe('useRejectIdea', () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ['ideas'] })
+    expect(invalidate).toHaveBeenCalledWith({ queryKey: ['idea'] })
     expect(invalidate).toHaveBeenCalledWith({ queryKey: ['ideaStats'] })
   })
 })
