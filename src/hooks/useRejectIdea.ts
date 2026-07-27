@@ -25,6 +25,7 @@ export function useRejectIdea() {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['ideas'] })
+      queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
     },
   })
 }
