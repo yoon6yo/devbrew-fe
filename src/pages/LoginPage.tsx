@@ -4,7 +4,7 @@ import { apiFetch } from '@/api/client'
 import { getMe } from '@/api/auth'
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -17,7 +17,7 @@ export default function LoginPage() {
     try {
       const res = await apiFetch<{ token: string }>('/api/auth/login', {
         method: 'POST',
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ email, password }),
       })
       localStorage.setItem('devbrew_token', res.token)
       try {
@@ -42,11 +42,11 @@ export default function LoginPage() {
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-[14px] text-[#828c94] mb-1.5">아이디</label>
+            <label className="block text-[14px] text-[#828c94] mb-1.5">이메일</label>
             <input
-              type="text"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
+              type="email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
               className="w-full border border-[#e0e0e0] rounded px-3 py-2 text-[15px] text-[#2f3438] focus:outline-none focus:ring-2 focus:ring-[#00a1ff] focus:border-transparent transition-all"
               required
               autoFocus
