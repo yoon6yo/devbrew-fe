@@ -246,15 +246,25 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                         ['실현 가능성', idea.scoreFeasibility],
                         ['수익화',      idea.scoreMonetization],
                         ['트렌드',      idea.scoreTrend],
-                      ] as [string, number | null][]).map(([label, val]) => (
-                        <div key={label} className="flex items-center gap-2">
-                          <span className="text-[12px] text-[#6b6080] w-20 shrink-0">{label}</span>
-                          <div className="flex-1 h-1.5 bg-[#e8e0f0] rounded-full overflow-hidden">
-                            <div className="h-full rounded-full bg-[#7c3aed] transition-all" style={{ width: `${((val ?? 0) / 10) * 100}%` }} />
+                      ] as [string, number | null][]).map(([label, val]) => {
+                        const color = val === null ? '#c4b8d4'
+                          : val >= 8 ? '#10b981'
+                          : val >= 6 ? '#7c3aed'
+                          : val >= 4 ? '#f59e0b'
+                          : '#ef4444'
+                        return (
+                          <div key={label} className="flex items-center gap-2">
+                            <span className="text-[12px] text-[#6b6080] w-20 shrink-0">{label}</span>
+                            <div className="flex-1 h-1.5 bg-[#e8e0f0] rounded-full overflow-hidden">
+                              <div
+                                className="h-full rounded-full transition-all"
+                                style={{ width: `${((val ?? 0) / 10) * 100}%`, backgroundColor: color }}
+                              />
+                            </div>
+                            <span className="text-[12px] font-bold tabular-nums w-5 text-right" style={{ color }}>{val}</span>
                           </div>
-                          <span className="text-[12px] font-bold tabular-nums text-[#2a2433] w-5 text-right">{val}</span>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </AdminSection>
                 )}
