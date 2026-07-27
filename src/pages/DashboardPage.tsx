@@ -12,7 +12,7 @@ import { PipelineTriggerModal } from '@/components/PipelineTriggerModal'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
 import type { DailyViewsDto } from '@/api/adminStats'
-import { notifyIdea, rejectIdea } from '@/api/ideas'
+import { notifyIdea, rejectIdea, restoreIdea } from '@/api/ideas'
 import { logout } from '@/api/auth'
 
 type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'REJECTED'
@@ -181,7 +181,16 @@ export function DashboardPage() {
     setBulkPending(false)
   }
 
-  const canBulkSelect = tab === 'SCORED' || tab === 'PENDING'
+  async function handleBulkRestore() {
+    setBulkPending(true)
+    await Promise.allSettled([...selectedIds].map(id => restoreIdea(id)))
+    setSelectedIds(new Set())
+    refetch()
+    queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
+    setBulkPending(false)
+  }
+
+  const canBulkSelect = tab === 'SCORED' || tab === 'PENDING' || tab === 'REJECTED'
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#4a4458]">
@@ -286,13 +295,23 @@ export function DashboardPage() {
                     공시하기
                   </button>
                 )}
-                <button
-                  disabled={bulkPending}
-                  onClick={handleBulkReject}
-                  className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg border border-[#e8e0f0] text-[#4a4458] hover:border-[#f87171] hover:text-[#ef4444] disabled:opacity-50 transition-colors"
-                >
-                  거절하기
-                </button>
+                {tab === 'REJECTED' ? (
+                  <button
+                    disabled={bulkPending}
+                    onClick={handleBulkRestore}
+                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-[#7c3aed] text-white hover:bg-[#6d28d9] disabled:opacity-50 transition-colors"
+                  >
+                    복구하기
+                  </button>
+                ) : (
+                  <button
+                    disabled={bulkPending}
+                    onClick={handleBulkReject}
+                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg border border-[#e8e0f0] text-[#4a4458] hover:border-[#f87171] hover:text-[#ef4444] disabled:opacity-50 transition-colors"
+                  >
+                    거절하기
+                  </button>
+                )}
                 <button
                   onClick={() => setSelectedIds(new Set())}
                   className="text-[13px] text-[#9b91b0] hover:text-[#4a4458] transition-colors"

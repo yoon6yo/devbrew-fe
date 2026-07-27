@@ -29,6 +29,10 @@ export function rejectIdea(id: number): Promise<IdeaDto> {
   return apiFetch(`/api/ideas/${id}/reject`, { method: 'POST' })
 }
 
+export function restoreIdea(id: number): Promise<IdeaDto> {
+  return apiFetch(`/api/ideas/${id}/restore`, { method: 'POST' })
+}
+
 export function scoreIdea(id: number): Promise<IdeaDto> {
   return apiFetch(`/api/ideas/${id}/score`, { method: 'POST' })
 }
