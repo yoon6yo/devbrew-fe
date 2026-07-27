@@ -7,10 +7,10 @@ import { IdeaModal } from '@/components/IdeaModal'
 import { SummaryCards } from '@/components/SummaryCards'
 import { Pagination } from '@/components/Pagination'
 import { ExportButton } from '@/components/ExportButton'
+import { PipelineTriggerModal } from '@/components/PipelineTriggerModal'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
 import type { DailyViewsDto } from '@/api/adminStats'
-import { triggerPipeline } from '@/api/adminStats'
 import { logout } from '@/api/auth'
 
 type TabKey = 'ALL' | 'NOTIFIED_TODAY' | 'NOTIFIED_PAST' | 'UNPUBLISHED' | 'REJECTED'
@@ -116,19 +116,8 @@ export function DashboardPage() {
   const role = localStorage.getItem('daybrew_role')
   const isAdmin = role === 'ADMIN'
 
-  const [triggerState, setTriggerState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-
-  async function handleTrigger() {
-    setTriggerState('loading')
-    try {
-      await triggerPipeline()
-      setTriggerState('success')
-      setTimeout(() => setTriggerState('idle'), 3000)
-    } catch {
-      setTriggerState('error')
-      setTimeout(() => setTriggerState('idle'), 3000)
-    }
-  }
+  const [showTriggerModal, setShowTriggerModal] = useState(false)
+  const [triggerSuccess, setTriggerSuccess] = useState(false)
 
   const ideaParams = tabToParams(tab)
   const { data, isLoading, isError, refetch } = useIdeas({ ...ideaParams, page })
@@ -165,20 +154,14 @@ export function DashboardPage() {
           <div className="flex items-center gap-3">
             {isAdmin && (
               <button
-                onClick={handleTrigger}
-                disabled={triggerState === 'loading'}
-                className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                  triggerState === 'success'
+                onClick={() => setShowTriggerModal(true)}
+                className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors ${
+                  triggerSuccess
                     ? 'border-green-300 bg-green-50 text-green-700'
-                    : triggerState === 'error'
-                    ? 'border-red-300 bg-red-50 text-red-700'
                     : 'border-[#e8e0f0] bg-white text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed]'
                 }`}
               >
-                {triggerState === 'loading' && '수집 중…'}
-                {triggerState === 'success' && '✓ 수집 시작됨'}
-                {triggerState === 'error' && '오류 발생'}
-                {triggerState === 'idle' && '스크래핑 실행'}
+                {triggerSuccess ? '✓ 수집 시작됨' : '스크래핑 실행'}
               </button>
             )}
             <ExportButton />
@@ -247,6 +230,16 @@ export function DashboardPage() {
       </main>
 
       <IdeaModal ideaId={selectedId} onClose={() => setSelectedId(null)} />
+
+      {showTriggerModal && (
+        <PipelineTriggerModal
+          onClose={() => setShowTriggerModal(false)}
+          onStarted={() => {
+            setTriggerSuccess(true)
+            setTimeout(() => setTriggerSuccess(false), 5000)
+          }}
+        />
+      )}
     </div>
   )
 }

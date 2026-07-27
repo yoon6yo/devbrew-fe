@@ -20,6 +20,17 @@ export function getAdminStats(): Promise<AdminStatsDto> {
   return apiFetch<AdminStatsDto>('/api/admin/stats')
 }
 
-export function triggerPipeline(): Promise<{ message: string }> {
-  return apiFetch<{ message: string }>('/api/admin/pipeline/trigger', { method: 'POST' })
+export type SourceTrack = 'SAAS' | 'GITHUB' | 'VIRAL'
+
+export interface PipelineTriggerOptions {
+  sources?: SourceTrack[]
+  minScore?: number
+}
+
+export function triggerPipeline(options?: PipelineTriggerOptions): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>('/api/admin/pipeline/trigger', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: options ? JSON.stringify(options) : undefined,
+  })
 }
