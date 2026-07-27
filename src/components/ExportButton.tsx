@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Button } from '@/components/ui/button'
 import { getTopIdeas } from '@/api/ideas'
 import { downloadJson } from '@/utils/exportJson'
 import { downloadCsv } from '@/utils/exportCsv'
@@ -24,22 +23,27 @@ export function ExportButton() {
   }
 
   return (
-    <div className="flex items-center gap-2">
-      <select
-        value={format}
-        onChange={(e) => setFormat(e.target.value as Format)}
-        aria-label="내보내기 형식"
+    <div className="flex items-center rounded-lg border border-[#e8e0f0] bg-white overflow-hidden">
+      {(['JSON', 'CSV'] as Format[]).map(f => (
+        <button
+          key={f}
+          onClick={() => setFormat(f)}
+          disabled={state === 'loading'}
+          className={`px-2.5 py-1.5 text-[12px] font-bold transition-colors disabled:opacity-50 ${
+            format === f ? 'bg-[#7c3aed] text-white' : 'text-[#6b6080] hover:text-[#7c3aed]'
+          }`}
+        >
+          {f}
+        </button>
+      ))}
+      <div className="w-px h-5 bg-[#e8e0f0]" />
+      <button
+        onClick={handleExport}
         disabled={state === 'loading'}
-        className="text-sm border rounded border-[#e0e0e0] px-2 py-1.5 text-[#424242] bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00a1ff] disabled:opacity-50"
+        className="px-3 py-1.5 text-[12px] font-medium text-[#4a4458] hover:text-[#7c3aed] transition-colors disabled:opacity-50 whitespace-nowrap"
       >
-        <option>JSON</option>
-        <option>CSV</option>
-      </select>
-      <Button variant="outline" size="sm" onClick={handleExport} disabled={state === 'loading'}>
-        {state === 'loading' && '준비 중…'}
-        {state === 'error' && '오류 발생'}
-        {state === 'idle' && 'Top 5 Export'}
-      </Button>
+        {state === 'loading' ? '준비 중…' : state === 'error' ? '오류 발생' : 'Top 5 내보내기 ↓'}
+      </button>
     </div>
   )
 }

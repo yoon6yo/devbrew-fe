@@ -3,13 +3,20 @@ import type { IdeaDto, IdeaStatus, PageResponse } from '@/types'
 
 interface GetIdeasParams {
   status?: IdeaStatus
+  statuses?: IdeaStatus[]
+  today?: boolean
   page?: number
   size?: number
 }
 
-export function getIdeas({ status, page = 0, size = 20 }: GetIdeasParams = {}): Promise<PageResponse<IdeaDto>> {
+export function getIdeas({ status, statuses, today, page = 0, size = 20 }: GetIdeasParams = {}): Promise<PageResponse<IdeaDto>> {
   const params = new URLSearchParams({ page: String(page), size: String(size), sort: 'score,desc' })
-  if (status) params.set('status', status)
+  if (statuses && statuses.length > 0) {
+    statuses.forEach(s => params.append('statuses', s))
+  } else if (status) {
+    params.set('status', status)
+  }
+  if (today !== undefined) params.set('today', String(today))
   return apiFetch(`/api/ideas?${params}`)
 }
 
