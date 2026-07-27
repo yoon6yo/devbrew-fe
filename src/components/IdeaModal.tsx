@@ -28,7 +28,6 @@ function AdminSection({ title, children }: { title: string; children: React.Reac
 function parseSteps(text: string): string[] {
   const byNewline = text.split('\n').map(s => s.trim()).filter(Boolean)
   if (byNewline.length > 1) return byNewline
-  // split before numbered patterns like "2. " or "②"
   const parts = text.split(/\s+(?=[②③④⑤]|\d+[.．]\s)/).map(s => s.trim()).filter(Boolean)
   return parts.length > 1 ? parts : [text]
 }
@@ -37,7 +36,7 @@ function cleanStep(step: string): string {
   return step.replace(/^[①②③④⑤]\s*|^\d+[.．]\s*/, '').trim()
 }
 
-function HowItWorksSteps({ text }: { text: string }) {
+function UsageSteps({ text }: { text: string }) {
   const steps = parseSteps(text)
   if (steps.length === 1) {
     return <p className="text-[14px] text-[#4a4458] leading-relaxed whitespace-pre-line">{text}</p>
@@ -75,6 +74,55 @@ function StackChips({ text }: { text: string }) {
         >
           {item}
         </span>
+      ))}
+    </div>
+  )
+}
+
+interface ImplItem { title: string; purpose: string | null; method: string | null }
+
+function parseImplGuide(text: string): ImplItem[] {
+  const sections = text.split(/\n(?=\d+\.\s)/).filter(Boolean)
+  if (sections.length < 2) return []
+  return sections.map(section => {
+    const lines = section.split('\n').map(s => s.trim()).filter(Boolean)
+    const title = lines[0]?.replace(/^\d+\.\s*/, '') ?? ''
+    let purpose: string | null = null
+    let method: string | null = null
+    for (const line of lines.slice(1)) {
+      if (line.startsWith('- 사용 목적:')) purpose = line.replace('- 사용 목적:', '').trim()
+      else if (line.startsWith('- 구현:')) method = line.replace('- 구현:', '').trim()
+    }
+    return { title, purpose, method }
+  })
+}
+
+function ImplementationGuide({ text }: { text: string }) {
+  const items = parseImplGuide(text)
+  if (!items.length) {
+    return <p className="text-[13px] text-[#4a4458] leading-relaxed whitespace-pre-line">{text}</p>
+  }
+  return (
+    <div className="space-y-3">
+      {items.map((item, i) => (
+        <div key={i} className="flex gap-3">
+          <div className="shrink-0 w-6 h-6 rounded-full bg-[rgba(124,58,237,0.12)] text-[#7c3aed] text-[11px] font-bold flex items-center justify-center mt-0.5">
+            {i + 1}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[13px] font-semibold text-[#2a2433] mb-1">{item.title}</p>
+            {item.purpose && (
+              <p className="text-[12px] text-[#6b6080] mb-0.5">
+                <span className="text-[#9b91b0] font-medium">목적</span>&ensp;{item.purpose}
+              </p>
+            )}
+            {item.method && (
+              <p className="text-[12px] text-[#4a4458]">
+                <span className="text-[#9b91b0] font-medium">구현</span>&ensp;{item.method}
+              </p>
+            )}
+          </div>
+        </div>
       ))}
     </div>
   )
@@ -137,7 +185,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               </div>
             </div>
 
-            {/* 핵심 요약 — callout style, not a box */}
+            {/* Description callout */}
             <div className="mb-5 pl-4 border-l-2 border-[#7c3aed]/40 py-0.5">
               <p className="text-[15px] text-[#2a2433] leading-relaxed font-medium">{idea.description}</p>
             </div>
@@ -149,15 +197,23 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               </Section>
             )}
 
-            {/* 어떻게 동작하나요 — visual steps */}
+            {/* 사용 방법 (numbered steps) */}
             {idea.howItWorks && (
               <div className="mb-4 p-3.5 bg-[#faf9f6] border border-[#e8e0f0] rounded-xl">
-                <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-3">어떻게 동작하나요</p>
-                <HowItWorksSteps text={idea.howItWorks} />
+                <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-3">사용 방법</p>
+                <UsageSteps text={idea.howItWorks} />
               </div>
             )}
 
-            {/* 기술 스택 — chips */}
+            {/* 구현 방법 */}
+            {idea.implementationGuide && (
+              <div className="mb-4 p-3.5 bg-[#faf9f6] border border-[#e8e0f0] rounded-xl">
+                <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-3">🛠 구현 방법</p>
+                <ImplementationGuide text={idea.implementationGuide} />
+              </div>
+            )}
+
+            {/* 기술 스택 (chips) */}
             {idea.suggestedStack && (
               <div className="mb-4 p-3.5 bg-[#faf9f6] border border-[#e8e0f0] rounded-xl">
                 <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-2.5">기술 스택</p>
@@ -171,12 +227,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               {idea.sourceUrl && (
                 <>
                   <span>·</span>
-                  <a
-                    href={idea.sourceUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#7c3aed] hover:underline"
-                  >
+                  <a href={idea.sourceUrl} target="_blank" rel="noopener noreferrer" className="text-[#7c3aed] hover:underline">
                     원본 보기 ↗
                   </a>
                 </>
@@ -199,10 +250,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                         <div key={label} className="flex items-center gap-2">
                           <span className="text-[12px] text-[#6b6080] w-20 shrink-0">{label}</span>
                           <div className="flex-1 h-1.5 bg-[#e8e0f0] rounded-full overflow-hidden">
-                            <div
-                              className="h-full rounded-full bg-[#7c3aed] transition-all"
-                              style={{ width: `${((val ?? 0) / 10) * 100}%` }}
-                            />
+                            <div className="h-full rounded-full bg-[#7c3aed] transition-all" style={{ width: `${((val ?? 0) / 10) * 100}%` }} />
                           </div>
                           <span className="text-[12px] font-bold tabular-nums text-[#2a2433] w-5 text-right">{val}</span>
                         </div>

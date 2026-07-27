@@ -214,7 +214,7 @@ export default function LandingPage() {
               <p className="text-[14px] font-bold text-[#7c3aed] mb-5 tracking-wider uppercase">
                 매일 아침 업데이트
               </p>
-              <h1 className="text-4xl md:text-5xl font-bold text-[#2a2433] mb-6 leading-[1.1]">
+              <h1 className="text-4xl md:text-5xl font-bold text-[#2a2433] mb-6 leading-[1.1] select-none">
                 만들 만한<br />아이디어를<br />매일 아침<br />골라드립니다
               </h1>
               <p className="text-[15px] text-[#6b6080] mb-8 leading-relaxed">

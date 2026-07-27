@@ -20,6 +20,7 @@ export interface IdeaDto {
   purpose: string | null
   howItWorks: string | null
   suggestedStack: string | null
+  implementationGuide: string | null
 }
 
 export interface PageResponse<T> {
