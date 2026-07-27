@@ -25,6 +25,61 @@ function AdminSection({ title, children }: { title: string; children: React.Reac
   )
 }
 
+function parseSteps(text: string): string[] {
+  const byNewline = text.split('\n').map(s => s.trim()).filter(Boolean)
+  if (byNewline.length > 1) return byNewline
+  // split before numbered patterns like "2. " or "②"
+  const parts = text.split(/\s+(?=[②③④⑤]|\d+[.．]\s)/).map(s => s.trim()).filter(Boolean)
+  return parts.length > 1 ? parts : [text]
+}
+
+function cleanStep(step: string): string {
+  return step.replace(/^[①②③④⑤]\s*|^\d+[.．]\s*/, '').trim()
+}
+
+function HowItWorksSteps({ text }: { text: string }) {
+  const steps = parseSteps(text)
+  if (steps.length === 1) {
+    return <p className="text-[14px] text-[#4a4458] leading-relaxed whitespace-pre-line">{text}</p>
+  }
+  return (
+    <div className="space-y-0">
+      {steps.map((step, i) => (
+        <div key={i} className="flex gap-3">
+          <div className="flex flex-col items-center shrink-0">
+            <div className="w-6 h-6 rounded-full bg-[#7c3aed] text-white text-[11px] font-bold flex items-center justify-center">
+              {i + 1}
+            </div>
+            {i < steps.length - 1 && (
+              <div className="w-px flex-1 bg-[#e8e0f0] my-1" style={{ minHeight: '12px' }} />
+            )}
+          </div>
+          <p className="text-[13px] text-[#4a4458] leading-relaxed pb-3">{cleanStep(step)}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+function StackChips({ text }: { text: string }) {
+  const items = text.split(/[,\n·•]/).map(s => s.trim()).filter(s => s.length > 0 && s.length < 50)
+  if (items.length <= 1) {
+    return <p className="text-[14px] text-[#4a4458] leading-relaxed">{text}</p>
+  }
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {items.map((item, i) => (
+        <span
+          key={i}
+          className="text-[12px] px-2.5 py-1 rounded-full bg-[rgba(124,58,237,0.07)] border border-[rgba(124,58,237,0.2)] text-[#5b21b6] font-medium"
+        >
+          {item}
+        </span>
+      ))}
+    </div>
+  )
+}
+
 export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose: () => void }) {
   const { data: idea, isLoading, isError } = useIdeaDetail(ideaId)
   const reject = useRejectIdea()
@@ -74,7 +129,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
             </div>
 
             {/* Badges + score */}
-            <div className="flex items-center gap-2 mb-5">
+            <div className="flex items-center gap-2 mb-4">
               <StatusBadge status={idea.status} />
               <TrackBadge track={idea.sourceTrack} />
               <div className="ml-auto">
@@ -82,10 +137,10 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               </div>
             </div>
 
-            {/* 설명 (pitch) */}
-            <Section title="한 줄 요약">
-              {idea.description}
-            </Section>
+            {/* 핵심 요약 — callout style, not a box */}
+            <div className="mb-5 pl-4 border-l-2 border-[#7c3aed]/40 py-0.5">
+              <p className="text-[15px] text-[#2a2433] leading-relaxed font-medium">{idea.description}</p>
+            </div>
 
             {/* 왜 필요한가 */}
             {idea.purpose && (
@@ -94,18 +149,20 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               </Section>
             )}
 
-            {/* 어떻게 동작하나요 */}
+            {/* 어떻게 동작하나요 — visual steps */}
             {idea.howItWorks && (
-              <Section title="어떻게 동작하나요">
-                <div className="whitespace-pre-line">{idea.howItWorks}</div>
-              </Section>
+              <div className="mb-4 p-3.5 bg-[#faf9f6] border border-[#e8e0f0] rounded-xl">
+                <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-3">어떻게 동작하나요</p>
+                <HowItWorksSteps text={idea.howItWorks} />
+              </div>
             )}
 
-            {/* 추천 기술 스택 */}
+            {/* 기술 스택 — chips */}
             {idea.suggestedStack && (
-              <Section title="기술 스택">
-                {idea.suggestedStack}
-              </Section>
+              <div className="mb-4 p-3.5 bg-[#faf9f6] border border-[#e8e0f0] rounded-xl">
+                <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-2.5">기술 스택</p>
+                <StackChips text={idea.suggestedStack} />
+              </div>
             )}
 
             {/* 원본 링크 + 날짜 */}
@@ -171,7 +228,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                       {reject.isPending ? '처리 중…' : '거절'}
                     </Button>
                     {reject.isError && (
-                      <p role="alert" className="text-xs text-red-500">거절 처리에 실패했습니다. 다시 시도해주세요.</p>
+                      <p role="alert" className="text-xs text-red-500">거절 처리에 실패했습니다. 다시 시도해 주세요.</p>
                     )}
                   </div>
                 )}
