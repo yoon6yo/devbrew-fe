@@ -15,7 +15,7 @@ export function ExportButton() {
     setState('loading')
     try {
       const ideas = await getTopIdeas(5)
-      format === 'JSON' ? downloadJson(ideas) : downloadCsv(ideas)
+      if (format === 'JSON') { downloadJson(ideas) } else { downloadCsv(ideas) }
       setState('idle')
     } catch {
       setState('error')
