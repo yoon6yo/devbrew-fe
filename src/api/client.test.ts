@@ -18,4 +18,12 @@ describe('apiFetch', () => {
     const result = await apiFetch<{ ok: boolean }>('/api/test')
     expect(result.ok).toBe(true)
   })
+
+  it('returns undefined on 204 No Content without calling json()', async () => {
+    server.use(
+      http.post('/api/test', () => new HttpResponse(null, { status: 204 }))
+    )
+    const result = await apiFetch<void>('/api/test', { method: 'POST' })
+    expect(result).toBeUndefined()
+  })
 })
