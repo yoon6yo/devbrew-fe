@@ -24,4 +24,9 @@ describe('useIdeaDetail', () => {
     expect(result.current.fetchStatus).toBe('idle')
     expect(result.current.data).toBeUndefined()
   })
+
+  it('transitions to error state when idea id does not exist', async () => {
+    const { result } = renderHook(() => useIdeaDetail(99999), { wrapper: makeWrapper() })
+    await waitFor(() => expect(result.current.isError).toBe(true))
+  })
 })
