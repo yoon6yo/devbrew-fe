@@ -11,7 +11,6 @@ import { ExportButton } from '@/components/ExportButton'
 import { PipelineTriggerModal } from '@/components/PipelineTriggerModal'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
-import type { DailyViewsDto } from '@/api/adminStats'
 import { notifyIdea, rejectIdea, restoreIdea } from '@/api/ideas'
 import { logout } from '@/api/auth'
 
