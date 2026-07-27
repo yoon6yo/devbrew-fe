@@ -24,7 +24,6 @@ export type SourceTrack = 'SAAS' | 'GITHUB' | 'VIRAL'
 
 export interface PipelineTriggerOptions {
   sources?: SourceTrack[]
-  minScore?: number
 }
 
 export function triggerPipeline(options?: PipelineTriggerOptions): Promise<{ message: string }> {

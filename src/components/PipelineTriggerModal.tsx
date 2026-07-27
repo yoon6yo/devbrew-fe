@@ -17,7 +17,6 @@ export function PipelineTriggerModal({ onClose, onStarted }: Props) {
   const [selected, setSelected] = useState<Set<SourceTrack>>(
     new Set(['SAAS', 'GITHUB', 'VIRAL'])
   )
-  const [minScore, setMinScore] = useState(7)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
@@ -34,10 +33,7 @@ export function PipelineTriggerModal({ onClose, onStarted }: Props) {
     setLoading(true)
     setError(false)
     try {
-      await triggerPipeline({
-        sources: [...selected],
-        minScore,
-      })
+      await triggerPipeline({ sources: [...selected] })
       onStarted()
       onClose()
     } catch {
@@ -88,29 +84,6 @@ export function PipelineTriggerModal({ onClose, onStarted }: Props) {
                 </label>
               ))}
             </div>
-          </div>
-
-          {/* Min score */}
-          <div>
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider">알림 최소 점수</p>
-              <span className="text-[15px] font-bold text-[#7c3aed] tabular-nums">{minScore}점</span>
-            </div>
-            <input
-              type="range"
-              min={1}
-              max={10}
-              value={minScore}
-              onChange={e => setMinScore(Number(e.target.value))}
-              className="w-full accent-[#7c3aed]"
-            />
-            <div className="flex justify-between text-[11px] text-[#9b91b0] mt-1">
-              <span>1 (느슨하게)</span>
-              <span>10 (엄격하게)</span>
-            </div>
-            <p className="text-[12px] text-[#9b91b0] mt-1.5">
-              이 점수 이상인 아이디어만 공시됩니다.
-            </p>
           </div>
 
           {error && (
