@@ -102,6 +102,23 @@ describe('DashboardPage', () => {
     expect(screen.queryByRole('button', { name: '파이프라인 실행' })).not.toBeInTheDocument()
   })
 
+  it('sends correct status param to API when a tab is clicked', async () => {
+    let capturedStatus: string | null = 'initial'
+    server.use(
+      http.get('/api/admin/stats', () => HttpResponse.json(mockAdminStats)),
+      http.get('/api/ideas', ({ request }) => {
+        capturedStatus = new URL(request.url).searchParams.get('status')
+        return HttpResponse.json({ content: [], totalElements: 0, totalPages: 0, number: 0, size: 20 })
+      }),
+    )
+    render(<DashboardPage />, { wrapper })
+    await waitFor(() => expect(screen.getByRole('tab', { name: '채점 완료' })).toBeInTheDocument())
+
+    await userEvent.click(screen.getByRole('tab', { name: '채점 완료' }))
+
+    await waitFor(() => expect(capturedStatus).toBe('SCORED'))
+  })
+
   it('shows success state after pipeline trigger', async () => {
     localStorage.setItem('daybrew_role', 'ADMIN')
     server.use(
