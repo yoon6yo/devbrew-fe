@@ -2,9 +2,9 @@ import { useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { useIdeas } from '@/hooks/useIdeas'
 import { useAdminStats } from '@/hooks/useAdminStats'
+import { useIdeaStats } from '@/hooks/useIdeaStats'
 import { IdeaCard } from '@/components/IdeaCard'
 import { IdeaModal } from '@/components/IdeaModal'
-import { SummaryCards } from '@/components/SummaryCards'
 import { Pagination } from '@/components/Pagination'
 import { ExportButton } from '@/components/ExportButton'
 import { PipelineTriggerModal } from '@/components/PipelineTriggerModal'
@@ -13,23 +13,15 @@ import type { IdeaStatus } from '@/types'
 import type { DailyViewsDto } from '@/api/adminStats'
 import { logout } from '@/api/auth'
 
-type TabKey = 'ALL' | 'NOTIFIED_TODAY' | 'NOTIFIED_PAST' | 'UNPUBLISHED' | 'REJECTED'
+type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'REJECTED'
 
-const TABS: { label: string; key: TabKey }[] = [
-  { label: '전체', key: 'ALL' },
-  { label: '공시중', key: 'NOTIFIED_TODAY' },
-  { label: '공시됐던', key: 'NOTIFIED_PAST' },
-  { label: '미공시', key: 'UNPUBLISHED' },
-  { label: '거절됨', key: 'REJECTED' },
-]
-
-function tabToParams(tab: TabKey): { status?: IdeaStatus; statuses?: IdeaStatus[]; today?: boolean } {
+function tabToParams(tab: TabKey): { status?: IdeaStatus; statuses?: IdeaStatus[] } {
   switch (tab) {
-    case 'NOTIFIED_TODAY': return { status: 'NOTIFIED', today: true }
-    case 'NOTIFIED_PAST':  return { status: 'NOTIFIED', today: false }
-    case 'UNPUBLISHED':    return { statuses: ['PENDING', 'SCORED'] }
-    case 'REJECTED':       return { status: 'REJECTED' }
-    default:               return {}
+    case 'PENDING':  return { status: 'PENDING' }
+    case 'SCORED':   return { status: 'SCORED' }
+    case 'NOTIFIED': return { status: 'NOTIFIED' }
+    case 'REJECTED': return { status: 'REJECTED' }
+    default:         return {}
   }
 }
 
@@ -121,6 +113,16 @@ export function DashboardPage() {
 
   const ideaParams = tabToParams(tab)
   const { data, isLoading, isError, refetch } = useIdeas({ ...ideaParams, page })
+  const { data: stats } = useIdeaStats()
+
+  const total = stats ? (stats.PENDING + stats.SCORED + stats.NOTIFIED + stats.REJECTED) : null
+  const TABS: { label: string; key: TabKey; count: number | null }[] = [
+    { label: '전체',    key: 'ALL',      count: total },
+    { label: '대기중',  key: 'PENDING',  count: stats?.PENDING ?? null },
+    { label: '채점완료', key: 'SCORED',  count: stats?.SCORED ?? null },
+    { label: '공시됨',  key: 'NOTIFIED', count: stats?.NOTIFIED ?? null },
+    { label: '거절됨',  key: 'REJECTED', count: stats?.REJECTED ?? null },
+  ]
 
   function setTab(key: TabKey) {
     const p = new URLSearchParams()
@@ -183,12 +185,16 @@ export function DashboardPage() {
 
       <main className="max-w-5xl mx-auto px-6 py-6">
         {isAdmin && <AdminStatsSection />}
-        <SummaryCards />
 
         <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
           <TabsList className="mb-4">
-            {TABS.map(({ label, key }) => (
-              <TabsTrigger key={key} value={key}>{label}</TabsTrigger>
+            {TABS.map(({ label, key, count }) => (
+              <TabsTrigger key={key} value={key}>
+                {label}
+                {count !== null && (
+                  <span className="ml-1.5 text-[11px] opacity-60 tabular-nums">({count})</span>
+                )}
+              </TabsTrigger>
             ))}
           </TabsList>
         </Tabs>
