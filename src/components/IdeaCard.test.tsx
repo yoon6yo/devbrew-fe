@@ -16,4 +16,20 @@ describe('IdeaCard', () => {
     await userEvent.click(screen.getByRole('article'))
     expect(onClick).toHaveBeenCalledOnce()
   })
+
+  it('calls onClick when Enter key is pressed', async () => {
+    const onClick = vi.fn()
+    render(<IdeaCard idea={mockIdea} onClick={onClick} />)
+    screen.getByRole('article').focus()
+    await userEvent.keyboard('{Enter}')
+    expect(onClick).toHaveBeenCalledOnce()
+  })
+
+  it('calls onClick when Space key is pressed', async () => {
+    const onClick = vi.fn()
+    render(<IdeaCard idea={mockIdea} onClick={onClick} />)
+    screen.getByRole('article').focus()
+    await userEvent.keyboard(' ')
+    expect(onClick).toHaveBeenCalledOnce()
+  })
 })
