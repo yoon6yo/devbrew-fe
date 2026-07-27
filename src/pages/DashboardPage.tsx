@@ -27,30 +27,30 @@ function tabToParams(tab: TabKey): { status?: IdeaStatus; statuses?: IdeaStatus[
   }
 }
 
-function PageViewsChart({ data }: { data: DailyViewsDto[] }) {
+function PageViewsBoxes({ data }: { data: DailyViewsDto[] }) {
   if (data.length === 0) {
-    return <p className="text-[13px] text-[#9b91b0] py-4 text-center">데이터 없음</p>
+    return <p className="text-[13px] text-[#9b91b0] py-2 text-center">데이터 없음</p>
   }
-  const max = Math.max(...data.map(d => d.count), 1)
   const DAY = ['일', '월', '화', '수', '목', '금', '토']
+  const today = new Date().toISOString().slice(0, 10)
   return (
     <div className="flex gap-2">
       {data.map(d => {
-        const barH = Math.max((d.count / max) * 72, 4)
+        const isToday = d.date === today
         const dayName = DAY[new Date(d.date).getDay()]
-        const isToday = d.date === new Date().toISOString().slice(0, 10)
         return (
-          <div key={d.date} className="flex-1 flex flex-col items-center min-w-0">
-            <span className={`text-[11px] font-bold tabular-nums mb-1 ${d.count > 0 ? 'text-[#7c3aed]' : 'text-[#c4b8d4]'}`}>
+          <div
+            key={d.date}
+            className={`flex-1 rounded-lg border px-1.5 py-2 flex flex-col items-center gap-1 ${
+              isToday
+                ? 'border-[#7c3aed]/40 bg-[rgba(124,58,237,0.06)]'
+                : 'border-[#e8e0f0] bg-[#faf9f6]'
+            }`}
+          >
+            <span className={`text-[15px] font-bold tabular-nums leading-none ${isToday ? 'text-[#7c3aed]' : 'text-[#2a2433]'}`}>
               {d.count}
             </span>
-            <div className="flex items-end w-full h-[72px]">
-              <div
-                className={`w-full rounded-t transition-colors ${isToday ? 'bg-[#7c3aed]' : 'bg-[#7c3aed]/40 hover:bg-[#7c3aed]/70'}`}
-                style={{ height: `${barH}px` }}
-              />
-            </div>
-            <span className={`text-[11px] mt-1.5 font-medium ${isToday ? 'text-[#7c3aed]' : 'text-[#9b91b0]'}`}>{dayName}</span>
+            <span className={`text-[10px] font-medium ${isToday ? 'text-[#7c3aed]' : 'text-[#9b91b0]'}`}>{dayName}</span>
             <span className="text-[9px] text-[#c4b8d4]">{d.date.slice(5)}</span>
           </div>
         )
@@ -104,7 +104,7 @@ function AdminStatsSection() {
         <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-3">
           일별 접근 수 (최근 7일)
         </p>
-        <PageViewsChart data={data.pageViews} />
+        <PageViewsBoxes data={data.pageViews} />
       </div>
     </div>
   )
