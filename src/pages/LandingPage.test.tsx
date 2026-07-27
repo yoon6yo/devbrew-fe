@@ -1,6 +1,9 @@
 import { render, screen, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { http, HttpResponse } from 'msw'
 import { describe, it, expect } from 'vitest'
 import React from 'react'
+import { server } from '../test/server'
 import LandingPage from './LandingPage'
 
 describe('LandingPage', () => {
@@ -32,5 +35,17 @@ describe('LandingPage', () => {
     render(<LandingPage />)
     expect(screen.getByRole('link', { name: '개인정보처리방침' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '이용약관' })).toBeInTheDocument()
+  })
+
+  it('shows error state and retry button when API fails, then recovers', async () => {
+    server.use(http.get('/api/ideas', () => HttpResponse.error()))
+    render(<LandingPage />)
+
+    await waitFor(() => expect(screen.getByRole('button', { name: '다시 시도' })).toBeInTheDocument())
+
+    server.resetHandlers()
+    await userEvent.click(screen.getByRole('button', { name: '다시 시도' }))
+
+    await waitFor(() => expect(screen.getAllByRole('article')).toHaveLength(3))
   })
 })
