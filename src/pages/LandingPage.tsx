@@ -62,12 +62,12 @@ function MockIdeaCard() {
         <div className="flex items-center justify-between mb-3">
           <span className="text-[12px] font-bold text-[#7c3aed] bg-[rgba(124,58,237,0.08)] px-2.5 py-1 rounded-md tracking-wide">SAAS</span>
           <span className="text-[15px] font-bold tabular-nums text-[#2a2433]">
-            9.2<span className="text-[#8b8398] font-normal text-[13px]">/10</span>
+            9.2<span className="text-[#6b6080] font-normal text-[13px]">/10</span>
           </span>
         </div>
 
         <h3 className="text-[15px] font-bold text-[#2a2433] mb-1.5 leading-snug">AI 기반 노코드 앱 빌더 플랫폼</h3>
-        <p className="text-[13px] text-[#8b8398] mb-3 leading-relaxed">
+        <p className="text-[13px] text-[#6b6080] mb-3 leading-relaxed">
           비개발자도 실용적인 웹앱을 만들 수 있는 AI-first 빌더. 수요 급증 중.
         </p>
 
@@ -78,7 +78,7 @@ function MockIdeaCard() {
         <div className="space-y-1.5 mb-3">
           {([['시장 적합성', 95], ['실현 가능성', 85], ['수익화', 90]] as [string, number][]).map(([label, pct]) => (
             <div key={label} className="flex items-center gap-2">
-              <span className="text-[12px] text-[#8b8398] w-20 shrink-0">{label}</span>
+              <span className="text-[12px] text-[#6b6080] w-20 shrink-0">{label}</span>
               <div className="flex-1 h-1 bg-[#e8e0f0] rounded-full overflow-hidden">
                 <div className="h-full rounded-full bg-[#7c3aed]/50" style={{ width: `${pct}%` }} />
               </div>
@@ -87,7 +87,7 @@ function MockIdeaCard() {
         </div>
 
         <div className="pt-3 border-t border-[#e8e0f0] flex items-center justify-between">
-          <span className="text-[12px] text-[#8b8398]">Reddit r/SaaS · 오늘 09:00</span>
+          <span className="text-[12px] text-[#6b6080]">Reddit r/SaaS · 오늘 09:00</span>
           <span className="text-[12px] font-bold text-[#7c3aed]">★ 24</span>
         </div>
       </div>
@@ -111,15 +111,26 @@ export default function LandingPage() {
       <nav className="sticky top-0 z-10 bg-[#faf9f6]/90 backdrop-blur border-b border-[#e8e0f0] px-6 py-4">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <span className="text-xl font-bold text-[#2a2433]">daybrew</span>
-          <a
-            href="/login"
-            className="text-[14px] font-bold text-white bg-[#7c3aed] px-5 py-2.5 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)] shadow-sm"
-          >
-            시작하기
-          </a>
+          <div className="flex items-center gap-3">
+            {localStorage.getItem('daybrew_role') === 'ADMIN' && (
+              <a
+                href="/dashboard"
+                className="text-[14px] font-medium text-[#7c3aed] border border-[#e8e0f0] px-4 py-2 rounded-lg hover:border-[#7c3aed] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)]"
+              >
+                대시보드
+              </a>
+            )}
+            <a
+              href="/login"
+              className="text-[14px] font-bold text-white bg-[#7c3aed] px-5 py-2.5 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)] shadow-sm"
+            >
+              시작하기
+            </a>
+          </div>
         </div>
       </nav>
 
+      <main>
       {/* Hero */}
       <section className="border-b border-[#e8e0f0]">
         <div className="max-w-4xl mx-auto px-6 py-20 md:py-28">
@@ -131,7 +142,7 @@ export default function LandingPage() {
               <h1 className="text-4xl md:text-5xl font-bold text-[#2a2433] mb-6 leading-[1.1]">
                 만들 만한<br />아이디어를<br />매일 아침<br />골라드립니다
               </h1>
-              <p className="text-[15px] text-[#8b8398] mb-8 leading-relaxed">
+              <p className="text-[15px] text-[#6b6080] mb-8 leading-relaxed">
                 Reddit, GitHub의 실제 신호에서 추출한 개발 아이디어.<br />
                 사용 목적부터 기술 스택 추천까지 한 장으로 정리해드립니다.
               </p>
@@ -161,7 +172,7 @@ export default function LandingPage() {
       <section id="how-it-works" className="py-24">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-[#2a2433] text-center mb-3">어떻게 동작하나요</h2>
-          <p className="text-[14px] text-[#8b8398] text-center mb-12">매일 자동으로 실행되는 3단계 파이프라인</p>
+          <p className="text-[14px] text-[#6b6080] text-center mb-12">매일 자동으로 실행되는 3단계 파이프라인</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {STEPS.map(({ Icon, num, title, items, desc }) => (
               <div key={num} className="bg-[#f3f0ec] rounded-xl border border-[#e8e0f0] p-6 flex flex-col gap-4">
@@ -169,11 +180,11 @@ export default function LandingPage() {
                   <div className="p-2.5 bg-[rgba(124,58,237,0.08)] rounded-xl">
                     <Icon />
                   </div>
-                  <span className="text-3xl font-bold text-[#e8e0f0] leading-none">{num}</span>
+                  <span className="text-3xl font-bold text-[#c9bedd] leading-none" aria-hidden="true">{num}</span>
                 </div>
                 <div>
                   <h3 className="text-[15px] font-bold text-[#2a2433] mb-2">{title}</h3>
-                  <p className="text-[13px] text-[#8b8398] mb-3 leading-relaxed">{desc}</p>
+                  <p className="text-[13px] text-[#6b6080] mb-3 leading-relaxed">{desc}</p>
                   <ul className="space-y-1">
                     {items.map(item => (
                       <li key={item} className="flex items-center gap-2 text-[13px] text-[#4a4458]">
@@ -193,7 +204,7 @@ export default function LandingPage() {
       <section id="ideas" className="py-24 bg-[#f3f0ec] border-t border-b border-[#e8e0f0]">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-[#2a2433] text-center mb-3">오늘의 아이디어</h2>
-          <p className="text-[14px] text-[#8b8398] text-center mb-10">실제로 수집된 최신 아이디어입니다</p>
+          <p className="text-[14px] text-[#6b6080] text-center mb-10">실제로 수집된 최신 아이디어입니다</p>
 
           {status === 'loading' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -212,7 +223,7 @@ export default function LandingPage() {
 
           {status === 'error' && (
             <div className="text-center py-12">
-              <p className="text-[14px] text-[#8b8398] mb-4">아이디어를 불러올 수 없습니다.</p>
+              <p className="text-[14px] text-[#6b6080] mb-4">아이디어를 불러올 수 없습니다.</p>
               <button
                 onClick={() => {
                   setStatus('loading')
@@ -228,7 +239,7 @@ export default function LandingPage() {
           )}
 
           {status === 'ready' && ideas.length === 0 && (
-            <p className="text-center py-12 text-[14px] text-[#8b8398]">아직 오늘의 아이디어가 준비되지 않았습니다.</p>
+            <p className="text-center py-12 text-[14px] text-[#6b6080]">아직 오늘의 아이디어가 준비되지 않았습니다.</p>
           )}
 
           {status === 'ready' && ideas.length > 0 && (
@@ -244,20 +255,20 @@ export default function LandingPage() {
                       <TrackBadge track={idea.sourceTrack} />
                       {idea.score !== null && (
                         <span className="text-[14px] font-bold tabular-nums text-[#2a2433]">
-                          {idea.score}<span className="text-[#8b8398] font-normal">/10</span>
+                          {idea.score}<span className="text-[#6b6080] font-normal">/10</span>
                         </span>
                       )}
                     </div>
                     <h3 className="text-[15px] font-bold text-[#2a2433] mb-2 line-clamp-2 leading-snug">{idea.title}</h3>
                     {idea.purpose
-                      ? <p className="text-[14px] text-[#8b8398] line-clamp-3 mb-3 leading-relaxed">{idea.purpose}</p>
-                      : <p className="text-[14px] text-[#8b8398] line-clamp-3 mb-3 leading-relaxed">{idea.description}</p>
+                      ? <p className="text-[14px] text-[#6b6080] line-clamp-3 mb-3 leading-relaxed">{idea.purpose}</p>
+                      : <p className="text-[14px] text-[#6b6080] line-clamp-3 mb-3 leading-relaxed">{idea.description}</p>
                     }
                     <ScoreBar score={idea.score} />
                   </div>
                 ))}
               </div>
-              <p className="text-center mt-8 text-[14px] text-[#8b8398]">
+              <p className="text-center mt-8 text-[14px] text-[#6b6080]">
                 <a href="/login" className="text-[#7c3aed] hover:underline font-bold">로그인</a>하여 전체 피드와 상세 기획서를 확인하세요.
               </p>
             </>
@@ -265,14 +276,16 @@ export default function LandingPage() {
         </div>
       </section>
 
+      </main>
+
       {/* Footer */}
       <footer className="border-t border-[#e8e0f0] py-8">
         <div className="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="text-[15px] font-bold text-[#2a2433]">daybrew</span>
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            <p className="text-[14px] text-[#8b8398]">매일 아침 개발 아이디어를 배달합니다</p>
-            <a href="/privacy" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">개인정보처리방침</a>
-            <a href="/terms" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">이용약관</a>
+            <p className="text-[14px] text-[#6b6080]">매일 아침 개발 아이디어를 배달합니다</p>
+            <a href="/privacy" className="text-[14px] text-[#6b6080] hover:text-[#4a4458] transition-colors">개인정보처리방침</a>
+            <a href="/terms" className="text-[14px] text-[#6b6080] hover:text-[#4a4458] transition-colors">이용약관</a>
           </div>
         </div>
       </footer>

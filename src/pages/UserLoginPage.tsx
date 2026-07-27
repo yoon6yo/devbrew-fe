@@ -8,19 +8,21 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 export default function UserLoginPage() {
   const [searchParams] = useSearchParams()
-  const errorParam = searchParams.get('error')
-  const errorMessage = errorParam
-    ? (ERROR_MESSAGES[errorParam] ?? ERROR_MESSAGES.default)
+  const hasError = searchParams.has('error')
+  const errorKey = searchParams.get('error') ?? ''
+  const errorMessage = hasError
+    ? (ERROR_MESSAGES[errorKey] ?? ERROR_MESSAGES.default)
     : null
 
   return (
     <div className="min-h-screen bg-[#faf9f6] flex items-center justify-center px-4">
-      <div className="bg-white border border-[#e8e0f0] rounded-xl p-10 w-full max-w-sm shadow-[0_4px_16px_rgba(124,58,237,0.08)]">
+      <main className="w-full max-w-sm">
+      <div className="bg-white border border-[#e8e0f0] rounded-xl p-10 w-full shadow-[0_4px_16px_rgba(124,58,237,0.08)]">
         <div className="mb-8 text-center">
           <a href="/" className="text-xl font-bold text-[#2a2433] hover:text-[#7c3aed] transition-colors">
             daybrew
           </a>
-          <p className="text-[14px] text-[#8b8398] mt-2">로그인하여 오늘의 아이디어를 확인하세요</p>
+          <p className="text-[14px] text-[#6b6080] mt-2">로그인하여 오늘의 아이디어를 확인하세요</p>
         </div>
 
         {errorMessage && (
@@ -50,7 +52,7 @@ export default function UserLoginPage() {
           </a>
         </div>
 
-        <p className="text-center text-[12px] text-[#8b8398] mt-8">
+        <p className="text-center text-[12px] text-[#6b6080] mt-8">
           로그인 시{' '}
           <a href="/terms" className="text-[#4a4458] hover:underline hover:text-[#7c3aed] transition-colors">이용약관</a>
           {' '}및{' '}
@@ -58,6 +60,7 @@ export default function UserLoginPage() {
           에 동의하게 됩니다.
         </p>
       </div>
+      </main>
     </div>
   )
 }

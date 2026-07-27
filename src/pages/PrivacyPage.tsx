@@ -21,7 +21,7 @@ export default function PrivacyPage() {
       {/* Content */}
       <main className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-3xl font-bold text-[#2a2433] mb-3">개인정보처리방침</h1>
-        <p className="text-[14px] text-[#8b8398] mb-12">최종 수정일: 2025년 7월 27일</p>
+        <p className="text-[14px] text-[#6b6080] mb-12">최종 수정일: 2025년 7월 27일</p>
 
         <div className="space-y-10">
 
@@ -86,11 +86,11 @@ export default function PrivacyPage() {
               ].map(({ law, period }) => (
                 <div key={period} className="text-[14px] text-[#4a4458]">
                   <span className="font-medium text-[#2a2433]">{period}</span>
-                  <span className="text-[#8b8398] ml-2">({law})</span>
+                  <span className="text-[#6b6080] ml-2">({law})</span>
                 </div>
               ))}
             </div>
-            <p className="text-[14px] text-[#8b8398] mt-3 leading-relaxed">
+            <p className="text-[14px] text-[#6b6080] mt-3 leading-relaxed">
               회원 탈퇴 시 수집된 개인정보는 즉시 파기되며, 단 위 법령에 따른 보관 의무가 있는 정보는 해당 기간 동안 별도 보관 후 파기됩니다.
             </p>
           </section>
@@ -147,7 +147,7 @@ export default function PrivacyPage() {
                 </li>
               ))}
             </ul>
-            <p className="text-[14px] text-[#8b8398] mt-3 leading-relaxed">
+            <p className="text-[14px] text-[#6b6080] mt-3 leading-relaxed">
               권리 행사는 서비스 내 계정 설정 또는 아래 개인정보 보호책임자에게 이메일로 요청하실 수 있습니다.
             </p>
           </section>
@@ -182,7 +182,7 @@ export default function PrivacyPage() {
               <p><span className="font-medium text-[#2a2433]">서비스명:</span> daybrew</p>
               <p><span className="font-medium text-[#2a2433]">문의 이메일:</span> <a href="mailto:2025112405@dgu.ac.kr" className="text-[#7c3aed] hover:underline">2025112405@dgu.ac.kr</a></p>
             </div>
-            <p className="text-[14px] text-[#8b8398] mt-3 leading-relaxed">
+            <p className="text-[14px] text-[#6b6080] mt-3 leading-relaxed">
               개인정보 처리에 관한 불만 또는 피해 구제를 위해 개인정보 분쟁조정위원회(www.kopico.go.kr) 또는 개인정보침해신고센터(privacy.kisa.or.kr)에 신고하실 수 있습니다.
             </p>
           </section>
@@ -203,7 +203,7 @@ export default function PrivacyPage() {
           <span className="text-[15px] font-bold text-[#2a2433]">daybrew</span>
           <div className="flex items-center gap-5">
             <Link to="/privacy" className="text-[14px] text-[#7c3aed] font-medium hover:underline">개인정보처리방침</Link>
-            <Link to="/terms" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">이용약관</Link>
+            <Link to="/terms" className="text-[14px] text-[#6b6080] hover:text-[#4a4458] transition-colors">이용약관</Link>
           </div>
         </div>
       </footer>

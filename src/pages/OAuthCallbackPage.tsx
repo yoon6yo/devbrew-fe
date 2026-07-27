@@ -10,7 +10,7 @@ export default function OAuthCallbackPage() {
       .then((me) => {
         localStorage.setItem('daybrew_auth', 'oauth')
         localStorage.setItem('daybrew_role', me.role)
-        navigate('/dashboard', { replace: true })
+        navigate(me.role === 'ADMIN' ? '/dashboard' : '/', { replace: true })
       })
       .catch(() => {
         navigate('/login?error=oauth_error', { replace: true })

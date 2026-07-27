@@ -34,7 +34,8 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-[#f8f8f8] flex items-center justify-center px-4">
-      <div className="bg-white border border-[#e0e0e0] rounded p-8 w-full max-w-sm shadow-[0_2px_5px_rgba(63,71,77,0.15)]">
+      <main className="w-full max-w-sm">
+      <div className="bg-white border border-[#e0e0e0] rounded p-8 w-full shadow-[0_2px_5px_rgba(63,71,77,0.15)]">
         <div className="mb-6">
           <Link to="/" className="text-xs text-[#828c94] hover:text-[#00a1ff] transition-colors">← 홈으로</Link>
           <h1 className="text-xl font-bold text-[#2f3438] mt-3">관리자 로그인</h1>
@@ -71,6 +72,7 @@ export default function LoginPage() {
           </button>
         </form>
       </div>
+      </main>
     </div>
   )
 }

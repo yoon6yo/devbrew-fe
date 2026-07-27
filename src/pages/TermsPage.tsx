@@ -21,7 +21,7 @@ export default function TermsPage() {
       {/* Content */}
       <main className="max-w-3xl mx-auto px-6 py-16">
         <h1 className="text-3xl font-bold text-[#2a2433] mb-3">이용약관</h1>
-        <p className="text-[14px] text-[#8b8398] mb-12">최종 수정일: 2025년 7월 27일</p>
+        <p className="text-[14px] text-[#6b6080] mb-12">최종 수정일: 2025년 7월 27일</p>
 
         <div className="space-y-10">
 
@@ -101,7 +101,7 @@ export default function TermsPage() {
                 </li>
               ))}
             </ul>
-            <p className="text-[14px] text-[#8b8398] mt-4 leading-relaxed">
+            <p className="text-[14px] text-[#6b6080] mt-4 leading-relaxed">
               서비스는 운영상·기술상 필요에 따라 서비스 내용을 변경할 수 있으며, 서비스 중단이 필요한 경우 사전에 공지합니다. 단, 불가피한 사유가 있는 경우 사후 공지할 수 있습니다.
             </p>
           </section>
@@ -196,7 +196,7 @@ export default function TermsPage() {
         <div className="max-w-4xl mx-auto px-6 flex items-center justify-between flex-wrap gap-4">
           <span className="text-[15px] font-bold text-[#2a2433]">daybrew</span>
           <div className="flex items-center gap-5">
-            <Link to="/privacy" className="text-[14px] text-[#8b8398] hover:text-[#4a4458] transition-colors">개인정보처리방침</Link>
+            <Link to="/privacy" className="text-[14px] text-[#6b6080] hover:text-[#4a4458] transition-colors">개인정보처리방침</Link>
             <Link to="/terms" className="text-[14px] text-[#7c3aed] font-medium hover:underline">이용약관</Link>
           </div>
         </div>

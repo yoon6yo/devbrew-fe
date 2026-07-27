@@ -10,6 +10,7 @@ import { ExportButton } from '@/components/ExportButton'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
 import type { DailyViewsDto } from '@/api/adminStats'
+import { triggerPipeline } from '@/api/adminStats'
 
 const TABS: { label: string; value: IdeaStatus | 'ALL' }[] = [
   { label: '전체', value: 'ALL' },
@@ -99,6 +100,20 @@ export function DashboardPage() {
   const role = localStorage.getItem('daybrew_role')
   const isAdmin = role === 'ADMIN'
 
+  const [triggerState, setTriggerState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+
+  async function handleTrigger() {
+    setTriggerState('loading')
+    try {
+      await triggerPipeline()
+      setTriggerState('success')
+      setTimeout(() => setTriggerState('idle'), 3000)
+    } catch {
+      setTriggerState('error')
+      setTimeout(() => setTriggerState('idle'), 3000)
+    }
+  }
+
   const { data, isLoading, isError, refetch } = useIdeas({ status, page })
 
   function setStatus(value: IdeaStatus | 'ALL') {
@@ -117,6 +132,18 @@ export function DashboardPage() {
       <header className="border-b bg-white px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-[#2f3438]">daybrew</h1>
         <div className="flex items-center gap-4">
+          {isAdmin && (
+            <button
+              onClick={handleTrigger}
+              disabled={triggerState === 'loading'}
+              className="text-[13px] font-medium px-3 py-1.5 rounded-md border border-[#e0e0e0] bg-white text-[#424242] hover:border-[#7c3aed] hover:text-[#7c3aed] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {triggerState === 'loading' && '실행 중…'}
+              {triggerState === 'success' && '파이프라인 시작됨'}
+              {triggerState === 'error' && '오류 발생'}
+              {triggerState === 'idle' && '파이프라인 실행'}
+            </button>
+          )}
           <ExportButton />
           <button
             onClick={() => {

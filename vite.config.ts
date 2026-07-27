@@ -11,6 +11,20 @@ export default defineConfig({
   server: {
     proxy: { '/api': 'http://localhost:8080' },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-vendor'
+          }
+          if (id.includes('node_modules/react-router')) {
+            return 'router'
+          }
+        },
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

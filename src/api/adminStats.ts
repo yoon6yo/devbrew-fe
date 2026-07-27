@@ -19,3 +19,7 @@ export interface AdminStatsDto {
 export function getAdminStats(): Promise<AdminStatsDto> {
   return apiFetch<AdminStatsDto>('/api/admin/stats')
 }
+
+export function triggerPipeline(): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>('/api/admin/pipeline/trigger', { method: 'POST' })
+}

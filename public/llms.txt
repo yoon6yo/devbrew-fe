@@ -1,0 +1,9 @@
+# daybrew
+
+daybrew는 매일 아침 Reddit, GitHub 신호에서 추출한 개발 아이디어를 제공하는 서비스입니다.
+
+## 주요 페이지
+- [홈](https://daybrew.duckdns.org/)
+- [로그인](https://daybrew.duckdns.org/login)
+- [개인정보처리방침](https://daybrew.duckdns.org/privacy)
+- [이용약관](https://daybrew.duckdns.org/terms)
