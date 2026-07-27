@@ -28,7 +28,7 @@ export function downloadMarkdown(ideas: IdeaDto[], filename = 'daybrew-top5.md')
   const today = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
 
   const body = ideas.map((idea, i) => {
-    const score = idea.score !== null ? `${idea.score}점` : '미채점'
+    const score = idea.score !== null ? scoreBar(idea.score) : '미채점'
     const track = TRACK_LABEL[idea.sourceTrack] ?? idea.sourceTrack
     const status = STATUS_LABEL[idea.status] ?? idea.status
 
