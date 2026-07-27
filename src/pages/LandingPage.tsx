@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { getIdeas } from '@/api/ideas'
+import { getMe, logout } from '@/api/auth'
 import type { IdeaDto } from '@/types'
 import { ScoreBar } from '@/components/ScoreBar'
 import { TrackBadge } from '@/components/TrackBadge'
@@ -98,6 +99,10 @@ function MockIdeaCard() {
 export default function LandingPage() {
   const [ideas, setIdeas] = useState<IdeaDto[]>([])
   const [status, setStatus] = useState<'loading' | 'error' | 'ready'>('loading')
+  const [role, setRole] = useState<string | null>(() => localStorage.getItem('daybrew_role'))
+  const [userLabel, setUserLabel] = useState<string | null>(null)
+  const [showMenu, setShowMenu] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
 
   function fetchIdeas() {
     setStatus('loading')
@@ -106,7 +111,37 @@ export default function LandingPage() {
       .catch(() => setStatus('error'))
   }
 
+  function handleLogout() {
+    logout().finally(() => {
+      localStorage.removeItem('daybrew_role')
+      localStorage.removeItem('daybrew_auth')
+      setRole(null)
+      setUserLabel(null)
+    })
+  }
+
   useEffect(() => { fetchIdeas() }, [])
+
+  useEffect(() => {
+    if (!role) return
+    getMe()
+      .then(me => setUserLabel(me.email.split('@')[0]))
+      .catch(() => {
+        localStorage.removeItem('daybrew_role')
+        localStorage.removeItem('daybrew_auth')
+        setRole(null)
+      })
+  }, [role])
+
+  useEffect(() => {
+    function onClickOutside(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setShowMenu(false)
+      }
+    }
+    if (showMenu) document.addEventListener('mousedown', onClickOutside)
+    return () => document.removeEventListener('mousedown', onClickOutside)
+  }, [showMenu])
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#4a4458] tracking-[-0.3px]">
@@ -115,7 +150,7 @@ export default function LandingPage() {
         <div className="max-w-4xl mx-auto flex items-center justify-between">
           <span className="text-xl font-bold text-[#2a2433]">daybrew</span>
           <div className="flex items-center gap-3">
-            {localStorage.getItem('daybrew_role') === 'ADMIN' && (
+            {role === 'ADMIN' && (
               <a
                 href="/dashboard"
                 className="text-[14px] font-medium text-[#7c3aed] border border-[#e8e0f0] px-4 py-2 rounded-lg hover:border-[#7c3aed] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)]"
@@ -123,12 +158,36 @@ export default function LandingPage() {
                 대시보드
               </a>
             )}
-            <a
-              href="/login"
-              className="text-[14px] font-bold text-white bg-[#7c3aed] px-5 py-2.5 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)] shadow-sm"
-            >
-              시작하기
-            </a>
+            {role && userLabel ? (
+              <div ref={menuRef} className="relative">
+                <button
+                  onClick={() => setShowMenu(v => !v)}
+                  className="flex items-center gap-2 text-[14px] font-medium text-[#2a2433] border border-[#e8e0f0] px-4 py-2 rounded-lg hover:border-[#d9cce8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)]"
+                >
+                  <span className="w-6 h-6 rounded-full bg-[#7c3aed] text-white text-[11px] font-bold flex items-center justify-center shrink-0">
+                    {userLabel[0].toUpperCase()}
+                  </span>
+                  {userLabel}
+                </button>
+                {showMenu && (
+                  <div className="absolute right-0 mt-1 w-36 bg-white border border-[#e8e0f0] rounded-lg shadow-lg py-1 z-20">
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-[13px] text-[#4a4458] hover:bg-[#f3f0ec] transition-colors"
+                    >
+                      로그아웃
+                    </button>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <a
+                href="/login"
+                className="text-[14px] font-bold text-white bg-[#7c3aed] px-5 py-2.5 rounded-lg hover:bg-[#6d28d9] active:bg-[#5b21b6] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.5)] shadow-sm"
+              >
+                시작하기
+              </a>
+            )}
           </div>
         </div>
       </nav>
@@ -266,9 +325,11 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-center mt-8 text-[14px] text-[#6b6080]">
-                <a href="/login" className="text-[#7c3aed] hover:underline font-bold">로그인</a>하여 전체 피드와 상세 기획서를 확인하세요.
-              </p>
+              {!role && (
+                <p className="text-center mt-8 text-[14px] text-[#6b6080]">
+                  <a href="/login" className="text-[#7c3aed] hover:underline font-bold">로그인</a>하여 전체 피드와 상세 기획서를 확인하세요.
+                </p>
+              )}
             </>
           )}
         </div>
