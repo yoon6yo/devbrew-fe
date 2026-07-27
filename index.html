@@ -4,7 +4,9 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/css/pretendard-dynamic-subset.css" />
+    <link rel="preload" as="style" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/css/pretendard-dynamic-subset.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/css/pretendard-dynamic-subset.css" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/packages/pretendard/dist/web/static/css/pretendard-dynamic-subset.css" /></noscript>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>daybrew — 매일 아침 만들 만한 아이디어를 골라드립니다</title>
     <meta name="description" content="daybrew delivers curated software development ideas every morning, extracted from real Reddit and GitHub signals. Each idea includes purpose, tech stack, and scoring — all in one page." />
