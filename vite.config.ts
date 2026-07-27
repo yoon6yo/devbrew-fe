@@ -3,21 +3,14 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { compression } from 'vite-plugin-compression2'
 import { ViteMinifyPlugin } from 'vite-plugin-minify'
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import path from 'path'
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    {
-      name: 'preload-css',
-      transformIndexHtml(html: string) {
-        return html.replace(
-          /<link rel="stylesheet" crossorigin href="([^"]+\.css[^"]*)"/g,
-          '<link rel="preload" as="style" href="$1"><link rel="stylesheet" crossorigin href="$1"'
-        )
-      },
-    },
+    cssInjectedByJsPlugin(),
     ViteMinifyPlugin(),
     compression({ algorithms: ['gzip'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
     compression({ algorithms: ['brotliCompress'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
