@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { useIdeas } from '@/hooks/useIdeas'
 import { useAdminStats } from '@/hooks/useAdminStats'
 import { useIdeaStats } from '@/hooks/useIdeaStats'
@@ -11,6 +12,7 @@ import { PipelineTriggerModal } from '@/components/PipelineTriggerModal'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
 import type { DailyViewsDto } from '@/api/adminStats'
+import { notifyIdea, rejectIdea } from '@/api/ideas'
 import { logout } from '@/api/auth'
 
 type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'REJECTED'
@@ -30,20 +32,29 @@ function PageViewsChart({ data }: { data: DailyViewsDto[] }) {
     return <p className="text-[13px] text-[#9b91b0] py-4 text-center">데이터 없음</p>
   }
   const max = Math.max(...data.map(d => d.count), 1)
+  const DAY = ['일', '월', '화', '수', '목', '금', '토']
   return (
-    <div className="flex items-end gap-1.5 h-24 pt-2">
-      {data.map(d => (
-        <div key={d.date} className="flex-1 flex flex-col items-center gap-1.5 min-w-0">
-          <div
-            className="w-full rounded bg-[#7c3aed]/50 hover:bg-[#7c3aed]/80 transition-colors"
-            style={{ height: `${Math.max((d.count / max) * 72, 3)}px` }}
-            title={`${d.date}: ${d.count}회`}
-          />
-          <span className="text-[10px] text-[#9b91b0] truncate w-full text-center leading-none">
-            {d.date.slice(5)}
-          </span>
-        </div>
-      ))}
+    <div className="flex gap-2">
+      {data.map(d => {
+        const barH = Math.max((d.count / max) * 72, 4)
+        const dayName = DAY[new Date(d.date).getDay()]
+        const isToday = d.date === new Date().toISOString().slice(0, 10)
+        return (
+          <div key={d.date} className="flex-1 flex flex-col items-center min-w-0">
+            <span className={`text-[11px] font-bold tabular-nums mb-1 ${d.count > 0 ? 'text-[#7c3aed]' : 'text-[#c4b8d4]'}`}>
+              {d.count}
+            </span>
+            <div className="flex items-end w-full h-[72px]">
+              <div
+                className={`w-full rounded-t transition-colors ${isToday ? 'bg-[#7c3aed]' : 'bg-[#7c3aed]/40 hover:bg-[#7c3aed]/70'}`}
+                style={{ height: `${barH}px` }}
+              />
+            </div>
+            <span className={`text-[11px] mt-1.5 font-medium ${isToday ? 'text-[#7c3aed]' : 'text-[#9b91b0]'}`}>{dayName}</span>
+            <span className="text-[9px] text-[#c4b8d4]">{d.date.slice(5)}</span>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -104,7 +115,10 @@ export function DashboardPage() {
   const tab = (searchParams.get('tab') as TabKey | null) ?? 'ALL'
   const page = Number(searchParams.get('page') ?? 0)
   const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
+  const [bulkPending, setBulkPending] = useState(false)
 
+  const queryClient = useQueryClient()
   const role = localStorage.getItem('daybrew_role')
   const isAdmin = role === 'ADMIN'
 
@@ -128,12 +142,46 @@ export function DashboardPage() {
     const p = new URLSearchParams()
     if (key !== 'ALL') p.set('tab', key)
     p.set('page', '0')
+    setSelectedIds(new Set())
     setSearchParams(p)
   }
 
   function setPage(p: number) {
     setSearchParams((prev) => { const n = new URLSearchParams(prev); n.set('page', String(p)); return n })
   }
+
+  function toggleSelect(id: number) {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      next.has(id) ? next.delete(id) : next.add(id)
+      return next
+    })
+  }
+
+  function toggleSelectAll() {
+    const ids = data?.content.map(i => i.id) ?? []
+    setSelectedIds(prev => prev.size === ids.length ? new Set() : new Set(ids))
+  }
+
+  async function handleBulkNotify() {
+    setBulkPending(true)
+    await Promise.allSettled([...selectedIds].map(id => notifyIdea(id)))
+    setSelectedIds(new Set())
+    refetch()
+    queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
+    setBulkPending(false)
+  }
+
+  async function handleBulkReject() {
+    setBulkPending(true)
+    await Promise.allSettled([...selectedIds].map(id => rejectIdea(id)))
+    setSelectedIds(new Set())
+    refetch()
+    queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
+    setBulkPending(false)
+  }
+
+  const canBulkSelect = tab === 'SCORED' || tab === 'PENDING'
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#4a4458]">
@@ -225,9 +273,54 @@ export function DashboardPage() {
 
         {!isLoading && !isError && data && data.content.length > 0 && (
           <>
+            {canBulkSelect && selectedIds.size > 0 && (
+              <div className="flex items-center gap-3 mb-4 px-4 py-3 bg-white border border-[#7c3aed]/30 rounded-xl shadow-sm">
+                <span className="text-[13px] font-medium text-[#2a2433]">{selectedIds.size}개 선택됨</span>
+                <div className="flex-1" />
+                {tab === 'SCORED' && (
+                  <button
+                    disabled={bulkPending}
+                    onClick={handleBulkNotify}
+                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-[#7c3aed] text-white hover:bg-[#6d28d9] disabled:opacity-50 transition-colors"
+                  >
+                    공시하기
+                  </button>
+                )}
+                <button
+                  disabled={bulkPending}
+                  onClick={handleBulkReject}
+                  className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg border border-[#e8e0f0] text-[#4a4458] hover:border-[#f87171] hover:text-[#ef4444] disabled:opacity-50 transition-colors"
+                >
+                  거절하기
+                </button>
+                <button
+                  onClick={() => setSelectedIds(new Set())}
+                  className="text-[13px] text-[#9b91b0] hover:text-[#4a4458] transition-colors"
+                >
+                  취소
+                </button>
+              </div>
+            )}
+            {canBulkSelect && (
+              <div className="flex items-center gap-2 mb-3">
+                <input
+                  type="checkbox"
+                  checked={selectedIds.size === data.content.length && data.content.length > 0}
+                  onChange={toggleSelectAll}
+                  className="w-4 h-4 rounded border-[#c4b8d4] accent-[#7c3aed] cursor-pointer"
+                />
+                <span className="text-[12px] text-[#9b91b0]">전체 선택</span>
+              </div>
+            )}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {data.content.map((idea) => (
-                <IdeaCard key={idea.id} idea={idea} onClick={() => setSelectedId(idea.id)} />
+                <IdeaCard
+                  key={idea.id}
+                  idea={idea}
+                  onClick={() => setSelectedId(idea.id)}
+                  selected={canBulkSelect ? selectedIds.has(idea.id) : undefined}
+                  onToggle={canBulkSelect ? toggleSelect : undefined}
+                />
               ))}
             </div>
             <Pagination page={data.number} totalPages={data.totalPages} onPageChange={setPage} />

@@ -99,6 +99,7 @@ function MockIdeaCard() {
 
 export default function LandingPage() {
   const [ideas, setIdeas] = useState<IdeaDto[]>([])
+  const [visibleCount, setVisibleCount] = useState(3)
   const [status, setStatus] = useState<'loading' | 'error' | 'ready'>('loading')
   const [role, setRole] = useState<string | null>(() => localStorage.getItem('daybrew_role'))
   const [userLabel, setUserLabel] = useState<string | null>(null)
@@ -108,7 +109,7 @@ export default function LandingPage() {
 
   function fetchIdeas() {
     setStatus('loading')
-    getIdeas({ size: 3, status: 'NOTIFIED' })
+    getIdeas({ size: 100, status: 'NOTIFIED', sort: 'updatedAt,asc' })
       .then(p => { setIdeas(p.content); setStatus('ready') })
       .catch(() => setStatus('error'))
   }
@@ -315,7 +316,7 @@ export default function LandingPage() {
           {status === 'ready' && ideas.length > 0 && (
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {ideas.map(idea => (
+                {ideas.slice(0, visibleCount).map(idea => (
                   <div
                     key={idea.id}
                     role="article"
@@ -341,6 +342,16 @@ export default function LandingPage() {
                   </div>
                 ))}
               </div>
+              {visibleCount < ideas.length && (
+                <div className="text-center mt-8">
+                  <button
+                    onClick={() => setVisibleCount(c => c + 3)}
+                    className="text-[14px] font-medium text-[#7c3aed] border border-[#e8e0f0] px-6 py-2.5 rounded-lg hover:border-[#7c3aed] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgba(124,58,237,0.4)]"
+                  >
+                    더 보기 ({ideas.length - visibleCount}개 남음)
+                  </button>
+                </div>
+              )}
               {!role && (
                 <p className="text-center mt-8 text-[14px] text-[#6b6080]">
                   <a href="/login" className="text-[#7c3aed] hover:underline font-bold">로그인</a>하여 전체 피드와 상세 기획서를 확인하세요.

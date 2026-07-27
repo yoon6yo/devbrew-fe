@@ -7,10 +7,11 @@ interface GetIdeasParams {
   today?: boolean
   page?: number
   size?: number
+  sort?: string
 }
 
-export function getIdeas({ status, statuses, today, page = 0, size = 20 }: GetIdeasParams = {}): Promise<PageResponse<IdeaDto>> {
-  const params = new URLSearchParams({ page: String(page), size: String(size), sort: 'score,desc' })
+export function getIdeas({ status, statuses, today, page = 0, size = 20, sort = 'score,desc' }: GetIdeasParams = {}): Promise<PageResponse<IdeaDto>> {
+  const params = new URLSearchParams({ page: String(page), size: String(size), sort })
   if (statuses && statuses.length > 0) {
     statuses.forEach(s => params.append('statuses', s))
   } else if (status) {
