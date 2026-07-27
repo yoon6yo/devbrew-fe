@@ -68,7 +68,7 @@ function MockIdeaCard() {
           </span>
         </div>
 
-        <h3 className="text-[15px] font-bold text-[#2a2433] mb-1.5 leading-snug">AI 기반 노코드 앱 빌더 플랫폼</h3>
+        <p className="text-[15px] font-bold text-[#2a2433] mb-1.5 leading-snug">AI 기반 노코드 앱 빌더 플랫폼</p>
         <p className="text-[13px] text-[#6b6080] mb-3 leading-relaxed">
           비개발자도 실용적인 웹앱을 만들 수 있는 AI-first 빌더. 수요 급증 중.
         </p>
