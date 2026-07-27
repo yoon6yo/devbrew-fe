@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { ProtectedRoute } from '@/components/ProtectedRoute'
+import { AdminRoute } from '@/components/AdminRoute'
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 const LandingPage = lazy(() => import('@/pages/LandingPage'))
 const UserLoginPage = lazy(() => import('@/pages/UserLoginPage'))
@@ -54,9 +55,9 @@ const router = createBrowserRouter([
   {
     path: '/dashboard',
     element: (
-      <ProtectedRoute>
+      <AdminRoute>
         <DashboardPage />
-      </ProtectedRoute>
+      </AdminRoute>
     ),
   },
   { path: '*', element: <NotFoundPage /> },
@@ -64,8 +65,10 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <Suspense fallback={<PageLoader />}>
-      <RouterProvider router={router} />
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>
+        <RouterProvider router={router} />
+      </Suspense>
+    </ErrorBoundary>
   )
 }
