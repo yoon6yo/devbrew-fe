@@ -57,7 +57,7 @@ export function IdeaCard({
       )}
 
       {/* Bottom: status + date + cta */}
-      <div className="flex items-center justify-between pt-1 border-t border-[#f0ebf8]">
+      <div className="flex items-center justify-between mt-auto">
         <div className="flex items-center gap-2">
           <StatusBadge status={idea.status} />
           <span className="text-[11px] text-[#c4b8d4]">{formatDate(idea.createdAt)}</span>

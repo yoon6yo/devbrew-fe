@@ -11,12 +11,12 @@ import { Button } from '@/components/ui/button'
 
 function SectionBox({ title, accent = false, children }: { title: string; accent?: boolean; children: React.ReactNode }) {
   return (
-    <div className={`mb-4 rounded-xl border overflow-hidden ${accent ? 'border-[rgba(124,58,237,0.2)] bg-[rgba(124,58,237,0.03)]' : 'border-[#e8e0f0] bg-[#faf9f6]'}`}>
-      <div className={`px-4 pt-3.5 pb-0 flex items-center gap-2`}>
-        <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${accent ? 'bg-[#7c3aed]' : 'bg-[#c4b8d4]'}`} />
+    <div className="mb-5">
+      <div className="flex items-center gap-2 mb-2.5">
+        <span className={`w-0.5 h-3.5 rounded-full shrink-0 ${accent ? 'bg-[#7c3aed]' : 'bg-[#d8d0e8]'}`} />
         <p className={`text-[11px] font-bold uppercase tracking-wider ${accent ? 'text-[#7c3aed]' : 'text-[#9b91b0]'}`}>{title}</p>
       </div>
-      <div className="px-4 pt-2.5 pb-3.5 text-[14px] text-[#4a4458] leading-relaxed">{children}</div>
+      <div className="text-[14px] text-[#4a4458] leading-relaxed">{children}</div>
     </div>
   )
 }
@@ -150,7 +150,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="bg-white rounded-2xl border border-[#e8e0f0] w-full max-w-xl mx-4 shadow-2xl max-h-[92vh] flex flex-col overflow-hidden"
+        className="bg-white rounded-2xl border border-[#e8e0f0] w-full max-w-2xl mx-4 shadow-2xl max-h-[92vh] flex flex-col overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {isLoading ? (

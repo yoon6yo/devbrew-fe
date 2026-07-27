@@ -8,7 +8,7 @@ const colorMap: Record<IdeaStatus, string> = {
 }
 
 const labelMap: Record<IdeaStatus, string> = {
-  NOTIFIED: '알림 완료',
+  NOTIFIED: '공시됨',
   SCORED: '채점 완료',
   PENDING: '대기 중',
   REJECTED: '거절됨',

@@ -43,7 +43,7 @@ function AdminStatsSection() {
   if (isLoading || !data) {
     return (
       <div className="mb-6 space-y-3">
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="bg-white rounded-xl border border-[#e8e0f0] px-4 py-3.5 animate-pulse h-20" />
           ))}
@@ -58,7 +58,7 @@ function AdminStatsSection() {
 
   return (
     <div className="mb-6 space-y-3">
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <StatCard
           label="오늘 방문"
           value={fmt(data.pageViews.find(d => d.date === new Date().toISOString().slice(0, 10))?.count ?? 0)}
@@ -161,7 +161,7 @@ export function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#4a4458]">
-      <header className="sticky top-0 z-10 bg-[#faf9f6]/90 backdrop-blur border-b border-[#e8e0f0] px-6 py-4">
+      <header className="sticky top-0 z-10 bg-[#faf9f6]/90 backdrop-blur border-b border-[#e8e0f0] px-4 sm:px-6 py-3.5">
         <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link
@@ -207,7 +207,7 @@ export function DashboardPage() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-6 py-6">
+      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {isAdmin && <AdminStatsSection />}
 
         <div className="flex items-center justify-between mb-4">

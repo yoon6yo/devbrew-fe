@@ -3,14 +3,12 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { compression } from 'vite-plugin-compression2'
 import { ViteMinifyPlugin } from 'vite-plugin-minify'
-import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 import path from 'path'
 
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    cssInjectedByJsPlugin(),
     ViteMinifyPlugin(),
     compression({ algorithms: ['gzip'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
     compression({ algorithms: ['brotliCompress'], exclude: /\.(png|jpg|gif|webp|avif|woff2?)$/ }),
@@ -22,6 +20,8 @@ export default defineConfig({
     proxy: { '/api': 'http://localhost:8080' },
   },
   build: {
+    cssCodeSplit: true,
+    chunkSizeWarningLimit: 500,
     rollupOptions: {
       output: {
         manualChunks(id) {
@@ -30,6 +30,9 @@ export default defineConfig({
           }
           if (id.includes('node_modules/react-router')) {
             return 'router'
+          }
+          if (id.includes('node_modules/@tanstack')) {
+            return 'query'
           }
         },
       },
