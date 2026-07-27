@@ -77,10 +77,9 @@ function AdminStatsSection() {
       <div className="mb-6 space-y-3">
         <div className="grid grid-cols-3 gap-3">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-xl border border-[#e8e0f0] px-4 py-3.5 animate-pulse h-18" />
+            <div key={i} className="bg-white rounded-xl border border-[#e8e0f0] px-4 py-3.5 animate-pulse h-20" />
           ))}
         </div>
-        <div className="bg-white rounded-xl border border-[#e8e0f0] px-4 py-4 animate-pulse h-36" />
       </div>
     )
   }
@@ -92,19 +91,16 @@ function AdminStatsSection() {
   return (
     <div className="mb-6 space-y-3">
       <div className="grid grid-cols-3 gap-3">
-        <StatCard label="오늘 토큰" value={fmt(data.gemini.todayTokens)} />
+        <div className="bg-white rounded-xl border border-[#e8e0f0] px-4 py-3.5">
+          <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-2">일별 접근 수</p>
+          <PageViewsBoxes data={data.pageViews} />
+        </div>
         <StatCard label="이번 달 토큰" value={fmt(data.gemini.monthTokens)} />
         <StatCard
           label="이번 달 비용"
           value={`$${data.gemini.estimatedMonthlyCostUsd.toFixed(4)}`}
           sub="Flash Lite 기준"
         />
-      </div>
-      <div className="bg-white rounded-xl border border-[#e8e0f0] px-5 py-4">
-        <p className="text-[11px] font-bold text-[#9b91b0] uppercase tracking-wider mb-3">
-          일별 접근 수 (최근 7일)
-        </p>
-        <PageViewsBoxes data={data.pageViews} />
       </div>
     </div>
   )
