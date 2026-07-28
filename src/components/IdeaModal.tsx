@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useIdeaDetail } from '@/hooks/useIdeaDetail'
 import { useRejectIdea } from '@/hooks/useRejectIdea'
+import { useRestoreIdea } from '@/hooks/useRestoreIdea'
 import { useScoreIdea } from '@/hooks/useScoreIdea'
 import { useNotifyIdea } from '@/hooks/useNotifyIdea'
 import { useStarIdea } from '@/hooks/useStarIdea'
@@ -125,6 +126,7 @@ function ImplementationGuide({ text }: { text: string }) {
 export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose: () => void }) {
   const { data: idea, isLoading, isError } = useIdeaDetail(ideaId)
   const reject = useRejectIdea()
+  const restore = useRestoreIdea()
   const score = useScoreIdea()
   const notify = useNotifyIdea()
   const isAdmin = localStorage.getItem('daybrew_role') === 'ADMIN'
@@ -363,16 +365,27 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                           </Button>
                         )}
                         {idea.status === 'SCORED' && (
-                          <Button
-                            size="sm"
-                            className={notifyDone
-                              ? 'bg-emerald-500 text-white cursor-default'
-                              : 'bg-emerald-600 hover:bg-emerald-700 text-white'}
-                            disabled={notify.isPending || notifyDone}
-                            onClick={() => handleNotify(idea.id)}
-                          >
-                            {notifyDone ? '✓ 공시 완료' : notify.isPending ? '공시 중…' : '공시하기 → Slack'}
-                          </Button>
+                          <>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-[#e8e0f0] text-[#7c3aed] hover:bg-[#f3f0ff]"
+                              disabled={restore.isPending}
+                              onClick={() => restore.mutate(idea.id, { onSuccess: onClose })}
+                            >
+                              {restore.isPending ? '처리 중…' : '재채점 요청'}
+                            </Button>
+                            <Button
+                              size="sm"
+                              className={notifyDone
+                                ? 'bg-emerald-500 text-white cursor-default'
+                                : 'bg-emerald-600 hover:bg-emerald-700 text-white'}
+                              disabled={notify.isPending || notifyDone}
+                              onClick={() => handleNotify(idea.id)}
+                            >
+                              {notifyDone ? '✓ 공시 완료' : notify.isPending ? '공시 중…' : '공시하기 → Slack'}
+                            </Button>
+                          </>
                         )}
                         {idea.status !== 'REJECTED' && (
                           <Button
@@ -385,7 +398,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                           </Button>
                         )}
                       </div>
-                      {(score.isError || notify.isError || reject.isError) && (
+                      {(score.isError || notify.isError || reject.isError || restore.isError) && (
                         <p role="alert" className="text-xs text-red-500 mt-1.5">처리에 실패했습니다. 다시 시도해 주세요.</p>
                       )}
                     </div>

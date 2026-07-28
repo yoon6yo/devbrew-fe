@@ -21,6 +21,11 @@ export interface IdeaDto {
   howItWorks: string | null
   suggestedStack: string | null
   implementationGuide: string | null
+  oneLiner: string | null
+  problems: string | null
+  revenueModel: string | null
+  strengths: string | null
+  risks: string | null
 }
 
 export interface PageResponse<T> {

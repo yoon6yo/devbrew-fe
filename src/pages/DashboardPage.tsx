@@ -13,7 +13,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
 import { notifyIdea, rejectIdea, restoreIdea, featureIdea } from '@/api/ideas'
 import { logout } from '@/api/auth'
-import { getPipelineStatus, type PipelineStatus } from '@/api/adminStats'
+import { getPipelineStatus, triggerScore, type PipelineStatus } from '@/api/adminStats'
 import { usePipelineStatus } from '@/hooks/usePipelineStatus'
 
 type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'FEATURED' | 'REJECTED'
@@ -141,6 +141,8 @@ export function DashboardPage() {
   const [showTriggerModal, setShowTriggerModal] = useState(false)
   const [triggerSuccess, setTriggerSuccess] = useState(false)
   const [pipelinePolling, setPipelinePolling] = useState(false)
+  const [scoreSuccess, setScoreSuccess] = useState(false)
+  const [scoreTriggering, setScoreTriggering] = useState(false)
   const pipelineStatus = usePipelineStatus(pipelinePolling)
 
   useEffect(() => {
@@ -255,16 +257,42 @@ export function DashboardPage() {
 
           <div className="flex items-center gap-3">
             {isAdmin && (
-              <button
-                onClick={() => setShowTriggerModal(true)}
-                className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors ${
-                  triggerSuccess
-                    ? 'border-green-300 bg-green-50 text-green-700'
-                    : 'border-[#e8e0f0] bg-white text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed]'
-                }`}
-              >
-                {triggerSuccess ? '✓ 수집 시작됨' : '스크래핑 실행'}
-              </button>
+              <>
+                <button
+                  onClick={() => setShowTriggerModal(true)}
+                  className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors ${
+                    triggerSuccess
+                      ? 'border-green-300 bg-green-50 text-green-700'
+                      : 'border-[#e8e0f0] bg-white text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed]'
+                  }`}
+                >
+                  {triggerSuccess ? '✓ 수집 시작됨' : '스크래핑 실행'}
+                </button>
+                <button
+                  onClick={async () => {
+                    if (scoreTriggering) return
+                    setScoreTriggering(true)
+                    try {
+                      await triggerScore()
+                      setScoreSuccess(true)
+                      setPipelinePolling(true)
+                      setTimeout(() => setScoreSuccess(false), 5000)
+                    } catch {
+                      // ignore
+                    } finally {
+                      setScoreTriggering(false)
+                    }
+                  }}
+                  disabled={scoreTriggering}
+                  className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors ${
+                    scoreSuccess
+                      ? 'border-green-300 bg-green-50 text-green-700'
+                      : 'border-[#e8e0f0] bg-white text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed] disabled:opacity-50'
+                  }`}
+                >
+                  {scoreSuccess ? '✓ 채점 시작됨' : scoreTriggering ? '요청 중…' : '채점 실행'}
+                </button>
+              </>
             )}
             <ExportButton />
             <button

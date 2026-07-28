@@ -49,3 +49,15 @@ export interface PipelineStatus {
 export function getPipelineStatus(): Promise<PipelineStatus> {
   return apiFetch<PipelineStatus>('/api/admin/pipeline/status')
 }
+
+export function triggerCollect(options?: PipelineTriggerOptions): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>('/api/admin/pipeline/collect', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: options ? JSON.stringify(options) : undefined,
+  })
+}
+
+export function triggerScore(): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>('/api/admin/pipeline/score', { method: 'POST' })
+}
