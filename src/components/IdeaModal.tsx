@@ -329,7 +329,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                       {/* Stage indicator */}
                       <div className="flex items-center gap-1 mb-3.5 text-[11px] flex-wrap">
                         {(['PENDING', 'SCORED', 'NOTIFIED', 'FEATURED'] as const).map((s, i) => {
-                          const labels: Record<string, string> = { PENDING: '수집됨', SCORED: '채점완료', NOTIFIED: '공시됨', FEATURED: '★ 피처됨' }
+                          const labels: Record<string, string> = { PENDING: '수집됨', SCORED: '채점완료', NOTIFIED: '공시됨', FEATURED: '게시됨' }
                           const rankMap: Record<string, number> = { PENDING: 0, SCORED: 1, NOTIFIED: 2, FEATURED: 3 }
                           const currentRank = rankMap[idea.status] ?? -1
                           const active = idea.status === s

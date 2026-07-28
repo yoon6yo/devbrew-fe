@@ -9,7 +9,7 @@ const colorMap: Record<IdeaStatus, string> = {
 }
 
 const labelMap: Record<IdeaStatus, string> = {
-  FEATURED: '★ 피처됨',
+  FEATURED: '게시됨',
   NOTIFIED: '공시됨',
   SCORED:   '채점 완료',
   PENDING:  '대기 중',

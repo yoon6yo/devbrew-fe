@@ -102,7 +102,7 @@ export function DashboardPage() {
     { label: '대기중',  key: 'PENDING',  count: stats?.PENDING ?? null },
     { label: '채점완료', key: 'SCORED',  count: stats?.SCORED ?? null },
     { label: '공시됨',  key: 'NOTIFIED', count: stats?.NOTIFIED ?? null },
-    { label: '★ 홈 추천됨', key: 'FEATURED', count: stats?.FEATURED ?? null },
+    { label: '게시됨', key: 'FEATURED', count: stats?.FEATURED ?? null },
     { label: '거절됨',  key: 'REJECTED', count: stats?.REJECTED ?? null },
   ]
 
@@ -295,7 +295,7 @@ export function DashboardPage() {
                     onClick={handleBulkFeature}
                     className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50 transition-colors"
                   >
-                    ★ 홈 추천 →
+                    게시하기 →
                   </button>
                 )}
                 {(tab === 'SCORED' || tab === 'NOTIFIED' || tab === 'FEATURED' || tab === 'REJECTED') && (
