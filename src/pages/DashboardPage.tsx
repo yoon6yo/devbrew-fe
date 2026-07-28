@@ -280,6 +280,18 @@ export function DashboardPage() {
               <div className="flex items-center gap-3 mb-4 px-4 py-3 bg-white border border-[#7c3aed]/30 rounded-xl shadow-sm">
                 <span className="text-[13px] font-medium text-[#2a2433]">{selectedIds.size}개 선택됨</span>
                 <div className="flex-1" />
+                {(tab === 'SCORED' || tab === 'NOTIFIED' || tab === 'FEATURED' || tab === 'REJECTED') && (
+                  <button
+                    disabled={bulkPending}
+                    onClick={handleBulkRestore}
+                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg border border-[#e8e0f0] text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed] disabled:opacity-50 transition-colors"
+                  >
+                    {tab === 'SCORED'    ? '← 대기중으로'
+                   : tab === 'NOTIFIED' ? '← 채점완료로'
+                   : tab === 'FEATURED' ? '← 공시됨으로'
+                   : '복구하기'}
+                  </button>
+                )}
                 {tab === 'SCORED' && (
                   <button
                     disabled={bulkPending}
@@ -296,18 +308,6 @@ export function DashboardPage() {
                     className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50 transition-colors"
                   >
                     게시하기 →
-                  </button>
-                )}
-                {(tab === 'SCORED' || tab === 'NOTIFIED' || tab === 'FEATURED' || tab === 'REJECTED') && (
-                  <button
-                    disabled={bulkPending}
-                    onClick={handleBulkRestore}
-                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg border border-[#e8e0f0] text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed] disabled:opacity-50 transition-colors"
-                  >
-                    {tab === 'SCORED'    ? '← 대기중으로'
-                   : tab === 'NOTIFIED' ? '← 채점완료로'
-                   : tab === 'FEATURED' ? '← 공시됨으로'
-                   : '복구하기'}
                   </button>
                 )}
                 {tab !== 'REJECTED' && (
