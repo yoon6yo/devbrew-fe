@@ -89,25 +89,25 @@ export function IdeaCard({
 
       {/* Problems */}
       {idea.problems && (
-        <div className="bg-[#f8f6ff] rounded-xl px-3 py-2.5">
-          <p className="text-[10px] font-semibold text-[#a78bfa] uppercase tracking-widest mb-1.5">해결하는 문제</p>
-          <BulletList text={idea.problems} dotColor="#c4b8d4" />
+        <div>
+          <p className="text-[10px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-1.5">해결하는 문제</p>
+          <BulletList text={idea.problems} limit={2} />
         </div>
       )}
 
       {/* Strengths + Risks */}
       {(idea.strengths || idea.risks) && (
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-0 border-t border-[#f0ebf8] pt-2.5">
           {idea.strengths && (
-            <div className="bg-[#f5f3ff] rounded-xl px-3 py-2.5">
-              <p className="text-[10px] font-semibold text-[#5b21b6] uppercase tracking-widest mb-1.5">강점</p>
-              <BulletList text={idea.strengths} limit={2} dotColor="#a78bfa" />
+            <div>
+              <p className="text-[10px] font-semibold text-[#7c3aed] uppercase tracking-widest mb-1.5">강점</p>
+              <BulletList text={idea.strengths} limit={1} dotColor="#a78bfa" />
             </div>
           )}
           {idea.risks && (
-            <div className="bg-[#f3f0ec] rounded-xl px-3 py-2.5">
-              <p className="text-[10px] font-semibold text-[#78716c] uppercase tracking-widest mb-1.5">리스크</p>
-              <BulletList text={idea.risks} limit={2} dotColor="#c4b8d4" />
+            <div>
+              <p className="text-[10px] font-semibold text-[#9b91b0] uppercase tracking-widest mb-1.5">리스크</p>
+              <BulletList text={idea.risks} limit={1} />
             </div>
           )}
         </div>
@@ -115,13 +115,13 @@ export function IdeaCard({
 
       {/* Revenue model */}
       {idea.revenueModel && (
-        <p className="text-[12px] text-[#5b21b6] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug font-medium">
+        <p className="text-[12px] text-[#6b6080] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug">
           {idea.revenueModel}
         </p>
       )}
 
       {/* Footer */}
-      <div className="mt-auto pt-2.5 border-t border-[#ede9fe]">
+      <div className="mt-auto pt-2.5 border-t border-[#f0ebf8]">
         <span className="text-[11px] text-[#c4b8d4] tracking-wide">{formatDate(idea.createdAt)}</span>
       </div>
     </article>

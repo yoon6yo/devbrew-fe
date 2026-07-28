@@ -80,10 +80,10 @@ function MockIdeaCard() {
         </p>
 
         {/* Problems */}
-        <div className="bg-[#f8f6ff] rounded-xl px-3 py-2.5">
-          <p className="text-[10px] font-semibold text-[#a78bfa] uppercase tracking-widest mb-1.5">해결하는 문제</p>
+        <div>
+          <p className="text-[10px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-1.5">해결하는 문제</p>
           <ul className="space-y-0.5">
-            {['코딩 없이 앱 만들기 어려움', '진입장벽 높은 개발 생태계', '맞춤 도구 부족'].map(item => (
+            {['코딩 없이 앱 만들기 어려움', '진입장벽 높은 개발 생태계'].map(item => (
               <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
                 <span className="shrink-0 text-[#c4b8d4] mt-px">·</span><span>{item}</span>
               </li>
@@ -91,22 +91,22 @@ function MockIdeaCard() {
           </ul>
         </div>
 
-        {/* Strengths + Risks — purple family, no red/green */}
-        <div className="grid grid-cols-2 gap-2.5">
-          <div className="bg-[#f5f3ff] rounded-xl px-3 py-2.5">
-            <p className="text-[10px] font-semibold text-[#5b21b6] uppercase tracking-widest mb-1.5">강점</p>
+        {/* Strengths + Risks */}
+        <div className="grid grid-cols-2 gap-x-4 border-t border-[#f0ebf8] pt-2.5">
+          <div>
+            <p className="text-[10px] font-semibold text-[#7c3aed] uppercase tracking-widest mb-1.5">강점</p>
             <ul className="space-y-0.5">
-              {['빠른 출시', '낮은 개발 비용'].map(item => (
+              {['빠른 출시'].map(item => (
                 <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
                   <span className="shrink-0 text-[#a78bfa] mt-px">·</span><span>{item}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="bg-[#f3f0ec] rounded-xl px-3 py-2.5">
-            <p className="text-[10px] font-semibold text-[#78716c] uppercase tracking-widest mb-1.5">리스크</p>
+          <div>
+            <p className="text-[10px] font-semibold text-[#9b91b0] uppercase tracking-widest mb-1.5">리스크</p>
             <ul className="space-y-0.5">
-              {['확장성 한계', '커스터마이징 제약'].map(item => (
+              {['확장성 한계'].map(item => (
                 <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
                   <span className="shrink-0 text-[#c4b8d4] mt-px">·</span><span>{item}</span>
                 </li>
@@ -116,12 +116,12 @@ function MockIdeaCard() {
         </div>
 
         {/* Revenue model */}
-        <p className="text-[12px] text-[#5b21b6] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug font-medium">
+        <p className="text-[12px] text-[#6b6080] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug">
           월정액 SaaS + 유료 템플릿
         </p>
 
         {/* Footer */}
-        <div className="mt-auto pt-2.5 border-t border-[#ede9fe]">
+        <div className="mt-auto pt-2.5 border-t border-[#f0ebf8]">
           <span className="text-[11px] text-[#c4b8d4] tracking-wide">2026. 07. 28</span>
         </div>
       </div>
