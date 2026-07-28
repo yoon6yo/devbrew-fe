@@ -4,6 +4,7 @@ const colorMap: Record<IdeaStatus, string> = {
   FEATURED: 'bg-amber-100 text-amber-700 border-amber-200',
   NOTIFIED: 'bg-green-100 text-green-700 border-green-200',
   SCORED:   'bg-blue-100 text-blue-700 border-blue-200',
+  SCORING:  'bg-[#f3f0ff] text-[#7c3aed] border-[#d8d0f8] animate-pulse',
   PENDING:  'bg-[#f0ebf8] text-[#7c3aed] border-[rgba(124,58,237,0.2)]',
   REJECTED: 'bg-gray-100 text-gray-500 border-gray-200',
 }
@@ -12,6 +13,7 @@ const labelMap: Record<IdeaStatus, string> = {
   FEATURED: '게시됨',
   NOTIFIED: '공시됨',
   SCORED:   '채점 완료',
+  SCORING:  '채점 중',
   PENDING:  '대기 중',
   REJECTED: '거절됨',
 }

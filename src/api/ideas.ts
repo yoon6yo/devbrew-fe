@@ -52,6 +52,7 @@ export async function getTopIdeas(n = 5): Promise<IdeaDto[]> {
 
 export interface IdeaStatsDto {
   PENDING: number
+  SCORING?: number
   SCORED: number
   NOTIFIED: number
   FEATURED: number

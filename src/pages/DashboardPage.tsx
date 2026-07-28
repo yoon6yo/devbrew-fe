@@ -16,11 +16,12 @@ import { logout } from '@/api/auth'
 import { getPipelineStatus, triggerScore, type PipelineStatus } from '@/api/adminStats'
 import { usePipelineStatus } from '@/hooks/usePipelineStatus'
 
-type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'FEATURED' | 'REJECTED'
+type TabKey = 'ALL' | 'PENDING' | 'SCORING' | 'SCORED' | 'NOTIFIED' | 'FEATURED' | 'REJECTED'
 
 function tabToParams(tab: TabKey): { status?: IdeaStatus; statuses?: IdeaStatus[] } {
   switch (tab) {
     case 'PENDING':  return { status: 'PENDING' }
+    case 'SCORING':  return { status: 'SCORING' }
     case 'SCORED':   return { status: 'SCORED' }
     case 'NOTIFIED': return { status: 'NOTIFIED' }
     case 'FEATURED': return { status: 'FEATURED' }
@@ -90,7 +91,7 @@ function fmtKST(iso: string | null | undefined, fallback = '기록 없음'): str
   })
 }
 
-function PipelineStatusPanel({ status, pendingCount, onScoreNow }: { status: PipelineStatus; pendingCount: number | null; onScoreNow: () => void }) {
+function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }: { status: PipelineStatus; pendingCount: number | null; scoringCount: number | null; onScoreNow: () => void }) {
   const isDone = !status.running && !!status.finishedAt
   const isError = !!status.error
   const scheduleRows = [
@@ -100,6 +101,7 @@ function PipelineStatusPanel({ status, pendingCount, onScoreNow }: { status: Pip
       lastResult: status.lastCollectResult,
       nextAt: status.nextCollectAt,
       pending: null as number | null,
+      scoring: null as number | null,
     },
     {
       label: '채점',
@@ -107,6 +109,7 @@ function PipelineStatusPanel({ status, pendingCount, onScoreNow }: { status: Pip
       lastResult: status.lastScoreResult,
       nextAt: status.nextScoreAt,
       pending: pendingCount,
+      scoring: scoringCount,
     },
   ]
   return (
@@ -154,17 +157,22 @@ function PipelineStatusPanel({ status, pendingCount, onScoreNow }: { status: Pip
       <div className="px-4 py-3 rounded-xl border border-[#e8e0f0] bg-white">
         <p className="text-[11px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-2.5">배치 스케줄 (KST)</p>
         <div className="space-y-3">
-          {scheduleRows.map(({ label, lastAt, lastResult, nextAt, pending }) => (
+          {scheduleRows.map(({ label, lastAt, lastResult, nextAt, pending, scoring }) => (
             <div key={label}>
               <div className="flex items-center justify-between gap-3 mb-1">
                 <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-[12px] font-semibold text-[#2a2433] w-8 shrink-0">{label}</span>
+                  {scoring !== null && scoring > 0 && (
+                    <span className="text-[11px] font-semibold text-[#7c3aed] bg-[#f3f0ff] border border-[#e0d9ff] px-2 py-0.5 rounded-full animate-pulse">
+                      채점중 {scoring}개
+                    </span>
+                  )}
                   {pending !== null && pending > 0 && (
-                    <span className="text-[11px] font-semibold text-[#7c3aed] bg-[#f3f0ff] border border-[#e0d9ff] px-2 py-0.5 rounded-full">
+                    <span className="text-[11px] font-semibold text-[#9b91b0] bg-[#f5f3ff] border border-[#e8e0f0] px-2 py-0.5 rounded-full">
                       대기 {pending}개
                     </span>
                   )}
-                  {pending !== null && pending === 0 && (
+                  {pending !== null && pending === 0 && (scoring === null || scoring === 0) && (
                     <span className="text-[11px] text-[#c4b8d4]">대기 없음</span>
                   )}
                   {pending !== null && pending > 0 && !status.running && (
@@ -232,10 +240,11 @@ export function DashboardPage() {
   const { data, isLoading, isError, refetch } = useIdeas({ ...ideaParams, page })
   const { data: stats } = useIdeaStats()
 
-  const total = stats ? (stats.PENDING + stats.SCORED + stats.NOTIFIED + (stats.FEATURED ?? 0) + stats.REJECTED) : null
+  const total = stats ? (stats.PENDING + (stats.SCORING ?? 0) + stats.SCORED + stats.NOTIFIED + (stats.FEATURED ?? 0) + stats.REJECTED) : null
   const TABS: { label: string; key: TabKey; count: number | null }[] = [
     { label: '전체',    key: 'ALL',      count: total },
     { label: '대기중',  key: 'PENDING',  count: stats?.PENDING ?? null },
+    { label: '채점중',  key: 'SCORING',  count: stats?.SCORING ?? null },
     { label: '채점완료', key: 'SCORED',  count: stats?.SCORED ?? null },
     { label: '공시됨',  key: 'NOTIFIED', count: stats?.NOTIFIED ?? null },
     { label: '게시됨', key: 'FEATURED', count: stats?.FEATURED ?? null },
@@ -382,19 +391,24 @@ export function DashboardPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {isAdmin && <AdminStatsSection />}
-        {isAdmin && pipelineStatus && (
-          <PipelineStatusPanel
-            status={pipelineStatus}
-            pendingCount={stats?.PENDING ?? null}
-            onScoreNow={async () => {
-              try {
-                await triggerScore()
-                setPipelinePolling(true)
-                setScoreSuccess(true)
-                setTimeout(() => setScoreSuccess(false), 5000)
-              } catch { /* ignore */ }
-            }}
-          />
+        {isAdmin && (
+          pipelineStatus
+            ? (
+              <PipelineStatusPanel
+                status={pipelineStatus}
+                pendingCount={stats?.PENDING ?? null}
+                scoringCount={stats?.SCORING ?? null}
+                onScoreNow={async () => {
+                  try {
+                    await triggerScore()
+                    setPipelinePolling(true)
+                    setScoreSuccess(true)
+                    setTimeout(() => setScoreSuccess(false), 5000)
+                  } catch { /* ignore */ }
+                }}
+              />
+            )
+            : <div className="mb-6 px-4 py-3 rounded-xl border border-[#e8e0f0] bg-white animate-pulse h-20" />
         )}
 
         <div className="flex items-center justify-between mb-4 gap-2">

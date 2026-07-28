@@ -4,10 +4,10 @@ import { getPipelineStatus, type PipelineStatus } from '@/api/adminStats'
 export function usePipelineStatus(active: boolean) {
   const [status, setStatus] = useState<PipelineStatus | null>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const activeRef = useRef(active)
+  activeRef.current = active
 
   useEffect(() => {
-    if (!active) return
-
     let cancelled = false
 
     async function poll() {
@@ -15,13 +15,12 @@ export function usePipelineStatus(active: boolean) {
         const s = await getPipelineStatus()
         if (!cancelled) {
           setStatus(s)
-          if (s.running) {
-            timerRef.current = setTimeout(poll, 2000)
-          }
+          const delay = s.running || activeRef.current ? 2000 : 60_000
+          timerRef.current = setTimeout(poll, delay)
         }
       } catch {
         if (!cancelled) {
-          timerRef.current = setTimeout(poll, 3000)
+          timerRef.current = setTimeout(poll, activeRef.current ? 3000 : 60_000)
         }
       }
     }
@@ -31,7 +30,7 @@ export function usePipelineStatus(active: boolean) {
       cancelled = true
       if (timerRef.current) clearTimeout(timerRef.current)
     }
-  }, [active])
+  }, [])
 
   return status
 }
