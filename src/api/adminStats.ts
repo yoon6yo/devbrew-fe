@@ -44,6 +44,12 @@ export interface PipelineStatus {
   finishedAt: string | null
   result: string | null
   error: string | null
+  lastCollectAt: string | null
+  lastCollectResult: string | null
+  nextCollectAt: string
+  lastScoreAt: string | null
+  lastScoreResult: string | null
+  nextScoreAt: string
 }
 
 export function getPipelineStatus(): Promise<PipelineStatus> {

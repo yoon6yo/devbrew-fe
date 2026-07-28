@@ -81,46 +81,93 @@ function AdminStatsSection() {
 
 const PIPELINE_STEPS = ['신호 수집', '중복 제거', '아이디어 생성', '채점']
 
+function fmtKST(iso: string | null | undefined, fallback = '기록 없음'): string {
+  if (!iso) return fallback
+  return new Date(iso).toLocaleString('ko-KR', {
+    timeZone: 'Asia/Seoul',
+    month: 'numeric', day: 'numeric',
+    hour: '2-digit', minute: '2-digit',
+  })
+}
+
 function PipelineStatusPanel({ status }: { status: PipelineStatus }) {
   const isDone = !status.running && !!status.finishedAt
   const isError = !!status.error
+  const scheduleRows = [
+    {
+      label: '수집',
+      lastAt: status.lastCollectAt,
+      lastResult: status.lastCollectResult,
+      nextAt: status.nextCollectAt,
+    },
+    {
+      label: '채점',
+      lastAt: status.lastScoreAt,
+      lastResult: status.lastScoreResult,
+      nextAt: status.nextScoreAt,
+    },
+  ]
   return (
-    <div className={`mb-6 px-4 py-3.5 rounded-xl border transition-colors ${
-      isError ? 'bg-red-50 border-red-200'
-      : isDone ? 'bg-[#f0faf5] border-[#a7f3d0]'
-      : 'bg-white border-[#e8e0f0] shadow-sm'
-    }`}>
-      <div className="flex items-center gap-2 flex-wrap mb-1.5">
-        {PIPELINE_STEPS.map((label, i) => {
-          const idx = i + 1
-          const done = (isDone && !isError) || status.stepIndex > idx
-          const active = status.running && status.stepIndex === idx
-          return (
-            <div key={label} className="flex items-center gap-1.5">
-              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
-                done   ? 'bg-[#10b981] text-white'
-                : active ? 'bg-[#7c3aed] text-white animate-pulse'
-                : 'bg-[#f0ebf8] text-[#c4b8d4]'
-              }`}>
-                {done ? '✓' : idx}
+    <div className="mb-6 space-y-2">
+      {(status.running || isDone) && (
+        <div className={`px-4 py-3.5 rounded-xl border transition-colors ${
+          isError ? 'bg-red-50 border-red-200'
+          : isDone ? 'bg-[#f0faf5] border-[#a7f3d0]'
+          : 'bg-white border-[#e8e0f0] shadow-sm'
+        }`}>
+          <div className="flex items-center gap-2 flex-wrap mb-1.5">
+            {PIPELINE_STEPS.map((label, i) => {
+              const idx = i + 1
+              const done = (isDone && !isError) || status.stepIndex > idx
+              const active = status.running && status.stepIndex === idx
+              return (
+                <div key={label} className="flex items-center gap-1.5">
+                  <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                    done   ? 'bg-[#10b981] text-white'
+                    : active ? 'bg-[#7c3aed] text-white animate-pulse'
+                    : 'bg-[#f0ebf8] text-[#c4b8d4]'
+                  }`}>
+                    {done ? '✓' : idx}
+                  </div>
+                  <span className={`text-[12px] font-medium ${
+                    done || active ? 'text-[#2a2433]' : 'text-[#c4b8d4]'
+                  }`}>{label}</span>
+                  {i < PIPELINE_STEPS.length - 1 && <span className="text-[#d8d0e8] text-[11px] mx-0.5">→</span>}
+                </div>
+              )
+            })}
+          </div>
+          {status.running && status.detail && (
+            <p className="text-[12px] text-[#6b6080] mt-1">{status.detail}</p>
+          )}
+          {isDone && !isError && (
+            <p className="text-[12px] text-[#1a7f4b] font-medium mt-1">완료 — {status.result}</p>
+          )}
+          {isError && (
+            <p className="text-[12px] text-red-600 mt-1">{status.error}</p>
+          )}
+        </div>
+      )}
+
+      <div className="px-4 py-3 rounded-xl border border-[#e8e0f0] bg-white">
+        <p className="text-[11px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-2.5">배치 스케줄 (KST)</p>
+        <div className="space-y-2">
+          {scheduleRows.map(({ label, lastAt, lastResult, nextAt }) => (
+            <div key={label} className="flex items-start justify-between gap-4">
+              <span className="text-[12px] font-medium text-[#4a4458] w-8 shrink-0">{label}</span>
+              <div className="flex-1 min-w-0">
+                <span className="text-[11px] text-[#9b91b0]">
+                  이전: {fmtKST(lastAt)}
+                  {lastResult && <span className="ml-1 text-[#c4b8d4]">({lastResult})</span>}
+                </span>
               </div>
-              <span className={`text-[12px] font-medium ${
-                done || active ? 'text-[#2a2433]' : 'text-[#c4b8d4]'
-              }`}>{label}</span>
-              {i < PIPELINE_STEPS.length - 1 && <span className="text-[#d8d0e8] text-[11px] mx-0.5">→</span>}
+              <span className="text-[11px] font-medium text-[#7c3aed] shrink-0">
+                다음: {fmtKST(nextAt)}
+              </span>
             </div>
-          )
-        })}
+          ))}
+        </div>
       </div>
-      {status.running && status.detail && (
-        <p className="text-[12px] text-[#6b6080] mt-1">{status.detail}</p>
-      )}
-      {isDone && !isError && (
-        <p className="text-[12px] text-[#1a7f4b] font-medium mt-1">완료 — {status.result}</p>
-      )}
-      {isError && (
-        <p className="text-[12px] text-red-600 mt-1">{status.error}</p>
-      )}
     </div>
   )
 }
@@ -313,7 +360,7 @@ export function DashboardPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {isAdmin && <AdminStatsSection />}
-        {isAdmin && pipelineStatus && (pipelineStatus.running || !!pipelineStatus.finishedAt) && (
+        {isAdmin && pipelineStatus && (
           <PipelineStatusPanel status={pipelineStatus} />
         )}
 
