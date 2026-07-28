@@ -175,14 +175,13 @@ function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }:
                   {pending !== null && pending === 0 && (scoring === null || scoring === 0) && (
                     <span className="text-[11px] text-[#c4b8d4]">대기 없음</span>
                   )}
-                  {pending !== null && pending > 0 && !status.running && (
-                    <button
-                      onClick={onScoreNow}
-                      className="text-[11px] font-semibold text-white bg-[#7c3aed] hover:bg-[#6d28d9] px-2.5 py-0.5 rounded-full transition-colors"
-                    >
-                      지금 채점
-                    </button>
-                  )}
+                  <button
+                    onClick={onScoreNow}
+                    disabled={status.running || !pending || pending === 0}
+                    className="text-[11px] font-semibold text-white bg-[#7c3aed] hover:bg-[#6d28d9] disabled:bg-[#c4b8d4] px-2.5 py-0.5 rounded-full transition-colors disabled:cursor-not-allowed"
+                  >
+                    {status.running ? '실행 중…' : '채점'}
+                  </button>
                 </div>
                 <span className="text-[11px] font-medium text-[#7c3aed] shrink-0">
                   다음: {fmtKST(nextAt)}
@@ -218,7 +217,6 @@ export function DashboardPage() {
   const [showTriggerModal, setShowTriggerModal] = useState(false)
   const [triggerSuccess, setTriggerSuccess] = useState(false)
   const [pipelinePolling, setPipelinePolling] = useState(false)
-  const [scoreSuccess, setScoreSuccess] = useState(false)
   const [scoreTriggering, setScoreTriggering] = useState(false)
   const pipelineStatus = usePipelineStatus(pipelinePolling)
 
@@ -228,13 +226,16 @@ export function DashboardPage() {
   }, [isAdmin])
 
   useEffect(() => {
-    if (pipelineStatus && !pipelineStatus.running) {
+    if (!pipelineStatus) return
+    if (!pipelineStatus.running) {
       refetch()
       queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
       const t = setTimeout(() => setPipelinePolling(false), 6000)
       return () => clearTimeout(t)
     }
-  }, [pipelineStatus?.running])
+    // Refresh stats every poll cycle while running so SCORING count stays live
+    queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
+  }, [pipelineStatus])
 
   const ideaParams = tabToParams(tab)
   const { data, isLoading, isError, refetch } = useIdeas({ ...ideaParams, page })
@@ -335,42 +336,16 @@ export function DashboardPage() {
 
           <div className="flex items-center gap-3">
             {isAdmin && (
-              <>
-                <button
-                  onClick={() => setShowTriggerModal(true)}
-                  className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors ${
-                    triggerSuccess
-                      ? 'border-green-300 bg-green-50 text-green-700'
-                      : 'border-[#e8e0f0] bg-white text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed]'
-                  }`}
-                >
-                  {triggerSuccess ? '✓ 수집 시작됨' : '스크래핑 실행'}
-                </button>
-                <button
-                  onClick={async () => {
-                    if (scoreTriggering) return
-                    setScoreTriggering(true)
-                    try {
-                      await triggerScore()
-                      setScoreSuccess(true)
-                      setPipelinePolling(true)
-                      setTimeout(() => setScoreSuccess(false), 5000)
-                    } catch {
-                      // ignore
-                    } finally {
-                      setScoreTriggering(false)
-                    }
-                  }}
-                  disabled={scoreTriggering}
-                  className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors ${
-                    scoreSuccess
-                      ? 'border-green-300 bg-green-50 text-green-700'
-                      : 'border-[#e8e0f0] bg-white text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed] disabled:opacity-50'
-                  }`}
-                >
-                  {scoreSuccess ? '✓ 채점 시작됨' : scoreTriggering ? '요청 중…' : '채점 실행'}
-                </button>
-              </>
+              <button
+                onClick={() => setShowTriggerModal(true)}
+                className={`text-[13px] font-medium px-3.5 py-1.5 rounded-lg border transition-colors ${
+                  triggerSuccess
+                    ? 'border-green-300 bg-green-50 text-green-700'
+                    : 'border-[#e8e0f0] bg-white text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed]'
+                }`}
+              >
+                {triggerSuccess ? '✓ 수집 시작됨' : '스크래핑 실행'}
+              </button>
             )}
             <ExportButton />
             <button
@@ -399,12 +374,13 @@ export function DashboardPage() {
                 pendingCount={stats?.PENDING ?? null}
                 scoringCount={stats?.SCORING ?? null}
                 onScoreNow={async () => {
+                  if (scoreTriggering) return
+                  setScoreTriggering(true)
                   try {
                     await triggerScore()
                     setPipelinePolling(true)
-                    setScoreSuccess(true)
-                    setTimeout(() => setScoreSuccess(false), 5000)
                   } catch { /* ignore */ }
+                  finally { setScoreTriggering(false) }
                 }}
               />
             )
