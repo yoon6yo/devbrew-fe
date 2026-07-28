@@ -90,7 +90,7 @@ function fmtKST(iso: string | null | undefined, fallback = '기록 없음'): str
   })
 }
 
-function PipelineStatusPanel({ status }: { status: PipelineStatus }) {
+function PipelineStatusPanel({ status, pendingCount, onScoreNow }: { status: PipelineStatus; pendingCount: number | null; onScoreNow: () => void }) {
   const isDone = !status.running && !!status.finishedAt
   const isError = !!status.error
   const scheduleRows = [
@@ -99,12 +99,14 @@ function PipelineStatusPanel({ status }: { status: PipelineStatus }) {
       lastAt: status.lastCollectAt,
       lastResult: status.lastCollectResult,
       nextAt: status.nextCollectAt,
+      pending: null as number | null,
     },
     {
       label: '채점',
       lastAt: status.lastScoreAt,
       lastResult: status.lastScoreResult,
       nextAt: status.nextScoreAt,
+      pending: pendingCount,
     },
   ]
   return (
@@ -151,19 +153,39 @@ function PipelineStatusPanel({ status }: { status: PipelineStatus }) {
 
       <div className="px-4 py-3 rounded-xl border border-[#e8e0f0] bg-white">
         <p className="text-[11px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-2.5">배치 스케줄 (KST)</p>
-        <div className="space-y-2">
-          {scheduleRows.map(({ label, lastAt, lastResult, nextAt }) => (
-            <div key={label} className="flex items-start justify-between gap-4">
-              <span className="text-[12px] font-medium text-[#4a4458] w-8 shrink-0">{label}</span>
-              <div className="flex-1 min-w-0">
+        <div className="space-y-3">
+          {scheduleRows.map(({ label, lastAt, lastResult, nextAt, pending }) => (
+            <div key={label}>
+              <div className="flex items-center justify-between gap-3 mb-1">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[12px] font-semibold text-[#2a2433] w-8 shrink-0">{label}</span>
+                  {pending !== null && pending > 0 && (
+                    <span className="text-[11px] font-semibold text-[#7c3aed] bg-[#f3f0ff] border border-[#e0d9ff] px-2 py-0.5 rounded-full">
+                      대기 {pending}개
+                    </span>
+                  )}
+                  {pending !== null && pending === 0 && (
+                    <span className="text-[11px] text-[#c4b8d4]">대기 없음</span>
+                  )}
+                  {pending !== null && pending > 0 && !status.running && (
+                    <button
+                      onClick={onScoreNow}
+                      className="text-[11px] font-semibold text-white bg-[#7c3aed] hover:bg-[#6d28d9] px-2.5 py-0.5 rounded-full transition-colors"
+                    >
+                      지금 채점
+                    </button>
+                  )}
+                </div>
+                <span className="text-[11px] font-medium text-[#7c3aed] shrink-0">
+                  다음: {fmtKST(nextAt)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between gap-3">
                 <span className="text-[11px] text-[#9b91b0]">
                   이전: {fmtKST(lastAt)}
                   {lastResult && <span className="ml-1 text-[#c4b8d4]">({lastResult})</span>}
                 </span>
               </div>
-              <span className="text-[11px] font-medium text-[#7c3aed] shrink-0">
-                다음: {fmtKST(nextAt)}
-              </span>
             </div>
           ))}
         </div>
@@ -361,7 +383,18 @@ export function DashboardPage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {isAdmin && <AdminStatsSection />}
         {isAdmin && pipelineStatus && (
-          <PipelineStatusPanel status={pipelineStatus} />
+          <PipelineStatusPanel
+            status={pipelineStatus}
+            pendingCount={stats?.PENDING ?? null}
+            onScoreNow={async () => {
+              try {
+                await triggerScore()
+                setPipelinePolling(true)
+                setScoreSuccess(true)
+                setTimeout(() => setScoreSuccess(false), 5000)
+              } catch { /* ignore */ }
+            }}
+          />
         )}
 
         <div className="flex items-center justify-between mb-4 gap-2">
