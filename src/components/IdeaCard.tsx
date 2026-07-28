@@ -11,13 +11,13 @@ function MiniLabel({ children }: { children: React.ReactNode }) {
   )
 }
 
-function BulletList({ text, limit = 3 }: { text: string; limit?: number }) {
+function BulletList({ text, limit = 3, dotColor = '#c4b8d4' }: { text: string; limit?: number; dotColor?: string }) {
   const items = text.split('\n').map(s => s.trim()).filter(Boolean).slice(0, limit)
   return (
     <ul className="space-y-0.5">
       {items.map((item, i) => (
         <li key={i} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
-          <span className="shrink-0 text-[#c4b8d4] mt-px">·</span>
+          <span className="shrink-0 mt-px" style={{ color: dotColor }}>·</span>
           <span>{item}</span>
         </li>
       ))}
@@ -89,29 +89,25 @@ export function IdeaCard({
 
       {/* Problems */}
       {idea.problems && (
-        <div>
-          <MiniLabel>해결하는 문제</MiniLabel>
-          <BulletList text={idea.problems} />
+        <div className="bg-[#f8f6ff] rounded-xl px-3 py-2.5">
+          <p className="text-[10px] font-semibold text-[#a78bfa] uppercase tracking-widest mb-1.5">해결하는 문제</p>
+          <BulletList text={idea.problems} dotColor="#c4b8d4" />
         </div>
       )}
 
       {/* Strengths + Risks */}
       {(idea.strengths || idea.risks) && (
-        <div className="grid grid-cols-2 gap-3 pt-0.5">
+        <div className="grid grid-cols-2 gap-2.5">
           {idea.strengths && (
-            <div>
-              <p className="text-[10px] font-semibold text-[#059669] uppercase tracking-widest mb-1.5">
-                장점
-              </p>
-              <BulletList text={idea.strengths} limit={2} />
+            <div className="bg-[#f5f3ff] rounded-xl px-3 py-2.5">
+              <p className="text-[10px] font-semibold text-[#5b21b6] uppercase tracking-widest mb-1.5">강점</p>
+              <BulletList text={idea.strengths} limit={2} dotColor="#a78bfa" />
             </div>
           )}
           {idea.risks && (
-            <div>
-              <p className="text-[10px] font-semibold text-[#dc2626] uppercase tracking-widest mb-1.5">
-                리스크
-              </p>
-              <BulletList text={idea.risks} limit={2} />
+            <div className="bg-[#f3f0ec] rounded-xl px-3 py-2.5">
+              <p className="text-[10px] font-semibold text-[#78716c] uppercase tracking-widest mb-1.5">리스크</p>
+              <BulletList text={idea.risks} limit={2} dotColor="#c4b8d4" />
             </div>
           )}
         </div>
@@ -119,13 +115,13 @@ export function IdeaCard({
 
       {/* Revenue model */}
       {idea.revenueModel && (
-        <p className="text-[12px] text-[#6b6080] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug">
+        <p className="text-[12px] text-[#5b21b6] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug font-medium">
           {idea.revenueModel}
         </p>
       )}
 
       {/* Footer */}
-      <div className="mt-auto pt-2.5 border-t border-[#f0ebf8]">
+      <div className="mt-auto pt-2.5 border-t border-[#ede9fe]">
         <span className="text-[11px] text-[#c4b8d4] tracking-wide">{formatDate(idea.createdAt)}</span>
       </div>
     </article>
