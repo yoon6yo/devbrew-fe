@@ -149,6 +149,8 @@ export function DashboardPage() {
 
   useEffect(() => {
     if (pipelineStatus && !pipelineStatus.running) {
+      refetch()
+      queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
       const t = setTimeout(() => setPipelinePolling(false), 6000)
       return () => clearTimeout(t)
     }
