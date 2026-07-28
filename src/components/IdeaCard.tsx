@@ -56,13 +56,19 @@ export function IdeaCard({
         </p>
       )}
 
-      {/* Bottom: status + date + cta */}
-      <div className="flex items-center justify-between mt-auto">
-        <div className="flex items-center gap-2">
+      {/* Bottom: status + date + star count + cta (with border-t separator) */}
+      <div className="flex items-center justify-between pt-2.5 border-t border-[#f0ebf8] mt-auto">
+        <div className="flex items-center gap-2 flex-wrap">
           <StatusBadge status={idea.status} />
           <span className="text-[11px] text-[#c4b8d4]">{formatDate(idea.createdAt)}</span>
+          {idea.starCount > 0 && (
+            <span className="text-[11px] text-[#a89ec0] flex items-center gap-0.5">
+              <span className="text-[#7c3aed]">★</span>
+              {idea.starCount}
+            </span>
+          )}
         </div>
-        <span className="text-[12px] text-[#c4b8d4] group-hover:text-[#7c3aed] transition-colors font-medium select-none">
+        <span className="text-[12px] text-[#c4b8d4] group-hover:text-[#7c3aed] transition-colors font-medium select-none shrink-0">
           자세히 →
         </span>
       </div>

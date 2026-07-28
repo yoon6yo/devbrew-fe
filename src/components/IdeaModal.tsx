@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useIdeaDetail } from '@/hooks/useIdeaDetail'
 import { useRejectIdea } from '@/hooks/useRejectIdea'
 import { useScoreIdea } from '@/hooks/useScoreIdea'
 import { useNotifyIdea } from '@/hooks/useNotifyIdea'
+import { useStarIdea } from '@/hooks/useStarIdea'
 import { StatusBadge } from './StatusBadge'
 import { TrackBadge } from './TrackBadge'
 import { ScoreRing, scoreStyle } from './ScoreRing'
@@ -13,8 +14,8 @@ function SectionBox({ title, accent = false, children }: { title: string; accent
   return (
     <div className="mb-5">
       <div className="flex items-center gap-2 mb-2.5">
-        <span className={`w-0.5 h-3.5 rounded-full shrink-0 ${accent ? 'bg-[#7c3aed]' : 'bg-[#d8d0e8]'}`} />
-        <p className={`text-[11px] font-bold uppercase tracking-wider ${accent ? 'text-[#7c3aed]' : 'text-[#9b91b0]'}`}>{title}</p>
+        <span className={`w-0.5 h-3.5 rounded-full shrink-0 ${accent ? 'bg-[#7c3aed]' : 'bg-[#e0d8f0]'}`} />
+        <p className={`text-[11px] font-bold uppercase tracking-wider ${accent ? 'text-[#7c3aed]' : 'text-[#a89ec0]'}`}>{title}</p>
       </div>
       <div className="text-[14px] text-[#4a4458] leading-relaxed">{children}</div>
     </div>
@@ -46,7 +47,7 @@ function UsageSteps({ text }: { text: string }) {
               {i + 1}
             </div>
             {i < steps.length - 1 && (
-              <div className="w-px flex-1 bg-[#e8e0f0] my-1" style={{ minHeight: '12px' }} />
+              <div className="w-px flex-1 bg-[#ede8f7] my-1" style={{ minHeight: '12px' }} />
             )}
           </div>
           <p className="text-[13px] text-[#4a4458] leading-relaxed pb-3">{cleanStep(step)}</p>
@@ -109,12 +110,12 @@ function ImplementationGuide({ text }: { text: string }) {
             <p className="text-[13px] font-semibold text-[#2a2433] mb-1">{item.title}</p>
             {item.purpose && (
               <p className="text-[12px] text-[#6b6080] mb-0.5">
-                <span className="text-[#9b91b0] font-medium">목적</span>&ensp;{item.purpose}
+                <span className="text-[#a89ec0] font-medium">목적</span>&ensp;{item.purpose}
               </p>
             )}
             {item.method && (
               <p className="text-[12px] text-[#4a4458]">
-                <span className="text-[#9b91b0] font-medium">구현</span>&ensp;{item.method}
+                <span className="text-[#a89ec0] font-medium">구현</span>&ensp;{item.method}
               </p>
             )}
           </div>
@@ -130,9 +131,12 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
   const score = useScoreIdea()
   const notify = useNotifyIdea()
   const isAdmin = localStorage.getItem('daybrew_role') === 'ADMIN'
+  const [notifyDone, setNotifyDone] = useState(false)
+  const star = useStarIdea(ideaId ?? -1)
 
   useEffect(() => {
     if (ideaId === null) return
+    setNotifyDone(false)
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
     document.addEventListener('keydown', handler)
     document.body.style.overflow = 'hidden'
@@ -142,32 +146,41 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
     }
   }, [ideaId, onClose])
 
+  function handleNotify(id: number) {
+    notify.mutate(id, {
+      onSuccess: () => {
+        setNotifyDone(true)
+        setTimeout(onClose, 1400)
+      },
+    })
+  }
+
   if (ideaId === null) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-[2px]" onClick={onClose}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 backdrop-blur-[2px]" onClick={onClose}>
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
-        className="bg-white rounded-2xl border border-[#e8e0f0] w-full max-w-2xl mx-4 shadow-2xl max-h-[92vh] flex flex-col overflow-hidden"
+        className="bg-white rounded-2xl border border-[#ede8f7] w-full max-w-3xl mx-4 shadow-[0_24px_64px_rgba(80,40,140,0.13)] max-h-[92vh] flex flex-col overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
         {isLoading ? (
-          <div className="p-6 space-y-3">
-            {[...Array(5)].map((_, i) => <div key={i} className="h-4 bg-[#e8e0f0] animate-pulse rounded" />)}
+          <div className="p-8 space-y-3">
+            {[...Array(5)].map((_, i) => <div key={i} className="h-4 bg-[#f0ebfa] animate-pulse rounded" />)}
           </div>
         ) : isError ? (
-          <div className="p-6 text-center py-8">
+          <div className="p-8 text-center py-10">
             <p className="text-[#9b91b0] text-[15px] mb-3">아이디어 정보를 불러올 수 없습니다.</p>
             <button onClick={onClose} className="text-[14px] text-[#7c3aed] hover:underline">닫기</button>
           </div>
         ) : idea ? (
           <>
             {/* Hero header */}
-            <div className="shrink-0 px-6 pt-5 pb-4 bg-gradient-to-b from-[#f0ebff] to-white border-b border-[#e8e0f0]">
+            <div className="shrink-0 px-7 pt-6 pb-5 bg-gradient-to-b from-[#f3eeff] to-white border-b border-[#ede8f7]/60">
               {/* Top row: badges + close */}
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-3.5">
                 <div className="flex items-center gap-2">
                   <StatusBadge status={idea.status} />
                   <TrackBadge track={idea.sourceTrack} />
@@ -175,7 +188,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                 <button
                   aria-label="닫기"
                   onClick={onClose}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg text-[#9b91b0] hover:text-[#4a4458] hover:bg-[#e8e0f0] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40"
+                  className="w-7 h-7 flex items-center justify-center rounded-lg text-[#b0a4c8] hover:text-[#4a4458] hover:bg-[#ede8f7] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40"
                 >
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                     <path d="M1 1l12 12M13 1L1 13" />
@@ -185,7 +198,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
 
               {/* Title + ScoreRing */}
               <div className="flex items-start gap-4">
-                <h2 id="modal-title" className="text-[18px] font-bold text-[#2a2433] leading-snug flex-1">
+                <h2 id="modal-title" className="text-[19px] font-bold text-[#2a2433] leading-snug flex-1">
                   {idea.title}
                 </h2>
                 <div className="shrink-0 mt-0.5">
@@ -206,11 +219,33 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
             </div>
 
             {/* Scrollable body */}
-            <div className="overflow-y-auto px-6 py-5 flex-1">
+            <div className="overflow-y-auto px-7 py-6 flex-1">
               {/* Description callout */}
               {idea.description && (
-                <div className="mb-5 px-4 py-3.5 bg-gradient-to-r from-[rgba(124,58,237,0.07)] to-[rgba(124,58,237,0.01)] border-l-[3px] border-[#7c3aed] rounded-r-xl">
+                <div className="mb-6 px-4 py-4 bg-gradient-to-r from-[rgba(124,58,237,0.07)] to-[rgba(124,58,237,0.01)] border-l-[3px] border-[#7c3aed] rounded-r-xl">
                   <p className="text-[15px] text-[#2a2433] leading-relaxed font-medium">{idea.description}</p>
+                </div>
+              )}
+
+              {/* Star button */}
+              {(idea.status === 'NOTIFIED' || idea.status === 'FEATURED') && (
+                <div className="flex items-center gap-3 mb-5">
+                  <button
+                    onClick={() => star.toggle(star.localCount ?? idea.starCount)}
+                    disabled={star.pending}
+                    aria-label={star.starred ? '스타 취소' : '스타 추가'}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-full text-[14px] font-bold transition-all disabled:opacity-60 ${
+                      star.starred
+                        ? 'bg-[#7c3aed] text-white shadow-[0_2px_8px_rgba(124,58,237,0.25)]'
+                        : 'bg-[rgba(124,58,237,0.08)] text-[#7c3aed] hover:bg-[rgba(124,58,237,0.15)] border border-[rgba(124,58,237,0.2)]'
+                    }`}
+                  >
+                    <span className="text-[15px] leading-none">{star.starred ? '★' : '☆'}</span>
+                    <span className="tabular-nums">{star.localCount ?? idea.starCount}</span>
+                  </button>
+                  <span className="text-[12px] text-[#a89ec0]">
+                    {star.starred ? '스타 취소하려면 다시 클릭' : '유망한 아이디어라면 스타를 눌러주세요'}
+                  </span>
                 </div>
               )}
 
@@ -239,7 +274,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               )}
 
               {/* Meta row */}
-              <div className="flex items-center gap-3 mt-1 mb-5 text-[12px] text-[#c4b8d4]">
+              <div className="flex items-center gap-3 mt-1 mb-6 text-[12px] text-[#c4b8d4]">
                 <span>{formatDate(idea.createdAt)}</span>
                 {idea.sourceUrl && (
                   <>
@@ -277,7 +312,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                           return (
                             <div key={label} className="flex items-center gap-2">
                               <span className="text-[12px] text-[#6b6080] w-20 shrink-0">{label}</span>
-                              <div className="flex-1 h-1.5 bg-[#e8e0f0] rounded-full overflow-hidden">
+                              <div className="flex-1 h-1.5 bg-[#f0ebfa] rounded-full overflow-hidden">
                                 <div
                                   className="h-full rounded-full transition-all"
                                   style={{ width: `${((val ?? 0) / 10) * 100}%`, backgroundColor: color }}
@@ -298,26 +333,28 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                   )}
 
                   {/* Lifecycle */}
-                  <div className="mb-4 rounded-xl border border-[rgba(124,58,237,0.2)] bg-[rgba(124,58,237,0.03)] overflow-hidden">
-                    <div className="px-4 pt-3.5 pb-0 flex items-center gap-2">
+                  <div className="mb-4 rounded-xl border border-[rgba(124,58,237,0.15)] bg-[rgba(124,58,237,0.03)] overflow-hidden">
+                    <div className="px-5 pt-4 pb-0 flex items-center gap-2">
                       <span className="w-1.5 h-1.5 rounded-full shrink-0 bg-[#7c3aed]" />
                       <p className="text-[11px] font-bold uppercase tracking-wider text-[#7c3aed]">라이프사이클</p>
                     </div>
-                    <div className="px-4 pt-2.5 pb-3.5">
+                    <div className="px-5 pt-3 pb-4">
                       {/* Stage indicator */}
-                      <div className="flex items-center gap-1 mb-3 text-[11px]">
-                        {(['PENDING', 'SCORED', 'NOTIFIED'] as const).map((s, i) => {
-                          const labels: Record<string, string> = { PENDING: '수집됨', SCORED: '채점완료', NOTIFIED: '공시됨' }
+                      <div className="flex items-center gap-1 mb-3.5 text-[11px] flex-wrap">
+                        {(['PENDING', 'SCORED', 'NOTIFIED', 'FEATURED'] as const).map((s, i) => {
+                          const labels: Record<string, string> = { PENDING: '수집됨', SCORED: '채점완료', NOTIFIED: '공시됨', FEATURED: '★ 피처됨' }
+                          const rankMap: Record<string, number> = { PENDING: 0, SCORED: 1, NOTIFIED: 2, FEATURED: 3 }
+                          const currentRank = rankMap[idea.status] ?? -1
                           const active = idea.status === s
-                          const done = idea.status === 'NOTIFIED' ? i < 2 : idea.status === 'SCORED' ? i < 1 : false
+                          const done = currentRank > i && currentRank >= 0
                           return (
                             <div key={s} className="flex items-center gap-1">
                               <span className={`px-2 py-0.5 rounded-full font-semibold ${
                                 active ? 'bg-[#7c3aed] text-white' :
-                                done   ? 'bg-[#e8e0f0] text-[#7c3aed]' :
-                                         'bg-[#f5f5f5] text-[#c4b8d4]'
+                                done   ? 'bg-[#ede8f7] text-[#7c3aed]' :
+                                         'bg-[#f5f3ff] text-[#c4b8d4]'
                               }`}>{labels[s]}</span>
-                              {i < 2 && <span className="text-[#d8d0e8]">→</span>}
+                              {i < 3 && <span className="text-[#d8d0e8]">→</span>}
                             </div>
                           )
                         })}
@@ -341,11 +378,13 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                         {idea.status === 'SCORED' && (
                           <Button
                             size="sm"
-                            className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                            disabled={notify.isPending}
-                            onClick={() => notify.mutate(idea.id, { onSuccess: onClose })}
+                            className={notifyDone
+                              ? 'bg-emerald-500 text-white cursor-default'
+                              : 'bg-emerald-600 hover:bg-emerald-700 text-white'}
+                            disabled={notify.isPending || notifyDone}
+                            onClick={() => handleNotify(idea.id)}
                           >
-                            {notify.isPending ? '공시 중…' : '공시하기 → Slack'}
+                            {notifyDone ? '✓ 공시 완료' : notify.isPending ? '공시 중…' : '공시하기 → Slack'}
                           </Button>
                         )}
                         {idea.status !== 'REJECTED' && (

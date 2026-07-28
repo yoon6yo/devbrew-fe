@@ -11,16 +11,17 @@ import { ExportButton } from '@/components/ExportButton'
 import { PipelineTriggerModal } from '@/components/PipelineTriggerModal'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
-import { notifyIdea, rejectIdea, restoreIdea } from '@/api/ideas'
+import { notifyIdea, rejectIdea, restoreIdea, featureIdea } from '@/api/ideas'
 import { logout } from '@/api/auth'
 
-type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'REJECTED'
+type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'FEATURED' | 'REJECTED'
 
 function tabToParams(tab: TabKey): { status?: IdeaStatus; statuses?: IdeaStatus[] } {
   switch (tab) {
     case 'PENDING':  return { status: 'PENDING' }
     case 'SCORED':   return { status: 'SCORED' }
     case 'NOTIFIED': return { status: 'NOTIFIED' }
+    case 'FEATURED': return { status: 'FEATURED' }
     case 'REJECTED': return { status: 'REJECTED' }
     default:         return {}
   }
@@ -95,12 +96,13 @@ export function DashboardPage() {
   const { data, isLoading, isError, refetch } = useIdeas({ ...ideaParams, page })
   const { data: stats } = useIdeaStats()
 
-  const total = stats ? (stats.PENDING + stats.SCORED + stats.NOTIFIED + stats.REJECTED) : null
+  const total = stats ? (stats.PENDING + stats.SCORED + stats.NOTIFIED + (stats.FEATURED ?? 0) + stats.REJECTED) : null
   const TABS: { label: string; key: TabKey; count: number | null }[] = [
     { label: '전체',    key: 'ALL',      count: total },
     { label: '대기중',  key: 'PENDING',  count: stats?.PENDING ?? null },
     { label: '채점완료', key: 'SCORED',  count: stats?.SCORED ?? null },
     { label: '공시됨',  key: 'NOTIFIED', count: stats?.NOTIFIED ?? null },
+    { label: '★ 피처됨', key: 'FEATURED', count: stats?.FEATURED ?? null },
     { label: '거절됨',  key: 'REJECTED', count: stats?.REJECTED ?? null },
   ]
 
@@ -148,6 +150,15 @@ export function DashboardPage() {
     setBulkPending(false)
   }
 
+  async function handleBulkFeature() {
+    setBulkPending(true)
+    await Promise.allSettled([...selectedIds].map(id => featureIdea(id)))
+    setSelectedIds(new Set())
+    refetch()
+    queryClient.invalidateQueries({ queryKey: ['ideaStats'] })
+    setBulkPending(false)
+  }
+
   async function handleBulkRestore() {
     setBulkPending(true)
     await Promise.allSettled([...selectedIds].map(id => restoreIdea(id)))
@@ -157,7 +168,7 @@ export function DashboardPage() {
     setBulkPending(false)
   }
 
-  const canBulkSelect = tab === 'SCORED' || tab === 'PENDING' || tab === 'REJECTED' || tab === 'NOTIFIED'
+  const canBulkSelect = isAdmin && (tab === 'SCORED' || tab === 'PENDING' || tab === 'REJECTED' || tab === 'NOTIFIED' || tab === 'FEATURED')
 
   return (
     <div className="min-h-screen bg-[#faf9f6] text-[#4a4458]">
@@ -210,19 +221,21 @@ export function DashboardPage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {isAdmin && <AdminStatsSection />}
 
-        <div className="flex items-center justify-between mb-4">
-          <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
-            <TabsList>
-              {TABS.map(({ label, key, count }) => (
-                <TabsTrigger key={key} value={key}>
-                  {label}
-                  {count !== null && (
-                    <span className="ml-1.5 text-[11px] opacity-60 tabular-nums">({count})</span>
-                  )}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
+        <div className="flex items-center justify-between mb-4 gap-2">
+          <div className="overflow-x-auto flex-1 min-w-0">
+            <Tabs value={tab} onValueChange={(v) => setTab(v as TabKey)}>
+              <TabsList>
+                {TABS.map(({ label, key, count }) => (
+                  <TabsTrigger key={key} value={key}>
+                    {label}
+                    {count !== null && (
+                      <span className="ml-1.5 text-[11px] opacity-60 tabular-nums">({count})</span>
+                    )}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
           {canBulkSelect && (
             <button
               onClick={() => { setIsEditMode(v => !v); setSelectedIds(new Set()) }}
@@ -276,15 +289,25 @@ export function DashboardPage() {
                     공시하기
                   </button>
                 )}
-                {tab === 'REJECTED' ? (
+                {tab === 'NOTIFIED' && (
+                  <button
+                    disabled={bulkPending}
+                    onClick={handleBulkFeature}
+                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50 transition-colors"
+                  >
+                    ★ 피처하기
+                  </button>
+                )}
+                {(tab === 'REJECTED' || tab === 'FEATURED') && (
                   <button
                     disabled={bulkPending}
                     onClick={handleBulkRestore}
                     className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-[#7c3aed] text-white hover:bg-[#6d28d9] disabled:opacity-50 transition-colors"
                   >
-                    복구하기
+                    {tab === 'FEATURED' ? '공시로 복원' : '복구하기'}
                   </button>
-                ) : (
+                )}
+                {tab !== 'REJECTED' && (
                   <button
                     disabled={bulkPending}
                     onClick={handleBulkReject}

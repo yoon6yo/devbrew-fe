@@ -1,9 +1,24 @@
 # daybrew
 
-daybrew는 매일 아침 Reddit, GitHub 신호에서 추출한 개발 아이디어를 제공하는 서비스입니다.
+daybrew는 매일 아침 Reddit, GitHub 신호에서 추출한 개발 아이디어를 자동으로 큐레이션하는 서비스입니다.
+Reddit r/SaaS, GitHub 트렌딩, 바이럴 토픽 3개 트랙에서 신호를 수집하고 AI가 시장 적합성·참신성·실현 가능성·수익화·트렌드 5개 항목으로 채점합니다.
+매일 상위 아이디어를 한 장짜리 기획서(사용 목적, 구현 방법, 기술 스택 추천)로 정리해 제공합니다.
 
 ## 주요 페이지
-- [홈](https://daybrew.duckdns.org/)
-- [로그인](https://daybrew.duckdns.org/login)
+- [홈](https://daybrew.duckdns.org/) — 오늘의 아이디어 피드
+- [로그인](https://daybrew.duckdns.org/login) — 카카오·Google OAuth2 로그인
+- [대시보드](https://daybrew.duckdns.org/dashboard) — 관리자 아이디어 관리 및 파이프라인 제어
 - [개인정보처리방침](https://daybrew.duckdns.org/privacy)
 - [이용약관](https://daybrew.duckdns.org/terms)
+
+## API
+- REST API: https://daybrew.duckdns.org/api/
+- OpenAPI 문서: https://daybrew.duckdns.org/swagger-ui/index.html
+- 아이디어 목록: GET /api/ideas?status=NOTIFIED&sort=score,desc
+- 아이디어 상세: GET /api/ideas/{id}
+
+## 기술 스택
+- 백엔드: Spring Boot 4.1 / Kotlin, PostgreSQL, Flyway
+- 프론트엔드: React 18 / TypeScript, Vite, Tailwind CSS
+- AI: Gemini 2.5 Flash Lite (아이디어 생성), Claude Haiku (채점)
+- 인프라: k3s 온프렘 클러스터, GHCR
