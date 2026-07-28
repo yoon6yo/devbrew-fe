@@ -6,7 +6,7 @@ import { useNotifyIdea } from '@/hooks/useNotifyIdea'
 import { useStarIdea } from '@/hooks/useStarIdea'
 import { StatusBadge } from './StatusBadge'
 import { TrackBadge } from './TrackBadge'
-import { ScoreRing, scoreStyle } from './ScoreRing'
+import { ScoreRing } from './ScoreRing'
 import { formatDate } from '@/utils/dateFormat'
 import { Button } from '@/components/ui/button'
 
