@@ -102,6 +102,7 @@ function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }:
       nextAt: status.nextCollectAt,
       pending: null as number | null,
       scoring: null as number | null,
+      showScoreButton: false,
     },
     {
       label: '채점',
@@ -110,6 +111,7 @@ function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }:
       nextAt: status.nextScoreAt,
       pending: pendingCount,
       scoring: scoringCount,
+      showScoreButton: true,
     },
   ]
   return (
@@ -157,7 +159,7 @@ function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }:
       <div className="px-4 py-3 rounded-xl border border-[#e8e0f0] bg-white">
         <p className="text-[11px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-2.5">배치 스케줄 (KST)</p>
         <div className="space-y-3">
-          {scheduleRows.map(({ label, lastAt, lastResult, nextAt, pending, scoring }) => (
+          {scheduleRows.map(({ label, lastAt, lastResult, nextAt, pending, scoring, showScoreButton }) => (
             <div key={label}>
               <div className="flex items-center justify-between gap-3 mb-1">
                 <div className="flex items-center gap-2 flex-wrap">
@@ -175,13 +177,15 @@ function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }:
                   {pending !== null && pending === 0 && (scoring === null || scoring === 0) && (
                     <span className="text-[11px] text-[#c4b8d4]">대기 없음</span>
                   )}
-                  <button
-                    onClick={onScoreNow}
-                    disabled={status.running || !pending || pending === 0}
-                    className="text-[11px] font-semibold text-white bg-[#7c3aed] hover:bg-[#6d28d9] disabled:bg-[#c4b8d4] px-2.5 py-0.5 rounded-full transition-colors disabled:cursor-not-allowed"
-                  >
-                    {status.running ? '실행 중…' : '채점'}
-                  </button>
+                  {showScoreButton && (
+                    <button
+                      onClick={onScoreNow}
+                      disabled={status.running || !pending || pending === 0}
+                      className="text-[11px] font-semibold text-white bg-[#7c3aed] hover:bg-[#6d28d9] disabled:bg-[#c4b8d4] px-2.5 py-0.5 rounded-full transition-colors disabled:cursor-not-allowed"
+                    >
+                      {status.running ? '실행 중…' : '채점'}
+                    </button>
+                  )}
                 </div>
                 <span className="text-[11px] font-medium text-[#7c3aed] shrink-0">
                   다음: {fmtKST(nextAt)}
