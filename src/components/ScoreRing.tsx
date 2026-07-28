@@ -1,9 +1,8 @@
 export function scoreStyle(score: number): { color: string; track: string } {
-  if (score >= 9) return { color: '#f59e0b', track: 'rgba(245,158,11,0.12)' }
-  if (score >= 8) return { color: '#10b981', track: 'rgba(16,185,129,0.12)' }
-  if (score >= 7) return { color: '#3b82f6', track: 'rgba(59,130,246,0.12)' }
-  if (score >= 5) return { color: '#7c3aed', track: 'rgba(124,58,237,0.12)' }
-  return { color: '#9b91b0', track: 'rgba(155,145,176,0.12)' }
+  if (score >= 9) return { color: '#5b21b6', track: 'rgba(91,33,182,0.12)' }
+  if (score >= 7) return { color: '#7c3aed', track: 'rgba(124,58,237,0.12)' }
+  if (score >= 5) return { color: '#a78bfa', track: 'rgba(167,139,250,0.12)' }
+  return { color: '#c4b8d4', track: 'rgba(196,184,212,0.12)' }
 }
 
 export function ScoreRing({ score, size = 40 }: { score: number | null; size?: number }) {
