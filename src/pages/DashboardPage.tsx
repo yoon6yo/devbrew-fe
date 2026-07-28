@@ -61,12 +61,13 @@ function AdminStatsSection() {
 
   return (
     <div className="mb-6 space-y-3">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <StatCard
           label="오늘 방문"
           value={fmt(data.pageViews.find(d => d.date === new Date().toISOString().slice(0, 10))?.count ?? 0)}
           sub={`7일 합계 ${fmt(data.pageViews.reduce((s, d) => s + d.count, 0))}회`}
         />
+        <StatCard label="오늘 토큰" value={fmt(data.gemini.todayTokens)} sub="입출력 합산" />
         <StatCard label="이번 달 토큰" value={fmt(data.gemini.monthTokens)} />
         <StatCard
           label="이번 달 비용"
