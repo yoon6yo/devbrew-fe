@@ -3,13 +3,6 @@ import { TrackBadge } from './TrackBadge'
 import { ScoreRing } from './ScoreRing'
 import { formatDate } from '@/utils/dateFormat'
 
-function MiniLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <p className="text-[10px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-1.5">
-      {children}
-    </p>
-  )
-}
 
 function BulletList({ text, limit = 3, dotColor = '#c4b8d4' }: { text: string; limit?: number; dotColor?: string }) {
   const items = text.split('\n').map(s => s.trim()).filter(Boolean).slice(0, limit)
