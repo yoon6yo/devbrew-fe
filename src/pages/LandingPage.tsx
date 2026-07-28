@@ -56,31 +56,26 @@ const STEPS = [
 
 
 function MockIdeaCard() {
-  const r = 16
+  const r = 14
   const circ = 2 * Math.PI * r
   const dash = (9 / 10) * circ
   return (
     <div className="relative">
       <div className="absolute -inset-4 bg-[#7c3aed]/6 rounded-2xl blur-2xl pointer-events-none" />
-      <div className="relative bg-white rounded-2xl border border-[#e8e0f0] p-5 shadow-[0_8px_32px_rgba(124,58,237,0.10)] flex flex-col gap-3">
+      <div className="relative bg-white rounded-2xl border border-[#e8e0f0] p-4 shadow-[0_6px_28px_rgba(124,58,237,0.10)] flex flex-col gap-2.5">
         <div className="flex items-center justify-between">
           <span className="text-[11px] font-bold text-[#7c3aed] bg-[rgba(124,58,237,0.08)] border border-[rgba(124,58,237,0.2)] px-2.5 py-0.5 rounded-full">SAAS</span>
           <div className="flex items-center gap-1.5 shrink-0">
-            <svg width="40" height="40" viewBox="0 0 40 40" className="-rotate-90">
-              <circle cx="20" cy="20" r={r} fill="none" stroke="#fef3c7" strokeWidth="3.5" />
-              <circle cx="20" cy="20" r={r} fill="none" stroke="#f59e0b" strokeWidth="3.5"
+            <svg width="36" height="36" viewBox="0 0 36 36" className="-rotate-90">
+              <circle cx="18" cy="18" r={r} fill="none" stroke="#fef3c7" strokeWidth="3.5" />
+              <circle cx="18" cy="18" r={r} fill="none" stroke="#f59e0b" strokeWidth="3.5"
                 strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
             </svg>
-            <div className="flex flex-col items-center leading-none">
-              <span className="text-[20px] font-bold tabular-nums" style={{ color: '#f59e0b' }}>9</span>
-            </div>
+            <span className="text-[20px] font-bold tabular-nums" style={{ color: '#f59e0b' }}>9</span>
           </div>
         </div>
 
-        <h3 className="text-[14px] font-bold text-[#2a2433] leading-snug">AI 기반 노코드 앱 빌더 플랫폼</h3>
-        <p className="text-[12px] text-[#6b6080] leading-relaxed line-clamp-2">
-          비개발자도 실용적인 웹앱을 만들 수 있는 AI-first 빌더. 수요 급증 중.
-        </p>
+        <h3 className="text-[14px] font-semibold text-[#18142a] leading-snug tracking-tight flex-1">AI 기반 노코드 앱 빌더 플랫폼</h3>
 
         <div className="pt-2.5 border-t border-[#f0ebf8]">
           <span className="text-[11px] text-[#c4b8d4] tracking-wide">2026. 07. 28</span>

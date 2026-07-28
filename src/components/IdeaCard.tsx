@@ -20,10 +20,10 @@ export function IdeaCard({
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick()}
-      className={`group cursor-pointer rounded-2xl border bg-white px-5 pt-5 pb-4
-                 hover:border-[#a78bfa] hover:shadow-[0_8px_40px_rgba(124,58,237,0.09)]
-                 transition-all duration-300 focus-visible:outline-none
-                 focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40 flex flex-col gap-3.5
+      className={`group cursor-pointer rounded-2xl border bg-white p-4
+                 hover:border-[#a78bfa] hover:shadow-[0_6px_28px_rgba(124,58,237,0.09)]
+                 transition-all duration-200 focus-visible:outline-none
+                 focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40 flex flex-col gap-2.5
                  ${selected ? 'border-[#7c3aed] bg-[#faf8ff]' : 'border-[#e8e0f0]'}`}
     >
       <div className="flex items-center justify-between">
@@ -39,20 +39,14 @@ export function IdeaCard({
           )}
           <TrackBadge track={idea.sourceTrack} />
         </div>
-        <ScoreRing score={idea.score} />
+        <ScoreRing score={idea.score} size={36} />
       </div>
 
-      <h3 className="text-[14.5px] font-semibold text-[#18142a] line-clamp-2 leading-snug tracking-tight">
+      <h3 className="text-[14px] font-semibold text-[#18142a] line-clamp-2 leading-snug tracking-tight flex-1">
         {idea.title}
       </h3>
 
-      {idea.description && (
-        <p className="text-[12.5px] text-[#7a718e] line-clamp-2 leading-relaxed">
-          {idea.description}
-        </p>
-      )}
-
-      <div className="mt-auto pt-3 border-t border-[#f0ebf8]">
+      <div className="pt-2.5 border-t border-[#f0ebf8]">
         <span className="text-[11px] text-[#c4b8d4] tracking-wide">{formatDate(idea.createdAt)}</span>
       </div>
     </article>
