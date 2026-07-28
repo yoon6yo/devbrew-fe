@@ -41,6 +41,10 @@ export function notifyIdea(id: number): Promise<IdeaDto> {
   return apiFetch(`/api/ideas/${id}/notify`, { method: 'POST' })
 }
 
+export function featureIdea(id: number): Promise<IdeaDto> {
+  return apiFetch(`/api/ideas/${id}/feature`, { method: 'POST' })
+}
+
 export async function getTopIdeas(n = 5): Promise<IdeaDto[]> {
   const page = await getIdeas({ page: 0, size: n })
   return page.content
@@ -50,9 +54,24 @@ export interface IdeaStatsDto {
   PENDING: number
   SCORED: number
   NOTIFIED: number
+  FEATURED: number
   REJECTED: number
 }
 
 export function getIdeaStats(): Promise<IdeaStatsDto> {
   return apiFetch<IdeaStatsDto>('/api/ideas/stats')
+}
+
+export function starIdea(id: number, fingerprint: string): Promise<IdeaDto> {
+  return apiFetch(`/api/ideas/${id}/star`, {
+    method: 'POST',
+    headers: { 'X-Fingerprint': fingerprint },
+  })
+}
+
+export function unstarIdea(id: number, fingerprint: string): Promise<IdeaDto> {
+  return apiFetch(`/api/ideas/${id}/star`, {
+    method: 'DELETE',
+    headers: { 'X-Fingerprint': fingerprint },
+  })
 }

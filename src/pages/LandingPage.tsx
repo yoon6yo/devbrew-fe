@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { getIdeas } from '@/api/ideas'
 import { getMe, logout } from '@/api/auth'
 import type { IdeaDto } from '@/types'
-import { ScoreRing } from '@/components/ScoreRing'
-import { StatusBadge } from '@/components/StatusBadge'
-import { TrackBadge } from '@/components/TrackBadge'
+import { IdeaCard } from '@/components/IdeaCard'
 import { IdeaModal } from '@/components/IdeaModal'
 
 const SignalIcon = () => (
@@ -51,7 +49,7 @@ const STEPS = [
     Icon: DocumentIcon,
     num: '03',
     title: '기획서 전달',
-    items: ['사용 목적 · 동작 방식', '추천 기술 스택', '세부 점수 breakdown'],
+    items: ['사용 목적 · 동작 방식', '구현 방법 가이드', '추천 기술 스택', '세부 점수 breakdown'],
     desc: '한 장짜리 기획서로 매일 아침 정리됩니다.',
   },
 ]
@@ -85,7 +83,7 @@ function MockIdeaCard() {
           비개발자도 실용적인 웹앱을 만들 수 있는 AI-first 빌더. 수요 급증 중.
         </p>
 
-        <div className="flex items-center justify-between pt-1 border-t border-[#f0ebf8]">
+        <div className="flex items-center justify-between pt-2.5">
           <div className="flex items-center gap-2">
             <span className="text-[11px] font-semibold text-[#10b981] bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.2)] px-2 py-0.5 rounded-full">공시됨</span>
             <span className="text-[11px] text-[#c4b8d4]">오늘 09:00</span>
@@ -106,11 +104,20 @@ export default function LandingPage() {
   const [selectedIdeaId, setSelectedIdeaId] = useState<number | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  function fetchIdeas() {
+  async function fetchIdeas() {
     setStatus('loading')
-    getIdeas({ size: 6, status: 'NOTIFIED', sort: 'updatedAt,asc' })
-      .then(p => { setIdeas(p.content); setStatus('ready') })
-      .catch(() => setStatus('error'))
+    try {
+      const featured = await getIdeas({ size: 5, status: 'FEATURED', today: true, sort: 'updatedAt,desc' })
+      if (featured.content.length > 0) {
+        setIdeas(featured.content)
+      } else {
+        const notified = await getIdeas({ size: 5, status: 'NOTIFIED', sort: 'updatedAt,desc' })
+        setIdeas(notified.content)
+      }
+      setStatus('ready')
+    } catch {
+      setStatus('error')
+    }
   }
 
   function handleLogout() {
@@ -207,7 +214,7 @@ export default function LandingPage() {
 
       <main>
       {/* Hero */}
-      <section className="border-b border-[#e8e0f0]">
+      <section className="border-b border-[#e8e0f0]/50">
         <div className="max-w-4xl mx-auto px-6 py-20 md:py-28">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
             <div>
@@ -276,7 +283,7 @@ export default function LandingPage() {
       </section>
 
       {/* Live ideas */}
-      <section id="ideas" className="py-24 bg-[#f3f0ec] border-t border-b border-[#e8e0f0]">
+      <section id="ideas" className="py-24 bg-[#f3f0ec] border-t border-b border-[#e8e0f0]/50">
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-[#2a2433] text-center mb-3">오늘의 아이디어</h2>
           <p className="text-[14px] text-[#6b6080] text-center mb-10">실제로 수집된 최신 아이디어입니다</p>
@@ -316,32 +323,11 @@ export default function LandingPage() {
             <>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {ideas.map(idea => (
-                  <article
+                  <IdeaCard
                     key={idea.id}
-                    tabIndex={0}
+                    idea={idea}
                     onClick={() => setSelectedIdeaId(idea.id)}
-                    onKeyDown={e => (e.key === 'Enter' || e.key === ' ') && setSelectedIdeaId(idea.id)}
-                    className="group cursor-pointer rounded-2xl border bg-white p-5
-                               hover:border-[#c4b5fd] hover:shadow-[0_4px_20px_rgba(124,58,237,0.10)]
-                               transition-all duration-200 focus-visible:outline-none
-                               focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40
-                               border-[#e8e0f0] flex flex-col gap-3"
-                  >
-                    <div className="flex items-center justify-between">
-                      <TrackBadge track={idea.sourceTrack} />
-                      <ScoreRing score={idea.score} />
-                    </div>
-                    <h3 className="text-[14px] font-bold text-[#2a2433] line-clamp-2 leading-snug flex-1">{idea.title}</h3>
-                    <p className="text-[12px] text-[#6b6080] line-clamp-2 leading-relaxed">
-                      {idea.purpose ?? idea.description}
-                    </p>
-                    <div className="flex items-center justify-between pt-1 border-t border-[#f0ebf8]">
-                      <StatusBadge status={idea.status} />
-                      <span className="text-[12px] text-[#c4b8d4] group-hover:text-[#7c3aed] transition-colors font-medium select-none">
-                        자세히 →
-                      </span>
-                    </div>
-                  </article>
+                  />
                 ))}
               </div>
               {!role && (

@@ -1,4 +1,4 @@
-export type IdeaStatus = 'PENDING' | 'SCORED' | 'NOTIFIED' | 'REJECTED'
+export type IdeaStatus = 'PENDING' | 'SCORED' | 'NOTIFIED' | 'FEATURED' | 'REJECTED'
 export type SourceTrack = 'SAAS' | 'GITHUB' | 'VIRAL' | 'HACKERNEWS'
 
 export interface IdeaDto {
