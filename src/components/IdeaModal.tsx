@@ -10,13 +10,10 @@ import { ScoreRing, scoreStyle } from './ScoreRing'
 import { formatDate } from '@/utils/dateFormat'
 import { Button } from '@/components/ui/button'
 
-function SectionBox({ title, accent = false, children }: { title: string; accent?: boolean; children: React.ReactNode }) {
+function SectionBox({ title, children }: { title: string; accent?: boolean; children: React.ReactNode }) {
   return (
-    <div className="mb-5">
-      <div className="flex items-center gap-2 mb-2.5">
-        <span className={`w-0.5 h-3.5 rounded-full shrink-0 ${accent ? 'bg-[#7c3aed]' : 'bg-[#e0d8f0]'}`} />
-        <p className={`text-[11px] font-bold uppercase tracking-wider ${accent ? 'text-[#7c3aed]' : 'text-[#a89ec0]'}`}>{title}</p>
-      </div>
+    <div className="mb-6">
+      <p className="text-[11px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-3 pb-2.5 border-b border-[#f5f2fc]">{title}</p>
       <div className="text-[14px] text-[#4a4458] leading-relaxed">{children}</div>
     </div>
   )
@@ -43,7 +40,7 @@ function UsageSteps({ text }: { text: string }) {
       {steps.map((step, i) => (
         <div key={i} className="flex gap-3">
           <div className="flex flex-col items-center shrink-0">
-            <div className="w-6 h-6 rounded-full bg-[#7c3aed] text-white text-[11px] font-bold flex items-center justify-center">
+            <div className="w-6 h-6 rounded-full bg-[#f0ebf8] text-[#7c3aed] text-[11px] font-bold flex items-center justify-center">
               {i + 1}
             </div>
             {i < steps.length - 1 && (
@@ -100,22 +97,22 @@ function ImplementationGuide({ text }: { text: string }) {
     return <p className="text-[13px] text-[#4a4458] leading-relaxed whitespace-pre-line">{text}</p>
   }
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       {items.map((item, i) => (
-        <div key={i} className="flex gap-3">
-          <div className="shrink-0 w-6 h-6 rounded-full bg-[rgba(124,58,237,0.12)] text-[#7c3aed] text-[11px] font-bold flex items-center justify-center mt-0.5">
+        <div key={i} className="flex gap-3 px-4 py-3.5 bg-[#faf9fc] border border-[#f0ebf8] rounded-xl">
+          <div className="shrink-0 w-5 h-5 rounded-full bg-[#f0ebf8] text-[#7c3aed] text-[10px] font-bold flex items-center justify-center mt-0.5">
             {i + 1}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-[13px] font-semibold text-[#2a2433] mb-1">{item.title}</p>
             {item.purpose && (
               <p className="text-[12px] text-[#6b6080] mb-0.5">
-                <span className="text-[#a89ec0] font-medium">목적</span>&ensp;{item.purpose}
+                <span className="text-[#b0a4c8] font-medium">목적</span>&ensp;{item.purpose}
               </p>
             )}
             {item.method && (
               <p className="text-[12px] text-[#4a4458]">
-                <span className="text-[#a89ec0] font-medium">구현</span>&ensp;{item.method}
+                <span className="text-[#b0a4c8] font-medium">구현</span>&ensp;{item.method}
               </p>
             )}
           </div>
@@ -206,16 +203,6 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                 </div>
               </div>
 
-              {/* Score tier label */}
-              {idea.score !== null && (
-                <div className="mt-2">
-                  {(() => {
-                    const { color } = scoreStyle(idea.score)
-                    const tier = idea.score >= 9 ? '최상위 아이디어' : idea.score >= 8 ? '탁월한 아이디어' : idea.score >= 7 ? '강한 아이디어' : idea.score >= 5 ? '평균 이상' : '재검토 필요'
-                    return <span className="text-[11px] font-bold" style={{ color }}>{tier}</span>
-                  })()}
-                </div>
-              )}
 
               {/* Star button — hero area */}
               {(idea.status === 'NOTIFIED' || idea.status === 'FEATURED') && (
@@ -244,8 +231,8 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
             <div className="overflow-y-auto px-7 py-6 flex-1">
               {/* Description callout */}
               {idea.description && (
-                <div className="mb-6 px-4 py-4 bg-gradient-to-r from-[rgba(124,58,237,0.07)] to-[rgba(124,58,237,0.01)] border-l-[3px] border-[#7c3aed] rounded-r-xl">
-                  <p className="text-[15px] text-[#2a2433] leading-relaxed font-medium">{idea.description}</p>
+                <div className="mb-6 px-4 py-4 bg-[#faf9fc] border border-[#ede8f7] rounded-xl">
+                  <p className="text-[15px] text-[#2a2433] leading-relaxed">{idea.description}</p>
                 </div>
               )}
 
@@ -256,7 +243,7 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
               )}
 
               {idea.howItWorks && (
-                <SectionBox title="사용 방법">
+                <SectionBox title="동작 방식">
                   <UsageSteps text={idea.howItWorks} />
                 </SectionBox>
               )}
