@@ -1,9 +1,9 @@
 export function scoreStyle(score: number): { color: string; track: string } {
-  if (score >= 9) return { color: '#f59e0b', track: '#fef3c7' }
-  if (score >= 8) return { color: '#10b981', track: '#d1fae5' }
-  if (score >= 7) return { color: '#3b82f6', track: '#dbeafe' }
-  if (score >= 5) return { color: '#7c3aed', track: '#ede9fe' }
-  return { color: '#9b91b0', track: '#f0ebf8' }
+  if (score >= 9) return { color: '#f59e0b', track: 'rgba(245,158,11,0.12)' }
+  if (score >= 8) return { color: '#10b981', track: 'rgba(16,185,129,0.12)' }
+  if (score >= 7) return { color: '#3b82f6', track: 'rgba(59,130,246,0.12)' }
+  if (score >= 5) return { color: '#7c3aed', track: 'rgba(124,58,237,0.12)' }
+  return { color: '#9b91b0', track: 'rgba(155,145,176,0.12)' }
 }
 
 export function ScoreRing({ score, size = 40 }: { score: number | null; size?: number }) {
@@ -11,7 +11,7 @@ export function ScoreRing({ score, size = 40 }: { score: number | null; size?: n
   const { color, track } = scoreStyle(score)
   const r = (size / 2) - 4
   const circ = 2 * Math.PI * r
-  const dash = ((score / 10) * circ)
+  const dash = (score / 10) * circ
   const fontSize = size >= 50 ? 24 : 20
   return (
     <div className="flex items-center gap-1.5 shrink-0">
@@ -23,9 +23,7 @@ export function ScoreRing({ score, size = 40 }: { score: number | null; size?: n
           style={{ transition: 'stroke-dasharray 0.4s ease' }}
         />
       </svg>
-      <div className="flex flex-col items-center leading-none">
-        <span className="font-bold tabular-nums" style={{ color, fontSize }}>{score}</span>
-      </div>
+      <span className="font-bold tabular-nums" style={{ color, fontSize }}>{score}</span>
     </div>
   )
 }

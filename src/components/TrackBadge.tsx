@@ -16,7 +16,7 @@ const trackLabel: Record<SourceTrack, string> = {
 
 export function TrackBadge({ track }: { track: SourceTrack }) {
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${trackStyle[track]}`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium border ${trackStyle[track]}`}>
       {trackLabel[track]}
     </span>
   )
