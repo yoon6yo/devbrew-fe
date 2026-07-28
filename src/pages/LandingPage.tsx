@@ -59,13 +59,22 @@ function MockIdeaCard() {
   const r = 16
   const circ = 2 * Math.PI * r
   const dash = (9 / 10) * circ
+  const problems = ['코딩 없이 앱 만들기 어려움', '진입장벽 높은 개발 생태계', '맞춤 도구 부족']
+  const strengths = ['빠른 출시', '낮은 개발 비용']
+  const risks = ['확장성 한계', '커스터마이징 제약']
   return (
     <div className="relative">
       <div className="absolute -inset-4 bg-[#7c3aed]/6 rounded-2xl blur-2xl pointer-events-none" />
-      <div className="relative bg-white rounded-2xl p-4 shadow-[0_0_0_1px_#a78bfa,0_4px_20px_rgba(124,58,237,0.12)] flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-medium text-[#7c3aed] bg-[#f3f0ec] border border-[#e8e0f0] px-2 py-0.5 rounded-full">SaaS</span>
-          <div className="flex items-center gap-1.5 shrink-0">
+      <div className="relative bg-white rounded-2xl p-4 shadow-[0_0_0_1px_#a78bfa,0_4px_20px_rgba(124,58,237,0.12)] flex flex-col gap-3">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="mb-1.5">
+              <span className="text-[11px] font-medium text-[#7c3aed] bg-[#f3f0ec] border border-[#e8e0f0] px-2 py-0.5 rounded-full">SaaS</span>
+            </div>
+            <h3 className="text-[15px] font-semibold text-[#18142a] leading-snug tracking-tight">AI 기반 노코드 앱 빌더 플랫폼</h3>
+          </div>
+          <div className="shrink-0 flex items-center gap-1.5">
             <svg width="40" height="40" viewBox="0 0 40 40" className="-rotate-90">
               <circle cx="20" cy="20" r={r} fill="none" stroke="rgba(245,158,11,0.12)" strokeWidth="3.5" />
               <circle cx="20" cy="20" r={r} fill="none" stroke="#f59e0b" strokeWidth="3.5"
@@ -75,9 +84,56 @@ function MockIdeaCard() {
           </div>
         </div>
 
-        <h3 className="text-[15px] font-semibold text-[#18142a] leading-snug tracking-tight flex-1">AI 기반 노코드 앱 빌더 플랫폼</h3>
-        <p className="text-[13px] text-[#9b91b0] leading-relaxed">비개발자도 실용적인 웹앱을 손쉽게 구축.</p>
+        {/* One-liner */}
+        <p className="text-[13px] text-[#7c3aed] font-medium leading-snug -mt-1">
+          비개발자도 실용적인 웹앱을 손쉽게 구축
+        </p>
 
+        {/* Problems */}
+        <div>
+          <p className="text-[10px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-1.5">해결하는 문제</p>
+          <ul className="space-y-0.5">
+            {problems.map(item => (
+              <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
+                <span className="shrink-0 text-[#c4b8d4] mt-px">·</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Strengths + Risks */}
+        <div className="grid grid-cols-2 gap-3 pt-0.5">
+          <div>
+            <p className="text-[10px] font-semibold text-[#059669] uppercase tracking-widest mb-1.5">장점</p>
+            <ul className="space-y-0.5">
+              {strengths.map(item => (
+                <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
+                  <span className="shrink-0 text-[#c4b8d4] mt-px">·</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="text-[10px] font-semibold text-[#dc2626] uppercase tracking-widest mb-1.5">리스크</p>
+            <ul className="space-y-0.5">
+              {risks.map(item => (
+                <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
+                  <span className="shrink-0 text-[#c4b8d4] mt-px">·</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Revenue model */}
+        <p className="text-[12px] text-[#6b6080] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug">
+          월정액 SaaS + 유료 템플릿
+        </p>
+
+        {/* Footer */}
         <div className="mt-auto pt-2.5 border-t border-[#f0ebf8]">
           <span className="text-[11px] text-[#c4b8d4] tracking-wide">2026. 07. 28</span>
         </div>
@@ -281,7 +337,7 @@ export default function LandingPage() {
 
           {status === 'loading' && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {[0, 1, 2].map(i => (
+              {[0, 1, 2, 3, 4, 5].map(i => (
                 <div key={i} className="border border-[#e8e0f0] rounded-xl p-5 bg-[#faf9f6]">
                   <div className="animate-pulse space-y-3">
                     <div className="h-5 w-16 bg-[#e8e0f0] rounded-md" />
