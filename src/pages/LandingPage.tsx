@@ -107,11 +107,11 @@ export default function LandingPage() {
   async function fetchIdeas() {
     setStatus('loading')
     try {
-      const featured = await getIdeas({ size: 5, status: 'FEATURED', today: true, sort: 'updatedAt,desc' })
+      const featured = await getIdeas({ size: 6, status: 'FEATURED', today: true, sort: 'updatedAt,desc' })
       if (featured.content.length > 0) {
         setIdeas(featured.content)
       } else {
-        const notified = await getIdeas({ size: 5, status: 'NOTIFIED', sort: 'updatedAt,desc' })
+        const notified = await getIdeas({ size: 6, status: 'NOTIFIED', sort: 'updatedAt,desc' })
         setIdeas(notified.content)
       }
       setStatus('ready')
