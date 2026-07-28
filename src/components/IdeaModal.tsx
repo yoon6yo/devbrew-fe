@@ -216,20 +216,10 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                   })()}
                 </div>
               )}
-            </div>
 
-            {/* Scrollable body */}
-            <div className="overflow-y-auto px-7 py-6 flex-1">
-              {/* Description callout */}
-              {idea.description && (
-                <div className="mb-6 px-4 py-4 bg-gradient-to-r from-[rgba(124,58,237,0.07)] to-[rgba(124,58,237,0.01)] border-l-[3px] border-[#7c3aed] rounded-r-xl">
-                  <p className="text-[15px] text-[#2a2433] leading-relaxed font-medium">{idea.description}</p>
-                </div>
-              )}
-
-              {/* Star button */}
+              {/* Star button — hero area */}
               {(idea.status === 'NOTIFIED' || idea.status === 'FEATURED') && (
-                <div className="flex items-center gap-3 mb-5">
+                <div className="flex items-center gap-3 mt-4 pt-4 border-t border-[#ede8f7]/60">
                   <button
                     onClick={() => star.toggle(star.localCount ?? idea.starCount)}
                     disabled={star.pending}
@@ -246,6 +236,16 @@ export function IdeaModal({ ideaId, onClose }: { ideaId: number | null; onClose:
                   <span className="text-[12px] text-[#a89ec0]">
                     {star.starred ? '스타 취소하려면 다시 클릭' : '유망한 아이디어라면 스타를 눌러주세요'}
                   </span>
+                </div>
+              )}
+            </div>
+
+            {/* Scrollable body */}
+            <div className="overflow-y-auto px-7 py-6 flex-1">
+              {/* Description callout */}
+              {idea.description && (
+                <div className="mb-6 px-4 py-4 bg-gradient-to-r from-[rgba(124,58,237,0.07)] to-[rgba(124,58,237,0.01)] border-l-[3px] border-[#7c3aed] rounded-r-xl">
+                  <p className="text-[15px] text-[#2a2433] leading-relaxed font-medium">{idea.description}</p>
                 </div>
               )}
 

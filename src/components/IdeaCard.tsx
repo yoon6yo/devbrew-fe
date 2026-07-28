@@ -49,7 +49,7 @@ export function IdeaCard({
       </h3>
 
       {idea.description && (
-        <p className="text-[13px] text-[#9b91b0] line-clamp-1 leading-relaxed">
+        <p className="text-[13px] text-[#9b91b0] line-clamp-2 leading-relaxed">
           {idea.description}
         </p>
       )}
