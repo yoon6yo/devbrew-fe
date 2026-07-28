@@ -5,6 +5,12 @@ metadata:
   namespace: daybrew
 spec:
   replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  minReadySeconds: 3
   selector:
     matchLabels:
       app: daybrew-fe
@@ -13,12 +19,17 @@ spec:
       labels:
         app: daybrew-fe
     spec:
+      terminationGracePeriodSeconds: 15
       containers:
         - name: daybrew-fe
           image: ghcr.io/yoon6yo/devbrew-fe:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 5"]
           resources:
             requests:
               memory: "32Mi"
@@ -26,6 +37,13 @@ spec:
             limits:
               memory: "64Mi"
               cpu: "100m"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 2
+            periodSeconds: 5
+            failureThreshold: 3
           livenessProbe:
             httpGet:
               path: /

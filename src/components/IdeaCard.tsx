@@ -1,5 +1,4 @@
 import type { IdeaDto } from '@/types'
-import { StatusBadge } from './StatusBadge'
 import { TrackBadge } from './TrackBadge'
 import { ScoreRing } from './ScoreRing'
 import { formatDate } from '@/utils/dateFormat'
@@ -21,13 +20,12 @@ export function IdeaCard({
       tabIndex={0}
       onClick={onClick}
       onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onClick()}
-      className={`group cursor-pointer rounded-2xl border bg-white p-5
-                 hover:border-[#c4b5fd] hover:shadow-[0_4px_20px_rgba(124,58,237,0.10)]
-                 transition-all duration-200 focus-visible:outline-none
-                 focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40 flex flex-col gap-3
+      className={`group cursor-pointer rounded-2xl border bg-white px-5 pt-5 pb-4
+                 hover:border-[#a78bfa] hover:shadow-[0_8px_40px_rgba(124,58,237,0.09)]
+                 transition-all duration-300 focus-visible:outline-none
+                 focus-visible:ring-2 focus-visible:ring-[#7c3aed]/40 flex flex-col gap-3.5
                  ${selected ? 'border-[#7c3aed] bg-[#faf8ff]' : 'border-[#e8e0f0]'}`}
     >
-      {/* Top: track badge + score ring (+ optional checkbox) */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           {onToggle && (
@@ -44,33 +42,18 @@ export function IdeaCard({
         <ScoreRing score={idea.score} />
       </div>
 
-      {/* Title */}
-      <h3 className="text-[14px] font-bold text-[#2a2433] line-clamp-2 leading-snug flex-1">
+      <h3 className="text-[14.5px] font-semibold text-[#18142a] line-clamp-2 leading-snug tracking-tight">
         {idea.title}
       </h3>
 
-      {/* Description preview */}
       {idea.description && (
-        <p className="text-[12px] text-[#6b6080] line-clamp-2 leading-relaxed">
+        <p className="text-[12.5px] text-[#7a718e] line-clamp-2 leading-relaxed">
           {idea.description}
         </p>
       )}
 
-      {/* Bottom: status + date + star count + cta (with border-t separator) */}
-      <div className="flex items-center justify-between pt-2.5 border-t border-[#f0ebf8] mt-auto">
-        <div className="flex items-center gap-2 flex-wrap">
-          <StatusBadge status={idea.status} />
-          <span className="text-[11px] text-[#c4b8d4]">{formatDate(idea.createdAt)}</span>
-          {idea.starCount > 0 && (
-            <span className="text-[11px] text-[#a89ec0] flex items-center gap-0.5">
-              <span className="text-[#7c3aed]">★</span>
-              {idea.starCount}
-            </span>
-          )}
-        </div>
-        <span className="text-[12px] text-[#c4b8d4] group-hover:text-[#7c3aed] transition-colors font-medium select-none shrink-0">
-          자세히 →
-        </span>
+      <div className="mt-auto pt-3 border-t border-[#f0ebf8]">
+        <span className="text-[11px] text-[#c4b8d4] tracking-wide">{formatDate(idea.createdAt)}</span>
       </div>
     </article>
   )
