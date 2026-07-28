@@ -33,3 +33,19 @@ export function triggerPipeline(options?: PipelineTriggerOptions): Promise<{ mes
     body: options ? JSON.stringify(options) : undefined,
   })
 }
+
+export interface PipelineStatus {
+  running: boolean
+  step: string | null
+  stepIndex: number
+  totalSteps: number
+  detail: string | null
+  startedAt: string | null
+  finishedAt: string | null
+  result: string | null
+  error: string | null
+}
+
+export function getPipelineStatus(): Promise<PipelineStatus> {
+  return apiFetch<PipelineStatus>('/api/admin/pipeline/status')
+}

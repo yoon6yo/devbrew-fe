@@ -13,6 +13,8 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { IdeaStatus } from '@/types'
 import { notifyIdea, rejectIdea, restoreIdea, featureIdea } from '@/api/ideas'
 import { logout } from '@/api/auth'
+import { getPipelineStatus, type PipelineStatus } from '@/api/adminStats'
+import { usePipelineStatus } from '@/hooks/usePipelineStatus'
 
 type TabKey = 'ALL' | 'PENDING' | 'SCORED' | 'NOTIFIED' | 'FEATURED' | 'REJECTED'
 
@@ -76,6 +78,52 @@ function AdminStatsSection() {
   )
 }
 
+const PIPELINE_STEPS = ['신호 수집', '중복 제거', '아이디어 생성', '채점']
+
+function PipelineStatusPanel({ status }: { status: PipelineStatus }) {
+  const isDone = !status.running && !!status.finishedAt
+  const isError = !!status.error
+  return (
+    <div className={`mb-6 px-4 py-3.5 rounded-xl border transition-colors ${
+      isError ? 'bg-red-50 border-red-200'
+      : isDone ? 'bg-[#f0faf5] border-[#a7f3d0]'
+      : 'bg-white border-[#e8e0f0] shadow-sm'
+    }`}>
+      <div className="flex items-center gap-2 flex-wrap mb-1.5">
+        {PIPELINE_STEPS.map((label, i) => {
+          const idx = i + 1
+          const done = (isDone && !isError) || status.stepIndex > idx
+          const active = status.running && status.stepIndex === idx
+          return (
+            <div key={label} className="flex items-center gap-1.5">
+              <div className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold ${
+                done   ? 'bg-[#10b981] text-white'
+                : active ? 'bg-[#7c3aed] text-white animate-pulse'
+                : 'bg-[#f0ebf8] text-[#c4b8d4]'
+              }`}>
+                {done ? '✓' : idx}
+              </div>
+              <span className={`text-[12px] font-medium ${
+                done || active ? 'text-[#2a2433]' : 'text-[#c4b8d4]'
+              }`}>{label}</span>
+              {i < PIPELINE_STEPS.length - 1 && <span className="text-[#d8d0e8] text-[11px] mx-0.5">→</span>}
+            </div>
+          )
+        })}
+      </div>
+      {status.running && status.detail && (
+        <p className="text-[12px] text-[#6b6080] mt-1">{status.detail}</p>
+      )}
+      {isDone && !isError && (
+        <p className="text-[12px] text-[#1a7f4b] font-medium mt-1">완료 — {status.result}</p>
+      )}
+      {isError && (
+        <p className="text-[12px] text-red-600 mt-1">{status.error}</p>
+      )}
+    </div>
+  )
+}
+
 export function DashboardPage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const tab = (searchParams.get('tab') as TabKey | null) ?? 'ALL'
@@ -91,6 +139,20 @@ export function DashboardPage() {
 
   const [showTriggerModal, setShowTriggerModal] = useState(false)
   const [triggerSuccess, setTriggerSuccess] = useState(false)
+  const [pipelinePolling, setPipelinePolling] = useState(false)
+  const pipelineStatus = usePipelineStatus(pipelinePolling)
+
+  useEffect(() => {
+    if (!isAdmin) return
+    getPipelineStatus().then(s => { if (s.running) setPipelinePolling(true) }).catch(() => {})
+  }, [isAdmin])
+
+  useEffect(() => {
+    if (pipelineStatus && !pipelineStatus.running) {
+      const t = setTimeout(() => setPipelinePolling(false), 6000)
+      return () => clearTimeout(t)
+    }
+  }, [pipelineStatus?.running])
 
   const ideaParams = tabToParams(tab)
   const { data, isLoading, isError, refetch } = useIdeas({ ...ideaParams, page })
@@ -220,6 +282,9 @@ export function DashboardPage() {
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
         {isAdmin && <AdminStatsSection />}
+        {isAdmin && pipelineStatus && (pipelineStatus.running || !!pipelineStatus.finishedAt) && (
+          <PipelineStatusPanel status={pipelineStatus} />
+        )}
 
         <div className="flex items-center justify-between mb-4 gap-2">
           <div className="overflow-x-auto flex-1 min-w-0">
@@ -362,6 +427,7 @@ export function DashboardPage() {
           onStarted={() => {
             setTriggerSuccess(true)
             setTimeout(() => setTriggerSuccess(false), 5000)
+            setPipelinePolling(true)
           }}
         />
       )}
