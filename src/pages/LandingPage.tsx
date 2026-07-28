@@ -57,23 +57,16 @@ const STEPS = [
 ]
 
 
-function Dot() {
-  return <span className="shrink-0 text-[#c4b8d4] mt-px leading-none">·</span>
-}
-
 function MockIdeaCard() {
-  const problems = ['코딩 없이 앱 만들기 어려움', '진입장벽 높은 개발 생태계', '맞춤 도구 부족']
-  const strengths = ['빠른 출시', '낮은 개발 비용']
-  const risks = ['확장성 한계', '커스터마이징 제약']
   return (
     <div className="relative select-none">
-      <div className="absolute -inset-6 bg-[#7c3aed]/5 rounded-3xl blur-3xl pointer-events-none" />
-      <div className="relative bg-white rounded-2xl p-5 shadow-[0_0_0_1.5px_#c4b0f8,0_8px_32px_rgba(124,58,237,0.14)] flex flex-col gap-3.5">
+      <div className="absolute -inset-6 bg-[#7c3aed]/8 rounded-3xl blur-3xl pointer-events-none" />
+      <div className="relative bg-white rounded-2xl p-4 shadow-[0_0_0_1px_#a78bfa,0_6px_28px_rgba(124,58,237,0.15)] flex flex-col gap-3">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0 space-y-1.5">
-            <TrackBadge track="SAAS" />
+          <div className="flex-1 min-w-0">
+            <div className="mb-1.5"><TrackBadge track="SAAS" /></div>
             <h3 className="text-[15px] font-semibold text-[#18142a] leading-snug tracking-tight">
               AI 기반 노코드 앱 빌더 플랫폼
             </h3>
@@ -82,40 +75,40 @@ function MockIdeaCard() {
         </div>
 
         {/* One-liner */}
-        <p className="text-[13px] text-[#7c3aed] font-medium leading-snug">
+        <p className="text-[13px] text-[#7c3aed] font-medium leading-snug -mt-1">
           비개발자도 실용적인 웹앱을 손쉽게 구축
         </p>
 
         {/* Problems */}
-        <div className="bg-[#faf9f6] rounded-xl px-3 py-2.5">
-          <p className="text-[10px] font-semibold text-[#b0a4c8] uppercase tracking-widest mb-2">해결하는 문제</p>
-          <ul className="space-y-1">
-            {problems.map(item => (
+        <div className="bg-[#f8f6ff] rounded-xl px-3 py-2.5">
+          <p className="text-[10px] font-semibold text-[#a78bfa] uppercase tracking-widest mb-1.5">해결하는 문제</p>
+          <ul className="space-y-0.5">
+            {['코딩 없이 앱 만들기 어려움', '진입장벽 높은 개발 생태계', '맞춤 도구 부족'].map(item => (
               <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
-                <Dot /><span>{item}</span>
+                <span className="shrink-0 text-[#c4b8d4] mt-px">·</span><span>{item}</span>
               </li>
             ))}
           </ul>
         </div>
 
-        {/* Strengths + Risks */}
+        {/* Strengths + Risks — purple family, no red/green */}
         <div className="grid grid-cols-2 gap-2.5">
-          <div className="bg-[#f0faf5] rounded-xl px-3 py-2.5">
-            <p className="text-[10px] font-semibold text-[#059669] uppercase tracking-widest mb-2">장점</p>
-            <ul className="space-y-1">
-              {strengths.map(item => (
+          <div className="bg-[#f5f3ff] rounded-xl px-3 py-2.5">
+            <p className="text-[10px] font-semibold text-[#5b21b6] uppercase tracking-widest mb-1.5">강점</p>
+            <ul className="space-y-0.5">
+              {['빠른 출시', '낮은 개발 비용'].map(item => (
                 <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
-                  <Dot /><span>{item}</span>
+                  <span className="shrink-0 text-[#a78bfa] mt-px">·</span><span>{item}</span>
                 </li>
               ))}
             </ul>
           </div>
-          <div className="bg-[#fff5f5] rounded-xl px-3 py-2.5">
-            <p className="text-[10px] font-semibold text-[#dc2626] uppercase tracking-widest mb-2">리스크</p>
-            <ul className="space-y-1">
-              {risks.map(item => (
+          <div className="bg-[#f3f0ec] rounded-xl px-3 py-2.5">
+            <p className="text-[10px] font-semibold text-[#78716c] uppercase tracking-widest mb-1.5">리스크</p>
+            <ul className="space-y-0.5">
+              {['확장성 한계', '커스터마이징 제약'].map(item => (
                 <li key={item} className="text-[12px] text-[#4a4458] flex gap-1.5 items-start leading-snug">
-                  <Dot /><span>{item}</span>
+                  <span className="shrink-0 text-[#c4b8d4] mt-px">·</span><span>{item}</span>
                 </li>
               ))}
             </ul>
@@ -123,15 +116,12 @@ function MockIdeaCard() {
         </div>
 
         {/* Revenue model */}
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] font-semibold text-[#b0a4c8] uppercase tracking-widest shrink-0">수익 모델</span>
-          <span className="text-[12px] text-[#5b21b6] bg-[#f5f3ff] border border-[#ede9fe] rounded-lg px-2.5 py-1 leading-snug font-medium">
-            월정액 SaaS + 유료 템플릿
-          </span>
-        </div>
+        <p className="text-[12px] text-[#5b21b6] bg-[#f5f3ff] rounded-lg px-2.5 py-1.5 leading-snug font-medium">
+          월정액 SaaS + 유료 템플릿
+        </p>
 
         {/* Footer */}
-        <div className="pt-2 border-t border-[#f0ebf8]">
+        <div className="mt-auto pt-2.5 border-t border-[#ede9fe]">
           <span className="text-[11px] text-[#c4b8d4] tracking-wide">2026. 07. 28</span>
         </div>
       </div>
