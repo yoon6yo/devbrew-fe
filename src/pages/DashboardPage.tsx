@@ -69,7 +69,7 @@ function AdminStatsSection() {
         <StatCard
           label="이번 달 비용"
           value={`$${data.gemini.estimatedMonthlyCostUsd.toFixed(4)}`}
-          sub="Flash Lite 기준"
+          sub="Flash 기준"
         />
       </div>
     </div>
@@ -102,7 +102,7 @@ export function DashboardPage() {
     { label: '대기중',  key: 'PENDING',  count: stats?.PENDING ?? null },
     { label: '채점완료', key: 'SCORED',  count: stats?.SCORED ?? null },
     { label: '공시됨',  key: 'NOTIFIED', count: stats?.NOTIFIED ?? null },
-    { label: '★ 피처됨', key: 'FEATURED', count: stats?.FEATURED ?? null },
+    { label: '★ 홈 추천됨', key: 'FEATURED', count: stats?.FEATURED ?? null },
     { label: '거절됨',  key: 'REJECTED', count: stats?.REJECTED ?? null },
   ]
 
@@ -286,7 +286,7 @@ export function DashboardPage() {
                     onClick={handleBulkNotify}
                     className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-[#7c3aed] text-white hover:bg-[#6d28d9] disabled:opacity-50 transition-colors"
                   >
-                    공시하기
+                    공시하기 →
                   </button>
                 )}
                 {tab === 'NOTIFIED' && (
@@ -295,16 +295,19 @@ export function DashboardPage() {
                     onClick={handleBulkFeature}
                     className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-50 transition-colors"
                   >
-                    ★ 피처하기
+                    ★ 홈 추천 →
                   </button>
                 )}
-                {(tab === 'REJECTED' || tab === 'FEATURED') && (
+                {(tab === 'SCORED' || tab === 'NOTIFIED' || tab === 'FEATURED' || tab === 'REJECTED') && (
                   <button
                     disabled={bulkPending}
                     onClick={handleBulkRestore}
-                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg bg-[#7c3aed] text-white hover:bg-[#6d28d9] disabled:opacity-50 transition-colors"
+                    className="text-[13px] font-medium px-3.5 py-1.5 rounded-lg border border-[#e8e0f0] text-[#4a4458] hover:border-[#7c3aed] hover:text-[#7c3aed] disabled:opacity-50 transition-colors"
                   >
-                    {tab === 'FEATURED' ? '공시로 복원' : '복구하기'}
+                    {tab === 'SCORED'    ? '← 대기중으로'
+                   : tab === 'NOTIFIED' ? '← 채점완료로'
+                   : tab === 'FEATURED' ? '← 공시됨으로'
+                   : '복구하기'}
                   </button>
                 )}
                 {tab !== 'REJECTED' && (
