@@ -71,9 +71,8 @@ function MockIdeaCard() {
               <circle cx="20" cy="20" r={r} fill="none" stroke="#f59e0b" strokeWidth="3.5"
                 strokeDasharray={`${dash} ${circ}`} strokeLinecap="round" />
             </svg>
-            <div className="flex flex-col items-center leading-none gap-0.5">
+            <div className="flex flex-col items-center leading-none">
               <span className="text-[20px] font-bold tabular-nums" style={{ color: '#f59e0b' }}>9</span>
-              <span className="text-[10px] font-bold" style={{ color: '#f59e0b' }}>★</span>
             </div>
           </div>
         </div>
@@ -83,12 +82,8 @@ function MockIdeaCard() {
           비개발자도 실용적인 웹앱을 만들 수 있는 AI-first 빌더. 수요 급증 중.
         </p>
 
-        <div className="flex items-center justify-between pt-2.5">
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-[#10b981] bg-[rgba(16,185,129,0.08)] border border-[rgba(16,185,129,0.2)] px-2 py-0.5 rounded-full">공시됨</span>
-            <span className="text-[11px] text-[#c4b8d4]">오늘 09:00</span>
-          </div>
-          <span className="text-[12px] text-[#c4b8d4] font-medium">자세히 →</span>
+        <div className="pt-2.5 border-t border-[#f0ebf8]">
+          <span className="text-[11px] text-[#c4b8d4] tracking-wide">2026. 07. 28</span>
         </div>
       </div>
     </div>
