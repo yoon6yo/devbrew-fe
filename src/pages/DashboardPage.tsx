@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
 import { useIdeas } from '@/hooks/useIdeas'
