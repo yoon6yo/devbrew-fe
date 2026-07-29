@@ -123,9 +123,12 @@ function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }:
           : 'bg-white border-[#e8e0f0] shadow-sm'
         }`}>
           <div className="flex items-center gap-2 flex-wrap mb-1.5">
-            {PIPELINE_STEPS.map((label, i) => {
+            {(status.totalSteps === 1
+              ? PIPELINE_STEPS.slice(-1)
+              : PIPELINE_STEPS.slice(0, Math.min(status.totalSteps, PIPELINE_STEPS.length))
+            ).map((label, i, arr) => {
               const idx = i + 1
-              const done = (isDone && !isError) || status.stepIndex > idx
+              const done = !isError && (status.stepIndex > idx || isDone)
               const active = status.running && status.stepIndex === idx
               return (
                 <div key={label} className="flex items-center gap-1.5">
@@ -139,7 +142,7 @@ function PipelineStatusPanel({ status, pendingCount, scoringCount, onScoreNow }:
                   <span className={`text-[12px] font-medium ${
                     done || active ? 'text-[#2a2433]' : 'text-[#c4b8d4]'
                   }`}>{label}</span>
-                  {i < PIPELINE_STEPS.length - 1 && <span className="text-[#d8d0e8] text-[11px] mx-0.5">→</span>}
+                  {i < arr.length - 1 && <span className="text-[#d8d0e8] text-[11px] mx-0.5">→</span>}
                 </div>
               )
             })}
